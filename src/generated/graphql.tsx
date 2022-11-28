@@ -17,8 +17,8 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  login: User;
-  register: User;
+  login?: Maybe<User>;
+  register?: Maybe<User>;
 };
 
 
@@ -43,7 +43,7 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String'];
   id: Scalars['ID'];
-  name: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
 };
 
 export type RegisterMutationVariables = Exact<{
@@ -53,7 +53,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', id: string, email: string, name: string } };
+export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'User', id: string, email: string, token?: string | null } | null };
 
 
 export const RegisterDocument = gql`
@@ -61,7 +61,7 @@ export const RegisterDocument = gql`
   register(email: $email, password: $password, confirmPassword: $confirmPassword) {
     id
     email
-    name
+    token
   }
 }
     `;

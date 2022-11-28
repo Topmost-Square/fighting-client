@@ -12,7 +12,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-    uri: process.env.FE_URL,
+    uri: process.env.REACT_APP_SERVER,
     credentials: 'include'
 });
 
@@ -34,6 +34,7 @@ const client = new ApolloClient({
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
       <ApolloProvider client={client}>

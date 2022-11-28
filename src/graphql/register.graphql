@@ -2,6 +2,6 @@ mutation Register($email: String!, $password: String!, $confirmPassword: String!
     register(email: $email, password: $password, confirmPassword: $confirmPassword) {
         id
         email
-        name
+        token
     }
 }

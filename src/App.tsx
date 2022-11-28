@@ -1,22 +1,60 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
     BrowserRouter,
     Routes,
     Route,
+    Navigate
 } from 'react-router-dom';
 import {Register} from "./pages/Register";
 import {Login} from "./pages/Login";
 import {Games} from "./pages/Games";
+import {isAuth} from "./utils/auth";
 
-function App() {
+const AuthRoute = ({ children }: any) => {
+    if (isAuth()) {
+        return children
+    }
+    return <Navigate to='/login' />
+}
+
+const UnAuthRoute = ({ children }: any) => {
+    if (isAuth()) {
+        return <Navigate to='/' />
+    }
+    return children
+}
+
+const App = () => {
+
   return (
-    <BrowserRouter>
-        <Routes>
-            <Route path='register' element={ <Register />}/>
-            <Route path='login' element={ <Login />}/>
-            <Route path='/' element={ <Games />}/>
-        </Routes>
-    </BrowserRouter>
+          <BrowserRouter>
+              <Routes>
+                  <Route
+                      path='register'
+                      element={
+                      <UnAuthRoute>
+                          <Register />
+                      </UnAuthRoute>
+                    }
+                  />
+                  <Route
+                      path='login'
+                      element={
+                      <UnAuthRoute>
+                          <Login />
+                      </UnAuthRoute>
+                    }
+                  />
+                  <Route
+                      path='/'
+                      element={
+                        <AuthRoute>
+                            <Games />
+                        </AuthRoute>
+                      }
+                  />
+              </Routes>
+          </BrowserRouter>
   );
 }
 
