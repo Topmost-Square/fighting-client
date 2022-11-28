@@ -1,4 +1,80 @@
+import {useNavigate} from "react-router-dom";
+import {ChangeEvent, FormEvent, useState} from "react";
+import {useLoginMutation} from "../generated/graphql";
+import {ApolloError} from "@apollo/client";
+import {saveToken} from "../utils/auth";
+
 export const Login = () => {
+    type LoginForm = {
+        email: string
+        password: string
+    }
+
+    const navigate = useNavigate();
+
+    const [form, setForm] = useState<LoginForm>({
+        email: '',
+        password: '',
+    });
+
+    const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrorFields([]);
+        setErrors([]);
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const [errors, setErrors] = useState<string[]>([])
+    const [errorFields, setErrorFields] = useState<string[]>([])
+
+    const [submitLogin, { error, loading }] = useLoginMutation();
+
+    const processGraphQLError = (e : ApolloError) => {
+        const graphQLError: string = e.graphQLErrors[0].extensions.errorContent as string;
+        const errorMessages: string[] = Object.values(graphQLError);
+        const errorFieldsNames: string[] = Object.keys(graphQLError);
+        setErrorFields([
+            ...errorFieldsNames
+        ]);
+        setErrors([
+            ...errorMessages
+        ]);
+    }
+
+    const submitForm = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setErrorFields([]);
+        setErrors([]);
+
+        try {
+            const loginResponse = await submitLogin({
+                variables: {
+                    ...form
+                }
+            });
+
+            if (loginResponse.data?.login) {
+                saveToken(
+                    loginResponse!.data!.login!.token as string
+                )
+                navigate('/');
+            } else {
+                setErrorFields([
+                    'email'
+                ]);
+                setErrors([
+                    "Sorry, our elves didn't manage to log you in"
+                ]);
+            }
+        } catch (e: any) {
+            if (e instanceof ApolloError) {
+                processGraphQLError(e)
+            }
+        }
+    }
+
     return (
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
@@ -11,31 +87,43 @@ export const Login = () => {
                         Login
                     </h2>
                 </div>
-                <form className="mt-8 space-y-6" action="#" method="POST">
+                <form className="mt-8 space-y-6" onSubmit={submitForm}>
                     <div className="-space-y-px rounded-md shadow-sm">
                         <div>
                             <label htmlFor="email-address" className="sr-only">Email address</label>
-                            <input id="email-address" name="email" type="email" autoComplete="email" required
-                                   className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                   placeholder="Email address" />
+                            <input
+                                id="email-address"
+                                name="email"
+                                type="email"
+                                autoComplete="email"
+                                required
+                                className={(errorFields.includes('email') ? "border-red-600 " : '') + "mb-1 relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"}
+                                placeholder="Email address"
+                                value = {form.email}
+                                onChange={onChangeInput}
+                            />
                         </div>
                         <div>
                             <label htmlFor="password" className="sr-only">Password</label>
-                            <input id="password" name="password" type="password" autoComplete="current-password"
-                                   required
-                                   className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                   placeholder="Password" />
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                autoComplete="current-password"
+                                required
+                                className={(errorFields.includes('password') ? "border-red-600 " : '') + "relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"}
+                                placeholder="Password"
+                                value = {form.password}
+                                onChange={onChangeInput}
+                            />
                         </div>
                     </div>
-
+                    { errors.length ?
+                        errors.map(
+                            error => <p className='text-red-600'>{error}</p>
+                        ) : ''
+                    }
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox"
-                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">Remember
-                                me</label>
-                        </div>
-
                         <div className="text-sm">
                             <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Forgot your
                                 password?</a>

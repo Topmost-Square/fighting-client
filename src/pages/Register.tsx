@@ -70,11 +70,6 @@ export const Register = () => {
                     "Sorry, our elves didn't manage to register your account"
                 ]);
             }
-
-            console.log(registerResponse, 'registerResponse')
-
-
-
         } catch (e: any) {
             if (e instanceof ApolloError) {
                 processGraphQLError(e)
