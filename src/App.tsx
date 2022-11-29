@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import {Register} from "./pages/Register";
 import {Login} from "./pages/Login";
-import {Games} from "./pages/Games";
+import {Menu} from "./pages/Menu";
 import {isAuth} from "./utils/auth";
 
 const AuthRoute = ({ children }: any) => {
@@ -49,7 +49,7 @@ const App = () => {
                       path='/'
                       element={
                         <AuthRoute>
-                            <Games />
+                            <Menu />
                         </AuthRoute>
                       }
                   />
