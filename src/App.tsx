@@ -9,6 +9,7 @@ import {Register} from "./pages/Register";
 import {Login} from "./pages/Login";
 import {Menu} from "./pages/Menu";
 import {isAuth} from "./utils/auth";
+import {Practice} from "./pages/Practice";
 
 const AuthRoute = ({ children }: any) => {
     if (isAuth()) {
@@ -51,6 +52,14 @@ const App = () => {
                         <AuthRoute>
                             <Menu />
                         </AuthRoute>
+                      }
+                  />
+                  <Route
+                      path='/practice'
+                      element={
+                          <AuthRoute>
+                              <Practice />
+                          </AuthRoute>
                       }
                   />
               </Routes>
