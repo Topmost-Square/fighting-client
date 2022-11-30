@@ -1,4 +1,5 @@
 type Position = { x: number|null, y: number|null };
+type KickMask = { x: number|null, y: number|null, width: number, height: number };
 
 export class Fighter {
     position: Position  = {
@@ -9,12 +10,22 @@ export class Fighter {
     canvas: HTMLCanvasElement|null = null;
     context: CanvasRenderingContext2D|null = null;
 
-    width = 50;
-    height = 100;
+    // todo: these values should depend on screen size
+    width = 150;
+    height = 400;
 
-    kickMask: Position = {
+    handKickMask: KickMask = {
         x: null,
-        y: null
+        y: null,
+        width: 150,
+        height: 50
+    }
+
+    legKickMask: KickMask = {
+        x: null,
+        y: null,
+        width: 250,
+        height: 70
     }
 
     constructor(
@@ -25,16 +36,53 @@ export class Fighter {
     ) {
         this.position.x = x;
         this.position.y = y;
+
         this.canvas = canvas;
         this.context = context;
     }
 
+    update() {
+        if (this.position.x && this.position.y) {
+            this.handKickMask.x = this.position.x + this.width
+            this.handKickMask.y = this.position.y + this.height / 4
+
+            this.legKickMask.x = this.position.x + this.width
+            this.legKickMask.y = this.position.y + this.height / 2
+        }
+    }
+
     draw() {
+        // draw fighter
+        if (this.context) {
+            this.context.fillStyle = "black";
+        }
         this.context!.fillRect(
             this.position.x!,
             this.position.y!,
             this.width,
             this.height
         );
+
+        // draw hand kick
+        if (this.context) {
+            this.context.fillStyle = "red";
+        }
+        this.context?.fillRect(
+            this.handKickMask.x!,
+            this.handKickMask.y!,
+            this.handKickMask.width,
+            this.handKickMask.height
+        )
+
+        // draw leg kick
+        if (this.context) {
+            this.context.fillStyle = "green";
+        }
+        this.context?.fillRect(
+            this.legKickMask.x!,
+            this.legKickMask.y!,
+            this.legKickMask.width,
+            this.legKickMask.height
+        )
     }
 }
