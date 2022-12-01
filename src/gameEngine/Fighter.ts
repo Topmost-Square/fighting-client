@@ -21,7 +21,7 @@ export class Fighter {
     height = 400;
 
     handKickMask: KickMask = {
-        show: false,
+        show: true,
         x: null,
         y: null,
         width: 150,
@@ -29,7 +29,7 @@ export class Fighter {
     }
 
     legKickMask: KickMask = {
-        show: false,
+        show: true,
         x: null,
         y: null,
         width: 250,
@@ -49,7 +49,8 @@ export class Fighter {
         this.context = context;
     }
 
-    update() {
+    drawKickMasks() {
+        //todo: should depend on where fighter is pointed to left or right
         if (this.position.x && this.position.y) {
             this.handKickMask.x = this.position.x + this.width
             this.handKickMask.y = this.position.y + this.height / 4
@@ -70,6 +71,8 @@ export class Fighter {
             this.width,
             this.height
         );
+
+        this.drawKickMasks();
 
         // draw hand kick
         if (this.context) {
