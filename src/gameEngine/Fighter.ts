@@ -1,5 +1,11 @@
 type Position = { x: number|null, y: number|null };
-type KickMask = { x: number|null, y: number|null, width: number, height: number };
+type KickMask = {
+    x: number|null,
+    y: number|null,
+    width: number,
+    height: number,
+    show: boolean
+};
 
 export class Fighter {
     position: Position  = {
@@ -15,6 +21,7 @@ export class Fighter {
     height = 400;
 
     handKickMask: KickMask = {
+        show: false,
         x: null,
         y: null,
         width: 150,
@@ -22,6 +29,7 @@ export class Fighter {
     }
 
     legKickMask: KickMask = {
+        show: false,
         x: null,
         y: null,
         width: 250,
@@ -67,22 +75,27 @@ export class Fighter {
         if (this.context) {
             this.context.fillStyle = "red";
         }
-        this.context?.fillRect(
-            this.handKickMask.x!,
-            this.handKickMask.y!,
-            this.handKickMask.width,
-            this.handKickMask.height
-        )
+        if (this.handKickMask.show) {
+            this.context?.fillRect(
+                this.handKickMask.x!,
+                this.handKickMask.y!,
+                this.handKickMask.width,
+                this.handKickMask.height
+            )
+        }
+
 
         // draw leg kick
         if (this.context) {
             this.context.fillStyle = "green";
         }
-        this.context?.fillRect(
-            this.legKickMask.x!,
-            this.legKickMask.y!,
-            this.legKickMask.width,
-            this.legKickMask.height
-        )
+        if (this.legKickMask.show) {
+            this.context?.fillRect(
+                this.legKickMask.x!,
+                this.legKickMask.y!,
+                this.legKickMask.width,
+                this.legKickMask.height
+            )
+        }
     }
 }
