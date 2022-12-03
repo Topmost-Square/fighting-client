@@ -20,6 +20,9 @@ export class Fighter {
     width = 150;
     height = 400;
 
+    verticalAcceleration = 0;
+    gravity = 20;
+
     handKickMask: KickMask = {
         show: true,
         x: null,
@@ -60,7 +63,26 @@ export class Fighter {
         }
     }
 
+    useGravity() {
+        if (this.position.y !== null && this.canvas) {
+            if (this.position.y < (this.canvas.height - 500)) {
+                this.position.y += this.gravity;
+            }
+        }
+
+        if (this.verticalAcceleration > 0 && this.position.y && this.canvas) {
+            this.position.y -= this.verticalAcceleration;
+            this.verticalAcceleration--;
+        }
+
+        if (this.verticalAcceleration === 1) {
+            this.verticalAcceleration = 0;
+        }
+    }
+
     draw() {
+        this.useGravity();
+
         // draw fighter
         if (this.context) {
             this.context.fillStyle = "black";
@@ -73,6 +95,7 @@ export class Fighter {
         );
 
         this.drawKickMasks();
+
 
         // draw hand kick
         if (this.context) {

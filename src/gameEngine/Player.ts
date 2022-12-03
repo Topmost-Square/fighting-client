@@ -16,8 +16,11 @@ export class Player extends Fighter {
     }
 
     update() {
-        if (this.controls?.up && this.position.y !== null) {
-            this.position.y -= 10;
+        if (this.controls?.up && this.position.y !== null && this.canvas) {
+            if (this.verticalAcceleration === 0 && this.position.y >= (this.canvas.height - 500)) {
+                this.controls?.stopUp();
+                this.verticalAcceleration = 50;
+            }
         }
 
         if (this.controls?.down && this.position.y !== null) {

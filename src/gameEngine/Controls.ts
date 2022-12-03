@@ -6,8 +6,6 @@ export class Controls {
 
     constructor() {
         window.addEventListener('keydown', e => {
-            console.log(e.key, 'event')
-
             switch (e.key) {
                 case 'ArrowUp':
                     this.up = true;
@@ -40,5 +38,9 @@ export class Controls {
                     break;
             }
         });
+    }
+
+    stopUp() {
+        this.up = false;
     }
 }
