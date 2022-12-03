@@ -25,10 +25,26 @@ export class Player extends Fighter {
 
         if (this.controls?.down && this.position.y) {
             this.height = 200; // temporarily simulate fighter is down (sitting)
+
+            if (
+                this.canvas &&
+                !this.verticalAcceleration &&
+                this.position.y >= this.canvas?.height - 500 - this.height
+            ) {
+                this.position.y = this.canvas?.height - 500 + 200;
+            }
         }
 
         if (!this.controls?.down && this.position.y) {
             this.height = 400; // temporarily simulate fighter is up
+
+            if (
+                this.canvas &&
+                !this.verticalAcceleration &&
+                this.position.y >= this.canvas?.height - 500
+            ) {
+                this.position.y = this.canvas?.height - 500;
+            }
         }
 
         if (this.position.x !== null) {
