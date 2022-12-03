@@ -39,8 +39,4 @@ export class Controls {
             }
         });
     }
-
-    stopUp() {
-        this.up = false;
-    }
 }
