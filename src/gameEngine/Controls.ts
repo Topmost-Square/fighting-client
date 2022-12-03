@@ -1,23 +1,58 @@
 export class Controls {
-    up = false;
-    down = false;
-    left = false;
-    right = false;
+    options = {
+        up: false,
+        down: false,
+        left: false,
+        right: false,
+        handKick: {
+            prevReleased: true,
+            pushed: false
+        },
+        legKick: {
+            prevReleased: true,
+            pushed: false
+        },
+    };
+
+    setOption(option: string, value: boolean) {
+        this.options = {
+            ...this.options,
+            [option]: value
+        }
+    }
 
     constructor() {
         window.addEventListener('keydown', e => {
             switch (e.key) {
                 case 'ArrowUp':
-                    this.up = true;
+                    this.setOption('up', true);
                     break;
                 case 'ArrowDown':
-                    this.down = true;
+                    this.setOption('down', true);
                     break;
                 case 'ArrowLeft':
-                    this.left = true;
+                    this.setOption('left', true);
                     break;
                 case 'ArrowRight':
-                    this.right = true;
+                    this.setOption('right', true);
+                    break;
+                case 'd':
+                    this.options = {
+                        ...this.options,
+                        handKick: {
+                            ...this.options.handKick,
+                            pushed: true,
+                        }
+                    }
+                    break;
+                case 's':
+                    this.options = {
+                        ...this.options,
+                        legKick: {
+                            ...this.options.legKick,
+                            pushed: true,
+                        }
+                    }
                     break;
             }
         });
@@ -25,18 +60,50 @@ export class Controls {
         window.addEventListener('keyup', e => {
             switch (e.key) {
                 case 'ArrowUp':
-                    this.up = false;
+                    this.setOption('up', false);
                     break;
                 case 'ArrowDown':
-                    this.down = false;
+                    this.setOption('down', false);
                     break;
                 case 'ArrowLeft':
-                    this.left = false;
+                    this.setOption('left', false);
                     break;
                 case 'ArrowRight':
-                    this.right = false;
+                    this.setOption('right', false);
+                    break;
+                case 'd':
+                    this.options = {
+                        ...this.options,
+                        handKick: {
+                            ...this.options.handKick,
+                            pushed: false,
+                            prevReleased: true
+                        }
+                    }
+                    break;
+                case 's':
+                    this.options = {
+                        ...this.options,
+                        legKick: {
+                            ...this.options.legKick,
+                            pushed: false,
+                            prevReleased: true
+                        }
+                    }
                     break;
             }
         });
+    }
+
+    dropReleaseFlag(kickType: string) {
+        if (this.options.hasOwnProperty(kickType)) {
+            this.options = {
+                ...this.options,
+                [kickType]: {
+                   ...[kickType],
+                    prevReleased: false
+                }
+            };
+        }
     }
 }

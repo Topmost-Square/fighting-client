@@ -24,7 +24,7 @@ export class Fighter {
     gravity = 20;
 
     handKickMask: KickMask = {
-        show: true,
+        show: false,
         x: null,
         y: null,
         width: 150,
@@ -32,7 +32,7 @@ export class Fighter {
     }
 
     legKickMask: KickMask = {
-        show: true,
+        show: false,
         x: null,
         y: null,
         width: 250,
