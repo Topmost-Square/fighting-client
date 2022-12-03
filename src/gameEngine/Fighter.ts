@@ -54,7 +54,7 @@ export class Fighter {
 
     drawKickMasks() {
         //todo: should depend on where fighter is pointed to left or right
-        if (this.position.x && this.position.y) {
+        if (this.position.x !== null && this.position.y !== null) {
             this.handKickMask.x = this.position.x + this.width
             this.handKickMask.y = this.position.y + this.height / 4
 
@@ -96,11 +96,11 @@ export class Fighter {
 
         this.drawKickMasks();
 
-
         // draw hand kick
         if (this.context) {
             this.context.fillStyle = "red";
         }
+
         if (this.handKickMask.show) {
             this.context?.fillRect(
                 this.handKickMask.x!,
@@ -110,11 +110,11 @@ export class Fighter {
             )
         }
 
-
         // draw leg kick
         if (this.context) {
             this.context.fillStyle = "green";
         }
+
         if (this.legKickMask.show) {
             this.context?.fillRect(
                 this.legKickMask.x!,
