@@ -13,6 +13,8 @@ export class Fighter {
         y: null
     };
 
+    side: null|string = null;
+
     canvas: HTMLCanvasElement|null = null;
     context: CanvasRenderingContext2D|null = null;
 
@@ -78,6 +80,10 @@ export class Fighter {
         if (this.verticalAcceleration === 1) {
             this.verticalAcceleration = 0;
         }
+    }
+
+    setSide(side: string) {
+        this.side = side;
     }
 
     draw() {
