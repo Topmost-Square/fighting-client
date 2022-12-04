@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from "react";
-import {Player} from "../gameEngine/Player";
-import {AIFighter} from "../gameEngine/AIFighter";
+import {Player} from "../gameEngine/fighters/Player";
+import {AIFighter} from "../gameEngine/fighters/AIFighter";
 
 export const Practice = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
