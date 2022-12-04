@@ -1,8 +1,8 @@
 import {Fighter} from "./Fighter";
-import {Controls} from "./Controls";
+import {PlayerControls} from "./Controls";
 
 export class Player extends Fighter {
-    controls: Controls|null = null;
+    controls: PlayerControls|null = null;
 
     constructor(
         x: number,
@@ -12,7 +12,7 @@ export class Player extends Fighter {
     ) {
         super(x, y, canvas, context);
 
-        this.controls = new Controls();
+        this.controls = new PlayerControls();
     }
 
     upControlAction() {

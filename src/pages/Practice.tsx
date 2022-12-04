@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import {Player} from "../gameEngine/Player";
+import {AIFighter} from "../gameEngine/AIFighter";
 
 export const Practice = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -8,21 +9,34 @@ export const Practice = () => {
         const canvas = canvasRef?.current;
         const c = canvas?.getContext('2d');
 
-        const player = canvas && c ?
-            new Player(
+        let player: Player|null = null;
+        let aiFighter: AIFighter|null = null;
+
+        if (canvas && c) {
+            player =  new Player(
                 100,
                 canvas.height - 500,
                 canvas,
                 c
-            ) :
-            null;
+            );
+
+            aiFighter = new AIFighter(
+                canvas.width - 200,
+                canvas.height - 500,
+                canvas,
+                c
+            );
+        }
 
         const animate = () => {
             requestAnimationFrame(animate);
-            if (c && canvas && player) {
+            if (c && canvas && player && aiFighter) {
                 c.clearRect(0, 0, canvas.width, canvas.height);
                 player.update();
                 player.draw();
+
+                aiFighter.update();
+                aiFighter.draw();
             }
         }
 

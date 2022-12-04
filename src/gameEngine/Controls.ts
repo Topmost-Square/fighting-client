@@ -1,27 +1,9 @@
-export class Controls {
-    options = {
-        up: false,
-        down: false,
-        left: false,
-        right: false,
-        handKick: {
-            prevReleased: true,
-            pushed: false
-        },
-        legKick: {
-            prevReleased: true,
-            pushed: false
-        },
-    };
+import {BaseControls} from "./BaseControls";
 
-    setOption(option: string, value: boolean) {
-        this.options = {
-            ...this.options,
-            [option]: value
-        }
-    }
-
+export class PlayerControls extends BaseControls {
     constructor() {
+        super();
+
         window.addEventListener('keydown', e => {
             switch (e.key) {
                 case 'ArrowUp':
@@ -93,17 +75,5 @@ export class Controls {
                     break;
             }
         });
-    }
-
-    dropReleaseFlag(kickType: string) {
-        if (this.options.hasOwnProperty(kickType)) {
-            this.options = {
-                ...this.options,
-                [kickType]: {
-                   ...[kickType],
-                    prevReleased: false
-                }
-            };
-        }
     }
 }
