@@ -25,6 +25,15 @@ export class Fighter {
     verticalAcceleration = 0;
     gravity = 20;
 
+    // temp. for debugging
+    pointer: KickMask = {
+        x: null,
+        y: null,
+        width: 50,
+        height: 50,
+        show: true
+    }
+
     handKickMask: KickMask = {
         show: false,
         x: null,
@@ -52,6 +61,29 @@ export class Fighter {
 
         this.canvas = canvas;
         this.context = context;
+    }
+
+    calculatePointer() {
+        if (this.position.x && this.position.y) {
+            this.pointer.y = this.position.y + 100
+            if (this.side === 'left') {
+                this.pointer.x = this.position.x + this.width
+            } else if (this.side === 'right') {
+                this.pointer.x = this.position.x - this.pointer.width
+            }
+        }
+    }
+
+    drawPointer() {
+        if (this.context) {
+            this.context.fillStyle = "brown";
+        }
+        this.context!.fillRect(
+            this.pointer.x!,
+            this.pointer.y!,
+            this.pointer.width,
+            this.pointer.height
+        );
     }
 
     drawKickMasks() {
@@ -88,6 +120,9 @@ export class Fighter {
 
     draw() {
         this.useGravity();
+
+        this.calculatePointer();
+        this.drawPointer();
 
         // draw fighter
         if (this.context) {
