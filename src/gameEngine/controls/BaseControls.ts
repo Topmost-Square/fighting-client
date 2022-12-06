@@ -1,3 +1,5 @@
+import {Fighter} from "../fighters/Fighter";
+
 export class BaseControls {
     options = {
         up: false,
@@ -13,6 +15,12 @@ export class BaseControls {
             pushed: false
         },
     };
+
+    fighter: Fighter|null = null;
+
+    setFighter(fighter: Fighter) {
+        this.fighter = fighter;
+    }
 
     setOption(option: string, value: boolean) {
         this.options = {

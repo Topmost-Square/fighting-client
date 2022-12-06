@@ -13,9 +13,10 @@ export class AIFighter extends Fighter {
         super(x, y, canvas, context);
 
         this.controls = new AIControls();
+        this.controls.setFighter(this);
     }
 
     update() {
-
+        this.controls?.behave();
     }
 }

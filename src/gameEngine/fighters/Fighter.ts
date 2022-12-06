@@ -13,6 +13,8 @@ export class Fighter {
         y: null
     };
 
+    enemy: Fighter|null = null;
+
     side: null|string = null;
 
     canvas: HTMLCanvasElement|null = null;
@@ -63,8 +65,12 @@ export class Fighter {
         this.context = context;
     }
 
+    setEnemy(enemy: Fighter) {
+        this.enemy = enemy;
+    }
+
     calculatePointer() {
-        if (this.position.x && this.position.y) {
+        if (this.position.x !== null && this.position.y !== null) {
             this.pointer.y = this.position.y + 100
             if (this.side === 'left') {
                 this.pointer.x = this.position.x + this.width

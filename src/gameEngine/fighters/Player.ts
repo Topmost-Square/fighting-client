@@ -1,5 +1,5 @@
 import {Fighter} from "./Fighter";
-import {PlayerControls} from "../controls/Controls";
+import {PlayerControls} from "../controls/PlayerControls";
 
 export class Player extends Fighter {
     controls: PlayerControls|null = null;

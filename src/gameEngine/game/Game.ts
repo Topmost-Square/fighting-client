@@ -19,10 +19,5 @@ export class Game {
                 this.opponent2.side = 'left';
             }
         }
-
-    }
-
-    update() {
-        this.defineOrientation();
     }
 }
