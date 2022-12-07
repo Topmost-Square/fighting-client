@@ -26,6 +26,7 @@ export class Fighter {
 
     verticalAcceleration = 0;
     gravity = 20;
+    speed = 5;
 
     // temp. for debugging
     pointer: KickMask = {
@@ -126,14 +127,19 @@ export class Fighter {
 
     goLeft() {
         if (this.position.x) {
-            this.position.x -= 10;
+            this.position.x -= this.speed;
         }
     }
 
     goRight() {
         if (this.position.x !== null) {
-            this.position.x += 10;
+            this.position.x += this.speed;
         }
+    }
+
+    isInTheAir() {
+        return (this.canvas && this.position.y !== null) &&
+            !(this.position.y >= (this.canvas.height - 500))
     }
 
     draw() {

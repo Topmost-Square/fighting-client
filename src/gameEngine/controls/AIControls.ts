@@ -79,7 +79,12 @@ export class AIControls extends BaseControls {
         let coordinateToMoveHandKick = null;
         let coordinateToMoveLegKick = null;
 
-        if (this.fighter?.position.x && this.fighter.enemy?.position.x) {
+        if (
+            this.fighter &&
+            this.fighter.enemy &&
+            this.fighter?.position.x !== null &&
+            this.fighter.enemy?.position.x !== null
+        ) {
             if (this.fighter?.side === 'left') {
                 coordinateToMoveHandKick =
                     this.fighter.enemy.position.x -
@@ -108,32 +113,34 @@ export class AIControls extends BaseControls {
         }
     }
 
-    behave() {
-        // 1 - orientation?
-        // 2 - distance to enemy?
+    calculateAndMove() {
+        let moveTo = this.whereToMove();
 
-        const moveTo = this.whereToMove();
         if (
             this.fighter !== null &&
             this.fighter.enemy !== null &&
             this.fighter.enemy.position.x !== null &&
             this.fighter.handKickMask.x !== null &&
-            this.fighter.position.x !== null
+            this.fighter.position.x !== null &&
+            !this.fighter.enemy.isInTheAir()
         ) {
             if (moveTo! < 0 && this.fighter?.side === 'right') {
                 this.fighter?.goLeft();
             } else if (
                 moveTo! > 0 &&
                 this.fighter?.side === 'left' &&
-                (this.fighter.enemy.position.x > this.fighter.handKickMask.x + this.fighter.handKickMask.width)
+                (
+                    this.fighter.enemy.position.x >
+                    this.fighter.handKickMask.x + this.fighter.handKickMask.width
+                )
             ) {
                 this.fighter?.goRight();
             }
         }
+    }
 
-        // maybe again write it to decisions array
-
-        // move to distance of kick (randomly arm or leg)
+    behave() {
+        this.calculateAndMove();
         // make a kick -> leg or arm
 
         // check did get damage? -> inside there's a decisions

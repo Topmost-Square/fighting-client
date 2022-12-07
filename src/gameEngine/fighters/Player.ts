@@ -16,10 +16,8 @@ export class Player extends Fighter {
     }
 
     upControlAction() {
-        if (this.controls?.options.up && this.position.y !== null && this.canvas) {
-            if (this.verticalAcceleration === 0 && this.position.y >= (this.canvas.height - 500)) {
-                this.verticalAcceleration = 50;
-            }
+        if (this.controls?.options.up && this.verticalAcceleration === 0 && !this.isInTheAir()) {
+            this.verticalAcceleration = 50;
         }
     }
 
