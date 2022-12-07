@@ -53,7 +53,7 @@ export class Player extends Fighter {
         if (this.position.x !== null) {
             if (this.controls?.options.left) {
                 if (this.position.x > 0) {
-                    this.position.x -= 10;
+                    this.goLeft();
                 } else if (this.position.x <= 0) {
                     this.position.x = 0;
                 }
@@ -65,7 +65,7 @@ export class Player extends Fighter {
         if (this.position.x !== null) {
             if (this.controls?.options.right && this.canvas) {
                 if (this.position.x + this.width < this.canvas?.width) {
-                    this.position.x += 10;
+                    this.goRight();
                 } else if (this.position.x + this.width >= this.canvas?.width) {
                     this.position.x = this.canvas?.width - this.width;
                 }
@@ -100,8 +100,11 @@ export class Player extends Fighter {
     update() {
         this.upControlAction();
         this.downControlAction();
+
+        //todo: for these add check so that player can't move if there's an enemy
         this.leftControlAction();
         this.rightControlAction();
+
         this.handKickControlAction();
         this.legKickControlAction();
     }

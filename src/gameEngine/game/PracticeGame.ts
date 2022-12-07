@@ -5,8 +5,6 @@ import {AIFighter} from "../fighters/AIFighter";
 export class PracticeGame extends Game {
     constructor(player: Player, ai: AIFighter) {
         super(player, ai);
-
-        ai.setEnemy(player);
     }
 
     update() {

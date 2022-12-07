@@ -124,6 +124,18 @@ export class Fighter {
         this.side = side;
     }
 
+    goLeft() {
+        if (this.position.x) {
+            this.position.x -= 10;
+        }
+    }
+
+    goRight() {
+        if (this.position.x !== null) {
+            this.position.x += 10;
+        }
+    }
+
     draw() {
         this.useGravity();
 

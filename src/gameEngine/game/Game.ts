@@ -7,6 +7,9 @@ export class Game {
     constructor(opponent1: Fighter, opponent2: Fighter) {
         this.opponent1 = opponent1;
         this.opponent2 = opponent2;
+
+        opponent1.setEnemy(opponent2);
+        opponent2.setEnemy(opponent1);
     }
 
     defineOrientation() {

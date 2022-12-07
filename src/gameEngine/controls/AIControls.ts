@@ -41,10 +41,6 @@ export class AIControls extends BaseControls {
 
     }
 
-    goLeft() {
-
-    }
-
     goRight() {
 
     }
@@ -80,15 +76,60 @@ export class AIControls extends BaseControls {
     }
 
     whereToMove() {
-        // console.log(this.fighter?.position, 'fighter itself')
-        // console.log(this.fighter?.enemy?.position, 'enemy')
+        let coordinateToMoveHandKick = null;
+        let coordinateToMoveLegKick = null;
+
+        if (this.fighter?.position.x && this.fighter.enemy?.position.x) {
+            if (this.fighter?.side === 'left') {
+                coordinateToMoveHandKick =
+                    this.fighter.enemy.position.x -
+                    (this.fighter.width +
+                    this.fighter.handKickMask.width);
+
+                coordinateToMoveLegKick =
+                    this.fighter.enemy.position.x -
+                    (this.fighter.width +
+                    this.fighter.legKickMask.width);
+
+            } else if (this.fighter?.side === 'right') {
+                coordinateToMoveHandKick =
+                    this.fighter.enemy.position.x + this.fighter.enemy.width -
+                    (this.fighter.position.x -
+                    this.fighter.handKickMask.width);
+
+                coordinateToMoveLegKick =
+                    this.fighter.enemy.position.x + this.fighter.enemy.width -
+                    (this.fighter.position.x -
+                    this.fighter.legKickMask.width);
+            }
+
+            // todo: randomly decide if move to hand or leg kick
+            return coordinateToMoveHandKick;
+        }
     }
 
     behave() {
         // 1 - orientation?
         // 2 - distance to enemy?
 
-        this.whereToMove();
+        const moveTo = this.whereToMove();
+        if (
+            this.fighter !== null &&
+            this.fighter.enemy !== null &&
+            this.fighter.enemy.position.x !== null &&
+            this.fighter.handKickMask.x !== null &&
+            this.fighter.position.x !== null
+        ) {
+            if (moveTo! < 0 && this.fighter?.side === 'right') {
+                this.fighter?.goLeft();
+            } else if (
+                moveTo! > 0 &&
+                this.fighter?.side === 'left' &&
+                (this.fighter.enemy.position.x > this.fighter.handKickMask.x + this.fighter.handKickMask.width)
+            ) {
+                this.fighter?.goRight();
+            }
+        }
 
         // maybe again write it to decisions array
 
