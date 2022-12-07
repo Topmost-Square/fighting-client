@@ -71,20 +71,20 @@ export class Fighter {
     }
 
     calculatePointer() {
-        if (this.position.x !== null && this.position.y !== null) {
-            this.pointer.y = this.position.y + 100
-            if (this.side === 'left') {
-                this.pointer.x = this.position.x + this.width
-            } else if (this.side === 'right') {
-                this.pointer.x = this.position.x - this.pointer.width
-            }
+        this.pointer.y = this.position.y! + 100;
+
+        if (this.side === 'left') {
+            this.pointer.x = this.position.x! + this.width
+        }
+
+        if (this.side === 'right') {
+            this.pointer.x = this.position.x! - this.pointer.width
         }
     }
 
     drawPointer() {
-        if (this.context) {
-            this.context.fillStyle = "brown";
-        }
+        this.context!.fillStyle = "brown";
+
         this.context!.fillRect(
             this.pointer.x!,
             this.pointer.y!,
@@ -95,24 +95,20 @@ export class Fighter {
 
     drawKickMasks() {
         //todo: should depend on where fighter is pointed to left or right
-        if (this.position.x !== null && this.position.y !== null) {
-            this.handKickMask.x = this.position.x + this.width
-            this.handKickMask.y = this.position.y + this.height / 4
+        this.handKickMask.x = this.position.x! + this.width
+        this.handKickMask.y = this.position.y! + this.height / 4
 
-            this.legKickMask.x = this.position.x + this.width
-            this.legKickMask.y = this.position.y + this.height / 2
-        }
+        this.legKickMask.x = this.position.x! + this.width
+        this.legKickMask.y = this.position.y! + this.height / 2
     }
 
     useGravity() {
-        if (this.position.y !== null && this.canvas) {
-            if (this.position.y < (this.canvas.height - 500)) {
-                this.position.y += this.gravity;
-            }
+        if (this.position.y! < (this.canvas!.height - 500)) {
+            this.position.y! += this.gravity;
         }
 
-        if (this.verticalAcceleration > 0 && this.position.y && this.canvas) {
-            this.position.y -= this.verticalAcceleration;
+        if (this.verticalAcceleration > 0) {
+            this.position.y! -= this.verticalAcceleration;
             this.verticalAcceleration--;
         }
 
@@ -126,20 +122,15 @@ export class Fighter {
     }
 
     goLeft() {
-        if (this.position.x) {
-            this.position.x -= this.speed;
-        }
+        this.position.x! -= this.speed;
     }
 
     goRight() {
-        if (this.position.x !== null) {
-            this.position.x += this.speed;
-        }
+        this.position.x! += this.speed;
     }
 
     isInTheAir() {
-        return (this.canvas && this.position.y !== null) &&
-            !(this.position.y >= (this.canvas.height - 500))
+        return !(this.position.y! >= (this.canvas!.height - 500))
     }
 
     draw() {
@@ -149,9 +140,8 @@ export class Fighter {
         this.drawPointer();
 
         // draw fighter
-        if (this.context) {
-            this.context.fillStyle = "black";
-        }
+        this.context!.fillStyle = "black";
+
         this.context!.fillRect(
             this.position.x!,
             this.position.y!,
@@ -162,9 +152,7 @@ export class Fighter {
         this.drawKickMasks();
 
         // draw hand kick
-        if (this.context) {
-            this.context.fillStyle = "red";
-        }
+        this.context!.fillStyle = "red";
 
         if (this.handKickMask.show) {
             this.context?.fillRect(
@@ -176,9 +164,7 @@ export class Fighter {
         }
 
         // draw leg kick
-        if (this.context) {
-            this.context.fillStyle = "green";
-        }
+        this.context!.fillStyle = "green";
 
         if (this.legKickMask.show) {
             this.context?.fillRect(

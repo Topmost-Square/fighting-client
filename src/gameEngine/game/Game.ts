@@ -13,14 +13,12 @@ export class Game {
     }
 
     defineOrientation() {
-        if (this.opponent1.position.x !== null && this.opponent2.position.x !== null) {
-            if (this.opponent1.position.x < this.opponent2.position.x) {
-                this.opponent1.side = 'left';
-                this.opponent2.side = 'right';
-            } else {
-                this.opponent1.side = 'right';
-                this.opponent2.side = 'left';
-            }
+        if (this.opponent1.position.x! < this.opponent2.position.x!) {
+            this.opponent1.side = 'left';
+            this.opponent2.side = 'right';
+        } else {
+            this.opponent1.side = 'right';
+            this.opponent2.side = 'left';
         }
     }
 }

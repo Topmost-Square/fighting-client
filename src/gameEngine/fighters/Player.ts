@@ -22,50 +22,44 @@ export class Player extends Fighter {
     }
 
     downControlAction() {
-        if (this.controls?.options.down && this.position.y) {
+        if (this.controls?.options.down) {
             this.height = 200; // temporarily simulate fighter is down (sitting)
 
-            if (
-                this.canvas &&
-                !this.verticalAcceleration &&
-                this.position.y >= this.canvas?.height - 500 - this.height
-            ) {
-                this.position.y = this.canvas?.height - 500 + 200;
+            if (!this.verticalAcceleration && this.position.y! >= this.canvas?.height! - 500 - this.height) {
+                this.position.y = this.canvas?.height! - 500 + 200;
             }
         }
 
         if (!this.controls?.options.down && this.position.y) {
             this.height = 400; // temporarily simulate fighter is up
 
-            if (
-                this.canvas &&
-                !this.verticalAcceleration &&
-                this.position.y >= this.canvas?.height - 500
-            ) {
-                this.position.y = this.canvas?.height - 500;
+            if (!this.verticalAcceleration && this.position.y >= this.canvas?.height! - 500) {
+                this.position.y = this.canvas?.height! - 500;
             }
         }
     }
 
     leftControlAction() {
-        if (this.position.x !== null) {
-            if (this.controls?.options.left) {
-                if (this.position.x > 0) {
-                    this.goLeft();
-                } else if (this.position.x <= 0) {
-                    this.position.x = 0;
-                }
+        if (this.controls?.options.left) {
+            if (this.position.x! > 0) {
+                this.goLeft();
+            }
+
+            if (this.position.x! <= 0) {
+                this.position.x = 0;
             }
         }
     }
 
     rightControlAction() {
         if (this.position.x !== null) {
-            if (this.controls?.options.right && this.canvas) {
-                if (this.position.x + this.width < this.canvas?.width) {
+            if (this.controls?.options.right) {
+                if (this.position.x + this.width < this.canvas?.width!) {
                     this.goRight();
-                } else if (this.position.x + this.width >= this.canvas?.width) {
-                    this.position.x = this.canvas?.width - this.width;
+                }
+
+                if (this.position.x + this.width >= this.canvas?.width!) {
+                    this.position.x = this.canvas?.width! - this.width;
                 }
             }
         }

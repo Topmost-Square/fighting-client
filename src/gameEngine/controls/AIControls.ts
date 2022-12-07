@@ -79,63 +79,55 @@ export class AIControls extends BaseControls {
         let coordinateToMoveHandKick = null;
         let coordinateToMoveLegKick = null;
 
-        if (
-            this.fighter &&
-            this.fighter.enemy &&
-            this.fighter?.position.x !== null &&
-            this.fighter.enemy?.position.x !== null
-        ) {
-            if (this.fighter?.side === 'left') {
-                coordinateToMoveHandKick =
-                    this.fighter.enemy.position.x -
-                    (this.fighter.width +
-                    this.fighter.handKickMask.width);
+        if (this.fighter?.side === 'left') {
+            coordinateToMoveHandKick =
+                this.fighter!.enemy!.position.x! -
+                (this.fighter.width +
+                this.fighter.handKickMask.width);
 
-                coordinateToMoveLegKick =
-                    this.fighter.enemy.position.x -
-                    (this.fighter.width +
-                    this.fighter.legKickMask.width);
+            coordinateToMoveLegKick =
+                this.fighter!.enemy!.position.x! -
+                (this.fighter.width +
+                this.fighter.legKickMask.width);
 
-            } else if (this.fighter?.side === 'right') {
-                coordinateToMoveHandKick =
-                    this.fighter.enemy.position.x + this.fighter.enemy.width -
-                    (this.fighter.position.x -
-                    this.fighter.handKickMask.width);
+        } else if (this.fighter?.side === 'right') {
+            coordinateToMoveHandKick =
+                this.fighter!.enemy!.position.x! + this.fighter.enemy!.width -
+                (this.fighter.position.x! -
+                this.fighter.handKickMask.width);
 
-                coordinateToMoveLegKick =
-                    this.fighter.enemy.position.x + this.fighter.enemy.width -
-                    (this.fighter.position.x -
-                    this.fighter.legKickMask.width);
-            }
-
-            // todo: randomly decide if move to hand or leg kick
-            return coordinateToMoveHandKick;
+            coordinateToMoveLegKick =
+                this.fighter.enemy!.position.x! + this.fighter.enemy!.width -
+                (this.fighter.position.x! -
+                this.fighter.legKickMask.width);
         }
+
+        // todo: randomly decide if move to hand or leg kick
+        return coordinateToMoveHandKick ?? null;
+    }
+
+    rightMoveCheck(moveTo: number) {
+        return moveTo! < 0 && this.fighter?.side === 'right'
+    }
+
+    leftMoveCheck(moveTo: number) {
+        return moveTo! > 0 && this.fighter?.side === 'left' &&
+            (
+                this.fighter?.enemy?.position?.x! >
+                this.fighter?.handKickMask?.x! +
+                this.fighter.handKickMask.width
+            )
     }
 
     calculateAndMove() {
         let moveTo = this.whereToMove();
 
-        if (
-            this.fighter !== null &&
-            this.fighter.enemy !== null &&
-            this.fighter.enemy.position.x !== null &&
-            this.fighter.handKickMask.x !== null &&
-            this.fighter.position.x !== null &&
-            !this.fighter.enemy.isInTheAir()
-        ) {
-            if (moveTo! < 0 && this.fighter?.side === 'right') {
+        if (moveTo && !this.fighter?.enemy?.isInTheAir()) {
+            if (this.rightMoveCheck(moveTo))
                 this.fighter?.goLeft();
-            } else if (
-                moveTo! > 0 &&
-                this.fighter?.side === 'left' &&
-                (
-                    this.fighter.enemy.position.x >
-                    this.fighter.handKickMask.x + this.fighter.handKickMask.width
-                )
-            ) {
+
+            if (this.leftMoveCheck(moveTo))
                 this.fighter?.goRight();
-            }
         }
     }
 

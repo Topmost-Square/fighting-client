@@ -14,43 +14,37 @@ export const Practice = () => {
         let aiFighter: AIFighter|null = null;
         let game: PracticeGame|null = null;
 
-        if (canvas && c) {
-            player =  new Player(
-                100,
-                canvas.height - 500,
-                canvas,
-                c
-            );
+        player =  new Player(
+            100,
+            canvas!.height - 500,
+            canvas,
+            c!
+        );
 
-            aiFighter = new AIFighter(
-                canvas.width - 200,
-                canvas.height - 500,
-                canvas,
-                c
-            );
+        aiFighter = new AIFighter(
+            canvas!.width - 200,
+            canvas!.height - 500,
+            canvas,
+            c!
+        );
 
-            game = new PracticeGame(player, aiFighter);
-        }
+        game = new PracticeGame(player, aiFighter);
 
         const animate = () => {
             requestAnimationFrame(animate);
-            if (c && canvas && player && aiFighter && game) {
-                c.clearRect(0, 0, canvas.width, canvas.height);
-                player.update();
-                player.draw();
+            c!.clearRect(0, 0, canvas!.width, canvas!.height);
+            player!.update();
+            player!.draw();
 
-                aiFighter.update();
-                aiFighter.draw();
+            aiFighter!.update();
+            aiFighter!.draw();
 
-                game.update();
-            }
+            game!.update();
         }
 
-        if (canvas && c && player) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            animate();
-        }
+        canvas!.width = window.innerWidth;
+        canvas!.height = window.innerHeight;
+        animate();
     }, []);
 
     return (
