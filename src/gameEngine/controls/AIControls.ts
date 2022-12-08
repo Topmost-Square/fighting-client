@@ -17,6 +17,8 @@ const decisions: any = {
 export class AIControls extends BaseControls {
     damageReceived = false;
 
+    moveTo: number|null = null;
+
     handKick() {
 
     }
@@ -76,17 +78,23 @@ export class AIControls extends BaseControls {
     }
 
     shouldMoveFromLeft() {
-        return this.fighter!.enemy!.position.x! >
-            this.fighter!.position.x! + this.fighter!.width + this.fighter!.handKickMask.width
+        return this.fighter?.side === 'left' &&
+            this.fighter!.enemy!.position.x! >
+                this.fighter!.position.x! +
+                this.fighter!.width +
+                this.fighter!.handKickMask.width
     }
 
     leftMoveCoordinate() {
-        return this.fighter!.enemy!.position.x! - (this.fighter!.width + this.fighter!.handKickMask.width);
+        return this.fighter!.enemy!.position.x! -
+            (this.fighter!.width + this.fighter!.handKickMask.width);
     }
 
     shouldMoveFromRight() {
-        return this.fighter!.enemy!.position.x! + this.fighter!.enemy!.width <
-            (this.fighter!.position.x! - this.fighter!.handKickMask.width)
+        return this.fighter?.side === 'right' &&
+            this.fighter!.enemy!.position.x! +
+            this.fighter!.enemy!.width <
+                (this.fighter!.position.x! - this.fighter!.handKickMask.width)
     }
 
     rightMoveCoordinate() {
@@ -95,10 +103,10 @@ export class AIControls extends BaseControls {
     }
 
     whereToMoveHandKick() {
-        if (this.fighter?.side === 'left' && this.shouldMoveFromLeft())
+        if (this.shouldMoveFromLeft())
             return this.leftMoveCoordinate()
 
-        if (this.fighter?.side === 'right' && this.shouldMoveFromRight()) {
+        if (this.shouldMoveFromRight()) {
             return this.rightMoveCoordinate();
         }
 
@@ -122,12 +130,12 @@ export class AIControls extends BaseControls {
         return null;
     }
 
-    rightMoveCheck(moveTo: number) {
-        return moveTo! < 0 && this.fighter?.side === 'right'
+    rightMoveCheck() {
+        return this.moveTo! < 0 && this.fighter?.side === 'right'
     }
 
-    leftMoveCheck(moveTo: number) {
-        return moveTo! > 0 && this.fighter?.side === 'left' &&
+    leftMoveCheck() {
+        return this.moveTo! > 0 && this.fighter?.side === 'left' &&
             (
                 this.fighter?.enemy?.position?.x! >
                 this.fighter?.handKickMask?.x! +
@@ -135,20 +143,54 @@ export class AIControls extends BaseControls {
             )
     }
 
-    calculateAndMove() {
-        let moveTo = this.whereToMoveHandKick();
-        if (moveTo && !this.fighter?.enemy?.isInTheAir()) {
-            if (this.rightMoveCheck(moveTo))
-                this.fighter?.goLeft();
+    isEnemyMoving() {
+        return this.fighter?.enemy?.controls?.options.left ||
+            this.fighter?.enemy?.controls?.options.right;
+    }
 
-            if (this.leftMoveCheck(moveTo))
-                this.fighter?.goRight();
+    calculateAndMove() {
+        if (!this.isEnemyMoving()) {
+            this.moveTo = this.whereToMoveHandKick();
+
+            if (this.moveTo && !this.fighter?.enemy?.isInTheAir()) {
+                if (this.rightMoveCheck())
+                    this.fighter?.goLeft();
+
+                if (this.leftMoveCheck())
+                    this.fighter?.goRight();
+            }
         }
     }
 
+    isCloseForLegKick() {
+        if (this.fighter?.side === 'left' &&
+            this.fighter!.enemy!.position.x! <=
+                this.fighter.position.x! + this.fighter.width +
+                    this.fighter.legKickMask.width)
+            return true;
+
+        if (this.fighter?.side === 'right' &&
+            this.fighter.enemy!.position.x! + this.fighter.enemy!.width >=
+                this.fighter.position.x! - this.fighter.legKickMask.width)
+            return true;
+    }
+
     behave() {
+        // if enemy is in the air
+        // randomly jump and try to attack
+
+
         this.calculateAndMove();
         // make a kick -> leg or arm
+
+        if (this.isCloseForLegKick()) {
+            //kick leg kick
+            this.fighter?.showLegKick();
+        } else {
+            this.fighter?.hideLegKick();
+        }
+
+
 
         // check did get damage? -> inside there's a decisions
 

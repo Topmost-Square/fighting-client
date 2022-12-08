@@ -1,3 +1,6 @@
+import {PlayerControls} from "../controls/PlayerControls";
+import {BaseControls} from "../controls/BaseControls";
+
 type Position = { x: number|null, y: number|null };
 type KickMask = {
     x: number|null,
@@ -8,6 +11,8 @@ type KickMask = {
 };
 
 export class Fighter {
+    controls: BaseControls|null = null;
+
     position: Position  = {
         x: null,
         y: null
@@ -131,6 +136,14 @@ export class Fighter {
 
     isInTheAir() {
         return !(this.position.y! >= (this.canvas!.height - 500))
+    }
+
+    showLegKick() {
+        this.legKickMask.show = true;
+    }
+
+    hideLegKick() {
+        this.legKickMask.show = false;
     }
 
     draw() {
