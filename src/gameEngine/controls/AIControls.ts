@@ -1,23 +1,18 @@
 import {BaseControls} from "./BaseControls";
 
-const decisions: any = {
-    damageReceived: {
-        phase1: [
-            ['goLeft', 'goRight'], // add random distance value
-            ['jump', 'jumpLeft', 'jumpRight'], // add random distance value
-            ['sit'],
-        ],
-        phase2: [
-            'handKick',
-            'legKick'
-        ]
-    }
-};
-
 export class AIControls extends BaseControls {
     damageReceived = false;
 
     moveTo: number|null = null;
+
+    canAttack = false;
+
+    kickSeries = 1;
+
+
+
+
+
 
     handKick() {
 
@@ -52,29 +47,8 @@ export class AIControls extends BaseControls {
     }
 
     didGetDamage() {
-        this.makeDecision('damageReceived');
+        // make decision
         this.damageReceived = false;
-    }
-
-
-    makeDecision(scenario: string) {
-        if (decisions.hasOwnProperty(scenario)) {
-            const scenarioValues: Array<any> = Object.values(decisions[scenario]);
-
-            let actions: Array<string> = [];
-
-            for (let i in scenarioValues) {
-                const numberOfWays = scenarioValues[i].length;
-                const randomlySelectedWay = Math.floor(Math.random() * numberOfWays);
-
-                if (Array.isArray(randomlySelectedWay)) {
-                    const randomlySelectedValueIndex = Math.floor(Math.random() * randomlySelectedWay.length);
-                    actions = [...actions, randomlySelectedWay[randomlySelectedValueIndex]];
-                } else {
-                    actions = [...actions, scenarioValues[randomlySelectedWay]]
-                }
-            }
-        }
     }
 
     shouldMoveFromLeft() {
@@ -162,7 +136,15 @@ export class AIControls extends BaseControls {
         }
     }
 
+    isVerticallyKickable() {
+        return this.fighter!.legKickMask.y! >= this.fighter!.enemy!.position.y! &&
+            this.fighter!.legKickMask.y! <= this.fighter!.enemy!.position.y! + this.fighter!.height;
+    }
+
     isCloseForLegKick() {
+        if (!this.isVerticallyKickable())
+            return false;
+
         if (this.fighter?.side === 'left' &&
             this.fighter!.enemy!.position.x! <=
                 this.fighter.position.x! + this.fighter.width +
@@ -175,22 +157,45 @@ export class AIControls extends BaseControls {
             return true;
     }
 
+    isCloseForHandKick() {
+        if (!this.isVerticallyKickable())
+            return false;
+
+        if (this.fighter?.side === 'left' &&
+            this.fighter!.enemy!.position.x! <=
+            this.fighter.position.x! + this.fighter.width +
+            this.fighter.handKickMask.width)
+            return true;
+
+        if (this.fighter?.side === 'right' &&
+            this.fighter.enemy!.position.x! + this.fighter.enemy!.width >=
+            this.fighter.position.x! - this.fighter.handKickMask.width)
+            return true;
+    }
+
     behave() {
         // if enemy is in the air
         // randomly jump and try to attack
 
+        if (this.canAttack) {
+            this.calculateAndMove();
+            // make a kick -> leg or arm
 
-        this.calculateAndMove();
-        // make a kick -> leg or arm
+            if (this.isCloseForLegKick()) {
+                //kick leg kick
+                this.fighter?.showLegKick();
+            } else {
+                this.fighter?.hideLegKick();
+            }
 
-        if (this.isCloseForLegKick()) {
-            //kick leg kick
-            this.fighter?.showLegKick();
-        } else {
-            this.fighter?.hideLegKick();
+            if (this.isCloseForHandKick()) {
+                this.fighter?.hideLegKick();
+                this.fighter?.showHandKick();
+            } else {
+                this.fighter?.hideLegKick();
+                this.fighter?.hideHandKick();
+            }
         }
-
-
 
         // check did get damage? -> inside there's a decisions
 

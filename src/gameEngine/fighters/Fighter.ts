@@ -152,6 +152,14 @@ export class Fighter {
         this.legKickMask.show = false;
     }
 
+    showHandKick() {
+        this.handKickMask.show = true;
+    }
+
+    hideHandKick() {
+        this.handKickMask.show = false;
+    }
+
     draw() {
         this.useGravity();
 
