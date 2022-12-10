@@ -99,12 +99,18 @@ export class Fighter {
     }
 
     drawKickMasks() {
-        //todo: should depend on where fighter is pointed to left or right
-        this.handKickMask.x = this.position.x! + this.width
-        this.handKickMask.y = this.position.y! + this.height / 4
+        this.handKickMask.y = this.position.y! + this.height / 4;
+        this.legKickMask.y = this.position.y! + this.height / 2;
 
-        this.legKickMask.x = this.position.x! + this.width
-        this.legKickMask.y = this.position.y! + this.height / 2
+        if (this.side === 'left') {
+            this.handKickMask.x = this.position.x! + this.width;
+            this.legKickMask.x = this.position.x! + this.width;
+        }
+
+        if (this.side === 'right') {
+            this.handKickMask.x = this.position.x! - this.handKickMask.width;
+            this.legKickMask.x = this.position.x! - this.legKickMask.width;
+        }
     }
 
     useGravity() {
