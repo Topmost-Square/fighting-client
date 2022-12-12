@@ -9,10 +9,11 @@ export class AIControls extends BaseControls {
 
     kickSeries = 1;
 
+    counter = 0;
 
+    counterTop = 0;
 
-
-
+    seriesEnergy = 1;
 
     handKick() {
 
@@ -173,11 +174,31 @@ export class AIControls extends BaseControls {
             return true;
     }
 
-    behave() {
-        // if enemy is in the air
-        // randomly jump and try to attack
+    count() {
+        this.counter++;
+        // 60 frames -> 1 second
+        if (this.counter === 60) {
+            this.counter = 0
+            this.counterTop++;
+        }
 
-        if (this.canAttack) {
+        // 60 seconds -> 1 minute
+        if (this.counterTop === 60) {
+            this.counterTop = 0;
+        }
+    }
+
+    decisions = ['wait', 'attack'];
+    timer = [1, 2, 3];
+
+    think() {
+
+    }
+
+
+
+    behave() {
+        if (this.fightStarted) {
             this.calculateAndMove();
             // make a kick -> leg or arm
 
@@ -196,10 +217,5 @@ export class AIControls extends BaseControls {
                 this.fighter?.hideHandKick();
             }
         }
-
-        // check did get damage? -> inside there's a decisions
-
-        // check decisions array
-        // if array is not empty -> do what
     }
 }

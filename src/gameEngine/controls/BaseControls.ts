@@ -16,7 +16,22 @@ export class BaseControls {
         },
     };
 
+    fightStarted = false;
+
     fighter: Fighter|null = null;
+
+    constructor() {
+        // wait for 3 seconds to prepare for fight
+        if (!this.fightStarted) {
+            this.preFightDelay();
+        }
+    }
+
+    preFightDelay() {
+        setTimeout(() => {
+            this.fightStarted = true;
+        }, 3000);
+    }
 
     setFighter(fighter: Fighter) {
         this.fighter = fighter;

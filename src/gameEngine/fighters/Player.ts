@@ -89,14 +89,16 @@ export class Player extends Fighter {
     }
 
     update() {
-        this.upControlAction();
-        this.downControlAction();
+        if (this.controls?.fightStarted) {
+            this.upControlAction();
+            this.downControlAction();
 
-        //todo: for these add check so that player can't move if there's an enemy
-        this.leftControlAction();
-        this.rightControlAction();
+            //todo: for these add check so that player can't move if there's an enemy
+            this.leftControlAction();
+            this.rightControlAction();
 
-        this.handKickControlAction();
-        this.legKickControlAction();
+            this.handKickControlAction();
+            this.legKickControlAction();
+        }
     }
 }
