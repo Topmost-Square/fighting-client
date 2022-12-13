@@ -290,6 +290,10 @@ export class AIControls extends BaseControls {
         }
     }
 
+    distancePerfectToMove() {
+        return Math.abs(this.moveTo! - this.fighter?.position.x!) >= this.fighter?.speed!
+    }
+
     behave() {
         if (this.fightStarted) {
 
@@ -300,9 +304,11 @@ export class AIControls extends BaseControls {
             }
 
             if (this.isWaiting && !this.isAttacking && this.moveTo) {
-                if (this.moveTo > this.fighter?.position.x!) {
+                if (this.moveTo > this.fighter?.position.x! && this.distancePerfectToMove()) {
                     this.fighter?.goRight();
-                } else {
+                }
+
+                if (this.moveTo < this.fighter?.position.x! && this.distancePerfectToMove()) {
                     this.fighter?.goLeft();
                 }
             }
