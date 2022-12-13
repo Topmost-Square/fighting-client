@@ -10,6 +10,7 @@ export class AIControls extends BaseControls {
 
     attackingTimeoutId: any = null;
     waitingTimeoutId: any = null;
+    moveToTimeoutId: any = null;
 
     decisions = ['wait', 'attack'];
     waitTimer = [1, 2];
@@ -58,7 +59,15 @@ export class AIControls extends BaseControls {
 
     moveFromEnemy() {
         if (this.fighter?.side === 'left') {
-            if (this.fighter.position.x! - 50 > 0) {
+            if (this.fighter.position.x! - 250 > 0) {
+                return this.fighter.position.x! - 250
+            } else if (this.fighter.position.x! - 200 > 0) {
+                return this.fighter.position.x! - 200
+            } else if (this.fighter.position.x! - 150 > 0) {
+                return this.fighter.position.x! - 150
+            } else if (this.fighter.position.x! - 100 > 0) {
+                return this.fighter.position.x! - 100
+            } else if (this.fighter.position.x! - 50 > 0) {
                 return this.fighter.position.x! - 50
             } else {
                 //implement jump
@@ -69,7 +78,15 @@ export class AIControls extends BaseControls {
         }
 
         if (this.fighter?.side === 'right') {
-            if (this.fighter.position.x! + this.fighter.width + 50 <= this.fighter.canvas!.width) {
+            if (this.fighter.position.x! + this.fighter.width + 250 <= this.fighter.canvas!.width) {
+                return this.fighter.position.x! + 250
+            } else if (this.fighter.position.x! + this.fighter.width + 200 <= this.fighter.canvas!.width) {
+                return this.fighter.position.x! + 200
+            } else if (this.fighter.position.x! + this.fighter.width + 150 <= this.fighter.canvas!.width) {
+                return this.fighter.position.x! + 150
+            } else if (this.fighter.position.x! + this.fighter.width + 100 <= this.fighter.canvas!.width) {
+                return this.fighter.position.x! + 100
+            } else if (this.fighter.position.x! + this.fighter.width + 50 <= this.fighter.canvas!.width) {
                 return this.fighter.position.x! + 50
             } else {
                 //implement jump
@@ -89,6 +106,7 @@ export class AIControls extends BaseControls {
 
             this.attackingTimeoutId = null;
             this.waitingTimeoutId = null;
+            this.moveToTimeoutId = null;
 
             this.isWaiting = false;
             this.isAttacking = false;
@@ -234,9 +252,22 @@ export class AIControls extends BaseControls {
     }
 
     finishAttack(time: number) {
+        this.isAttacking = true;
         this.attackingTimeoutId = setTimeout(() => {
             this.isAttacking = false;
             this.moveTo = this.moveFromEnemy();
+            this.finishWaiting(2);
+
+            this.moveToTimeoutId = setTimeout(() => {
+                this.moveTo = null;
+            }, 2000);
+        }, time * 1000);
+    }
+
+    finishWaiting(time: number) {
+        this.isWaiting = true;
+        this.waitingTimeoutId = setTimeout(() => {
+            this.isWaiting = false;
         }, time * 1000);
     }
 
@@ -248,7 +279,6 @@ export class AIControls extends BaseControls {
             const randomTimerIndex = Math.floor(Math.random() * 3);
             const time = this.attackTimer[randomTimerIndex];
 
-            this.isAttacking = true;
             this.finishAttack(time);
         }
 
@@ -256,10 +286,7 @@ export class AIControls extends BaseControls {
             const randomTimerIndex = Math.floor(Math.random() * 2);
             const time = this.waitTimer[randomTimerIndex];
 
-            this.isWaiting = true;
-            this.waitingTimeoutId = setTimeout(() => {
-                this.isWaiting = false;
-            }, time * 1000);
+            this.finishWaiting(time);
         }
     }
 
@@ -270,6 +297,14 @@ export class AIControls extends BaseControls {
 
             if (!this.isWaiting && !this.isAttacking) {
                 this.makeChoice();
+            }
+
+            if (this.isWaiting && !this.isAttacking && this.moveTo) {
+                if (this.moveTo > this.fighter?.position.x!) {
+                    this.fighter?.goRight();
+                } else {
+                    this.fighter?.goLeft();
+                }
             }
 
             if (this.isAttacking) {
@@ -291,7 +326,6 @@ export class AIControls extends BaseControls {
                     this.fighter?.hideHandKick();
                 }
             }
-
         }
     }
 }
