@@ -8,6 +8,8 @@ export class AIControls extends BaseControls {
     isAttacking = false;
     isWaiting   = false;
 
+    kickSelected: string|null = null;
+
     attackingTimeoutId: any = null;
     waitingTimeoutId: any = null;
     moveToTimeoutId: any = null;
@@ -186,9 +188,27 @@ export class AIControls extends BaseControls {
             this.fighter?.enemy?.controls?.options.right;
     }
 
+    kicks = ['hand', 'leg'];
+
     calculateAndMove() {
-        if (!this.isEnemyMoving()) {
-            this.moveTo = this.whereToMoveHandKick();
+        // todo: make something with enemy movement
+        // if (!this.isEnemyMoving()) {
+
+        if (!this.kickSelected) {
+            const randomKickIndex = Math.floor(Math.random() * 2);
+            this.kickSelected = this.kicks[randomKickIndex];
+        } else {
+            if (this.kickSelected === 'hand') {
+                this.moveTo = this.whereToMoveHandKick();
+
+                this.checkAndHandKick();
+            }
+
+            if (this.kickSelected === 'leg') {
+                this.moveTo = this.whereToMoveLegKick();
+
+                this.checkAndLegKick();
+            }
 
             if (this.moveTo && !this.fighter?.enemy?.isInTheAir()) {
                 if (this.rightMoveCheck())
@@ -294,43 +314,51 @@ export class AIControls extends BaseControls {
         return Math.abs(this.moveTo! - this.fighter?.position.x!) >= this.fighter?.speed!
     }
 
+    shouldMoveFromEnemy() {
+        return this.isWaiting && !this.isAttacking && this.moveTo && this.distancePerfectToMove();
+    }
+
+    checkAndHandKick() {
+        if (this.isCloseForHandKick()) {
+            this.fighter?.showHandKick();
+
+            setTimeout(() => {
+                this.kickSelected = null;
+                this.fighter?.hideHandKick();
+            }, 1000);
+        }
+    }
+
+    checkAndLegKick() {
+        if (this.isCloseForLegKick()) {
+            this.fighter?.showLegKick();
+
+            setTimeout(() => {
+                this.kickSelected = null;
+                this.fighter?.hideLegKick();
+            }, 1000);
+        }
+    }
+
     behave() {
         if (this.fightStarted) {
-
-            this.didGetDamage()
+            this.didGetDamage();
 
             if (!this.isWaiting && !this.isAttacking) {
                 this.makeChoice();
             }
 
-            if (this.isWaiting && !this.isAttacking && this.moveTo) {
-                if (this.moveTo > this.fighter?.position.x! && this.distancePerfectToMove()) {
+            // move out of enemy after attack
+            if (this.shouldMoveFromEnemy()) {
+                if (this.moveTo! > this.fighter?.position.x!)
                     this.fighter?.goRight();
-                }
 
-                if (this.moveTo < this.fighter?.position.x! && this.distancePerfectToMove()) {
+                if (this.moveTo! < this.fighter?.position.x!)
                     this.fighter?.goLeft();
-                }
             }
 
             if (this.isAttacking) {
                 this.calculateAndMove();
-                // make a kick -> leg or arm
-
-                if (this.isCloseForLegKick()) {
-                    //kick leg kick
-                    this.fighter?.showLegKick();
-                } else {
-                    this.fighter?.hideLegKick();
-                }
-
-                if (this.isCloseForHandKick()) {
-                    this.fighter?.hideLegKick();
-                    this.fighter?.showHandKick();
-                } else {
-                    this.fighter?.hideLegKick();
-                    this.fighter?.hideHandKick();
-                }
             }
         }
     }
