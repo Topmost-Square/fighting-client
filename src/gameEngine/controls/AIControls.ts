@@ -11,6 +11,10 @@ export class AIControls extends BaseControls {
     attackingTimeoutId: any = null;
     waitingTimeoutId: any = null;
 
+    decisions = ['wait', 'attack'];
+    waitTimer = [1, 2];
+    attackTimer = [3, 4, 5];
+
     kickSeries = 1;
 
     counter = 0;
@@ -229,24 +233,29 @@ export class AIControls extends BaseControls {
         }
     }
 
-    decisions = ['wait', 'attack'];
-    timer = [1, 2, 3];
+    finishAttack(time: number) {
+        this.attackingTimeoutId = setTimeout(() => {
+            this.isAttacking = false;
+            this.moveTo = this.moveFromEnemy();
+        }, time * 1000);
+    }
 
     makeChoice() {
         const randomDecisionIndex = Math.floor(Math.random() + .5);
         const action = this.decisions[randomDecisionIndex];
 
-        const randomTimerIndex = Math.floor(Math.random() * 3);
-        const time = this.timer[randomTimerIndex];
-
         if (action === 'attack') {
+            const randomTimerIndex = Math.floor(Math.random() * 3);
+            const time = this.attackTimer[randomTimerIndex];
+
             this.isAttacking = true;
-            this.attackingTimeoutId = setTimeout(() => {
-                this.isAttacking = false;
-            }, time * 1000);
+            this.finishAttack(time);
         }
 
         if (action === 'wait') {
+            const randomTimerIndex = Math.floor(Math.random() * 2);
+            const time = this.waitTimer[randomTimerIndex];
+
             this.isWaiting = true;
             this.waitingTimeoutId = setTimeout(() => {
                 this.isWaiting = false;
