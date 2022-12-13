@@ -5,7 +5,11 @@ export class AIControls extends BaseControls {
 
     moveTo: number|null = null;
 
-    canAttack = false;
+    isAttacking = false;
+    isWaiting   = false;
+
+    attackingTimeoutId: any = null;
+    waitingTimeoutId: any = null;
 
     kickSeries = 1;
 
@@ -43,12 +47,49 @@ export class AIControls extends BaseControls {
 
     }
 
-    receiveDamage() {
+    receiveDamage(damage: number) {
         this.damageReceived = true;
+        //todo: lower health
+    }
+
+    moveFromEnemy() {
+        if (this.fighter?.side === 'left') {
+            if (this.fighter.position.x! - 50 > 0) {
+                return this.fighter.position.x! - 50
+            } else {
+                //implement jump
+                this.jump();
+                // or maybe 100 -> jump forward
+                return 0;
+            }
+        }
+
+        if (this.fighter?.side === 'right') {
+            if (this.fighter.position.x! + this.fighter.width + 50 <= this.fighter.canvas!.width) {
+                return this.fighter.position.x! + 50
+            } else {
+                //implement jump
+                this.jump();
+                // or maybe -100 -> jump forward
+                return 0;
+            }
+        }
+
+        return 0;
     }
 
     didGetDamage() {
-        // make decision
+        if (this.damageReceived) {
+            // make decision to move out of enemy
+            this.moveTo = this.moveFromEnemy();
+
+            this.attackingTimeoutId = null;
+            this.waitingTimeoutId = null;
+
+            this.isWaiting = false;
+            this.isAttacking = false;
+        }
+
         this.damageReceived = false;
     }
 
@@ -191,31 +232,57 @@ export class AIControls extends BaseControls {
     decisions = ['wait', 'attack'];
     timer = [1, 2, 3];
 
-    think() {
+    makeChoice() {
+        const randomDecisionIndex = Math.floor(Math.random() + .5);
+        const action = this.decisions[randomDecisionIndex];
 
+        const randomTimerIndex = Math.floor(Math.random() * 3);
+        const time = this.timer[randomTimerIndex];
+
+        if (action === 'attack') {
+            this.isAttacking = true;
+            this.attackingTimeoutId = setTimeout(() => {
+                this.isAttacking = false;
+            }, time * 1000);
+        }
+
+        if (action === 'wait') {
+            this.isWaiting = true;
+            this.waitingTimeoutId = setTimeout(() => {
+                this.isWaiting = false;
+            }, time * 1000);
+        }
     }
-
-
 
     behave() {
         if (this.fightStarted) {
-            this.calculateAndMove();
-            // make a kick -> leg or arm
 
-            if (this.isCloseForLegKick()) {
-                //kick leg kick
-                this.fighter?.showLegKick();
-            } else {
-                this.fighter?.hideLegKick();
+            this.didGetDamage()
+
+            if (!this.isWaiting && !this.isAttacking) {
+                this.makeChoice();
             }
 
-            if (this.isCloseForHandKick()) {
-                this.fighter?.hideLegKick();
-                this.fighter?.showHandKick();
-            } else {
-                this.fighter?.hideLegKick();
-                this.fighter?.hideHandKick();
+            if (this.isAttacking) {
+                this.calculateAndMove();
+                // make a kick -> leg or arm
+
+                if (this.isCloseForLegKick()) {
+                    //kick leg kick
+                    this.fighter?.showLegKick();
+                } else {
+                    this.fighter?.hideLegKick();
+                }
+
+                if (this.isCloseForHandKick()) {
+                    this.fighter?.hideLegKick();
+                    this.fighter?.showHandKick();
+                } else {
+                    this.fighter?.hideLegKick();
+                    this.fighter?.hideHandKick();
+                }
             }
+
         }
     }
 }
