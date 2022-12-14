@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Player} from "../gameEngine/fighters/Player";
 import {AIFighter} from "../gameEngine/fighters/AIFighter";
 import {PracticeGame} from "../gameEngine/game/PracticeGame";
@@ -13,6 +13,7 @@ export const Practice = () => {
         let player: Player|null = null;
         let aiFighter: AIFighter|null = null;
         let game: PracticeGame|null = null;
+        let gameState: boolean = true;
 
         player =  new Player(
             100,
@@ -30,14 +31,34 @@ export const Practice = () => {
 
         game = new PracticeGame(player, aiFighter);
 
+
+
         const animate = () => {
             requestAnimationFrame(animate);
             c!.clearRect(0, 0, canvas!.width, canvas!.height);
-            player!.update();
+            if (player?.health! <= 0 || aiFighter?.health! <= 0) {
+                // game over
+                gameState = false;
+            }
+
+            c!.font = '30px Arial';
+            c!.fillStyle = 'white';
+
+            if (gameState) {
+                c!.fillText(`AI Fighter ${aiFighter!.health}`, canvas?.width! - 300, 100)
+                c!.fillText(`Player ${player!.health}`, 100, 100)
+            } else {
+                const winner = player?.health! > aiFighter?.health! ? 'Player' : 'AI Fighter';
+                c!.fillText(`${winner} wins`, 400, 100)
+            }
+
+            aiFighter!.draw();
             player!.draw();
 
-            aiFighter!.update();
-            aiFighter!.draw();
+            if (gameState) {
+                player!.update();
+                aiFighter!.update();
+            }
 
             game!.update();
         }
