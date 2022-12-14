@@ -9,6 +9,9 @@ export class AIControls extends BaseControls {
     isWaiting   = false;
 
     kickSelected: string|null = null;
+    kickPerformed: boolean = false;
+
+    kickSpeed = 200;
 
     attackingTimeoutId: any = null;
     waitingTimeoutId: any = null;
@@ -198,24 +201,30 @@ export class AIControls extends BaseControls {
             const randomKickIndex = Math.floor(Math.random() * 2);
             this.kickSelected = this.kicks[randomKickIndex];
         } else {
-            if (this.kickSelected === 'hand') {
+            if (this.kickSelected === 'hand' && !this.kickPerformed) {
                 this.moveTo = this.whereToMoveHandKick();
 
-                this.checkAndHandKick();
-            }
+                if (!this.fighter?.enemy?.isInTheAir()) {
+                    if (this.rightMoveCheck())
+                        this.fighter?.goLeft();
 
-            if (this.kickSelected === 'leg') {
+                    if (this.leftMoveCheck())
+                        this.fighter?.goRight();
+                }
+
+                this.checkAndHandKick();
+            } else if (this.kickSelected === 'leg' && !this.kickPerformed) {
                 this.moveTo = this.whereToMoveLegKick();
 
+                if (!this.fighter?.enemy?.isInTheAir()) {
+                    if (this.rightMoveCheck())
+                        this.fighter?.goLeft();
+
+                    if (this.leftMoveCheck())
+                        this.fighter?.goRight();
+                }
+
                 this.checkAndLegKick();
-            }
-
-            if (this.moveTo && !this.fighter?.enemy?.isInTheAir()) {
-                if (this.rightMoveCheck())
-                    this.fighter?.goLeft();
-
-                if (this.leftMoveCheck())
-                    this.fighter?.goRight();
             }
         }
     }
@@ -322,10 +331,13 @@ export class AIControls extends BaseControls {
         if (this.isCloseForHandKick()) {
             this.fighter?.showHandKick();
 
+            this.kickSelected = null;
+            this.kickPerformed = true;
+
             setTimeout(() => {
-                this.kickSelected = null;
                 this.fighter?.hideHandKick();
-            }, 1000);
+                this.kickPerformed = false;
+            }, this.kickSpeed);
         }
     }
 
@@ -333,10 +345,13 @@ export class AIControls extends BaseControls {
         if (this.isCloseForLegKick()) {
             this.fighter?.showLegKick();
 
+            this.kickSelected = null;
+            this.kickPerformed = true;
+
             setTimeout(() => {
-                this.kickSelected = null;
                 this.fighter?.hideLegKick();
-            }, 1000);
+                this.kickPerformed = false;
+            }, this.kickSpeed);
         }
     }
 
