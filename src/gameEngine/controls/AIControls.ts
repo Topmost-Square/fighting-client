@@ -29,34 +29,6 @@ export class AIControls extends BaseControls {
 
     seriesEnergy = 1;
 
-    handKick() {
-
-    }
-
-    legKick() {
-
-    }
-
-    jump() {
-
-    }
-
-    jumpLeft() {
-
-    }
-
-    jumpRight() {
-
-    }
-
-    sit() {
-
-    }
-
-    goRight() {
-
-    }
-
     receiveDamage(damage: number) {
         this.damageReceived = true;
         //todo: lower health
@@ -76,7 +48,6 @@ export class AIControls extends BaseControls {
                 return this.fighter.position.x! - 50
             } else {
                 //implement jump
-                this.jump();
                 // or maybe 100 -> jump forward
                 return 0;
             }
@@ -95,7 +66,6 @@ export class AIControls extends BaseControls {
                 return this.fighter.position.x! + 50
             } else {
                 //implement jump
-                this.jump();
                 // or maybe -100 -> jump forward
                 return 0;
             }
@@ -264,20 +234,6 @@ export class AIControls extends BaseControls {
             this.fighter.enemy!.position.x! + this.fighter.enemy!.width >=
             this.fighter.position.x! - this.fighter.handKickMask.width)
             return true;
-    }
-
-    count() {
-        this.counter++;
-        // 60 frames -> 1 second
-        if (this.counter === 60) {
-            this.counter = 0
-            this.counterTop++;
-        }
-
-        // 60 seconds -> 1 minute
-        if (this.counterTop === 60) {
-            this.counterTop = 0;
-        }
     }
 
     finishAttack(time: number) {
