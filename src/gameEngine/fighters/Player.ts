@@ -70,7 +70,7 @@ export class Player extends Fighter {
             this.controls.options.handKick.prevReleased
         ) {
             this.handKickMask.show = true;
-            this.controls?.dropReleaseFlag('handKick')
+            this.controls?.dropReleaseFlag('handKick');
         } else {
             this.handKickMask.show = false;
         }

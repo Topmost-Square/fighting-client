@@ -334,6 +334,8 @@ export class AIControls extends BaseControls {
             this.kickSelected = null;
             this.kickPerformed = true;
 
+            this.fighter?.enemy!.getDamage(1);
+
             setTimeout(() => {
                 this.fighter?.hideHandKick();
                 this.kickPerformed = false;
@@ -347,6 +349,8 @@ export class AIControls extends BaseControls {
 
             this.kickSelected = null;
             this.kickPerformed = true;
+
+            this.fighter?.enemy!.getDamage(2);
 
             setTimeout(() => {
                 this.fighter?.hideLegKick();

@@ -18,6 +18,8 @@ export class Fighter {
         y: null
     };
 
+    health: number = 100;
+
     enemy: Fighter|null = null;
 
     side: null|string = null;
@@ -73,6 +75,10 @@ export class Fighter {
 
     setEnemy(enemy: Fighter) {
         this.enemy = enemy;
+    }
+
+    getDamage(damage: number) {
+        this.health -= damage;
     }
 
     calculatePointer() {
