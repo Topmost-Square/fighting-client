@@ -64,11 +64,31 @@ export class Player extends Fighter {
         }
     }
 
+    closeForDamage(kickType: string) {
+        const kickMaskWidth = kickType === 'hand' ?
+            this.handKickMask.width :
+            this.legKickMask.width;
+
+        return (
+            this.side === 'left' &&
+                this.enemy?.position.x! <=
+                this.position.x! + this.width + kickMaskWidth) ||
+            (
+                this.side === 'right' &&
+                this.enemy?.position.x! + this.enemy?.width! >=
+                this.position.x! - kickMaskWidth
+            );
+    }
+
     handKickControlAction() {
         if (
             this.controls?.options.handKick.pushed &&
             this.controls.options.handKick.prevReleased
         ) {
+            if (this.closeForDamage('hand')) {
+                this.enemy?.getDamage(1);
+            }
+
             this.handKickMask.show = true;
             this.controls?.dropReleaseFlag('handKick');
         } else {
@@ -81,6 +101,10 @@ export class Player extends Fighter {
             this.controls?.options.legKick.pushed &&
             this.controls.options.legKick.prevReleased
         ) {
+            if (this.closeForDamage('leg')) {
+                this.enemy?.getDamage(2);
+            }
+
             this.legKickMask.show = true;
             this.controls?.dropReleaseFlag('legKick')
         } else {
