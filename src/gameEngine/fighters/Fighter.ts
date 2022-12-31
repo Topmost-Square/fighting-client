@@ -221,19 +221,35 @@ export class Fighter {
             )
         }
 
+       this.drawSprite();
+    }
+
+    drawSprite() {
         if (this.spriteSheet) {
+
+            const oneImageSize = 32;
+            const xStart = 1;
+            const yStart = 0;
+            const clipWidth = 32;
+            const clipHeight = 32;
+            const placeImageX = this.position.x!
+            const placeImageY = this.position.y!
+            const widthImage = this.height; // because our sprite is square
+            const heightImage = this.height;
+
+            this.context!.imageSmoothingEnabled = false;
+
             this.context!.drawImage(
                 this.spriteSheet!,
-                0,
-                0,
-                100,
-                100,
-                this.position.x!,
-                this.position.y!,
-                this.width,
-                this.height,
+                xStart * oneImageSize,
+                yStart * oneImageSize,
+                clipWidth,
+                clipHeight,
+                placeImageX,
+                placeImageY,
+                widthImage,
+                heightImage,
             );
         }
-
     }
 }
