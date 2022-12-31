@@ -19,7 +19,8 @@ export const Practice = () => {
             100,
             canvas!.height - 500,
             canvas,
-            c!
+            c!,
+            'basic'
         );
 
         aiFighter = new AIFighter(

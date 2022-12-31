@@ -7,9 +7,10 @@ export class Player extends Fighter {
         x: number,
         y: number,
         canvas: HTMLCanvasElement|null,
-        context: CanvasRenderingContext2D
+        context: CanvasRenderingContext2D,
+        spriteSheet: string|null
     ) {
-        super(x, y, canvas, context);
+        super(x, y, canvas, context, spriteSheet);
 
         this.controls = new PlayerControls();
     }

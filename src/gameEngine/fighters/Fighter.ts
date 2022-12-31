@@ -1,5 +1,6 @@
-import {PlayerControls} from "../controls/PlayerControls";
 import {BaseControls} from "../controls/BaseControls";
+import BasicFighterSprite from '../images/sprites/32/basic.png';
+import GreenFighterSprite from '../images/sprites/32/green.png';
 
 type Position = { x: number|null, y: number|null };
 type KickMask = {
@@ -35,6 +36,8 @@ export class Fighter {
     gravity = 20;
     speed = 5;
 
+    spriteSheet: HTMLImageElement|null = null;
+
     // temp. for debugging
     pointer: KickMask = {
         x: null,
@@ -64,13 +67,23 @@ export class Fighter {
         x: number,
         y: number,
         canvas: HTMLCanvasElement|null,
-        context: CanvasRenderingContext2D
+        context: CanvasRenderingContext2D,
+        spriteSheet: string|null = null
     ) {
         this.position.x = x;
         this.position.y = y;
 
+        if (spriteSheet) {
+            this.setSpriteSheet(spriteSheet)
+        }
+
         this.canvas = canvas;
         this.context = context;
+    }
+
+    setSpriteSheet(spriteSheet: string) {
+        this.spriteSheet = new Image();
+        this.spriteSheet.src = spriteSheet === 'basic' ? BasicFighterSprite : GreenFighterSprite;
     }
 
     setEnemy(enemy: Fighter) {
@@ -207,5 +220,20 @@ export class Fighter {
                 this.legKickMask.height
             )
         }
+
+        if (this.spriteSheet) {
+            this.context!.drawImage(
+                this.spriteSheet!,
+                0,
+                0,
+                100,
+                100,
+                this.position.x!,
+                this.position.y!,
+                this.width,
+                this.height,
+            );
+        }
+
     }
 }
