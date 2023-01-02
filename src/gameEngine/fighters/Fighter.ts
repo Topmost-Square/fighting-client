@@ -1,8 +1,7 @@
 import {BaseControls} from "../controls/BaseControls";
-import BasicFighterSprite from '../images/sprites/32/basic.png';
-import GreenFighterSprite from '../images/sprites/32/green.png';
+import {SpriteSheet} from "../sprite/SpriteSheet";
 
-type Position = { x: number|null, y: number|null };
+export type Position = { x: number|null, y: number|null };
 type KickMask = {
     x: number|null,
     y: number|null,
@@ -36,7 +35,7 @@ export class Fighter {
     gravity = 20;
     speed = 5;
 
-    spriteSheet: HTMLImageElement|null = null;
+    spriteSheet: SpriteSheet|null = null;
 
     // temp. for debugging
     pointer: KickMask = {
@@ -74,16 +73,11 @@ export class Fighter {
         this.position.y = y;
 
         if (spriteSheet) {
-            this.setSpriteSheet(spriteSheet)
+            this.spriteSheet = new SpriteSheet(spriteSheet, context)
         }
 
         this.canvas = canvas;
         this.context = context;
-    }
-
-    setSpriteSheet(spriteSheet: string) {
-        this.spriteSheet = new Image();
-        this.spriteSheet.src = spriteSheet === 'basic' ? BasicFighterSprite : GreenFighterSprite;
     }
 
     setEnemy(enemy: Fighter) {
@@ -221,35 +215,8 @@ export class Fighter {
             )
         }
 
-       this.drawSprite();
-    }
-
-    drawSprite() {
         if (this.spriteSheet) {
-
-            const oneImageSize = 32;
-            const xStart = 1;
-            const yStart = 0;
-            const clipWidth = 32;
-            const clipHeight = 32;
-            const placeImageX = this.position.x!
-            const placeImageY = this.position.y!
-            const widthImage = this.height; // because our sprite is square
-            const heightImage = this.height;
-
-            this.context!.imageSmoothingEnabled = false;
-
-            this.context!.drawImage(
-                this.spriteSheet!,
-                xStart * oneImageSize,
-                yStart * oneImageSize,
-                clipWidth,
-                clipHeight,
-                placeImageX,
-                placeImageY,
-                widthImage,
-                heightImage,
-            );
+            this.spriteSheet.draw(this.position.x!, this.position.y!, this.height);
         }
     }
 }
