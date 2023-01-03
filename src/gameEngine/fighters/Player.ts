@@ -86,6 +86,8 @@ export class Player extends Fighter {
             this.controls?.options.handKick.pushed &&
             this.controls.options.handKick.prevReleased
         ) {
+            this.spriteSheet?.callAnimation('hand');
+
             if (this.closeForDamage('hand')) {
                 this.enemy?.getDamage(1);
             }

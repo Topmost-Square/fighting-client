@@ -6,9 +6,13 @@ export class SpriteSheet {
     size = 400;
     context: CanvasRenderingContext2D|null = null;
 
+    outsideAnimationCall: string|null = null;
+    dropOnLast: boolean = false;
+
     counter = 0;
     xRange = 0;
     xStart = 1;
+    yStart = 1;
     maxCountTo = 10;
 
     constructor(spriteSheetName: string|null = null, context: CanvasRenderingContext2D) {
@@ -35,12 +39,21 @@ export class SpriteSheet {
                     yStart: 1,
                     xRange: 6,
                     speed: 10,
+                    dropOnLast: false
+                }
+            case 'hand':
+                return {
+                    yStart: 2,
+                    xRange: 5,
+                    speed: 15,
+                    dropOnLast: true
                 }
             default:
                 return {
                     yStart: 1,
                     xRange: 6,
                     speed: 10,
+                    dropOnLast: false
                 }
         }
     }
@@ -55,14 +68,29 @@ export class SpriteSheet {
 
         if (this.xStart >= this.xRange) {
             this.xStart = 1;
+
+            if (this.dropOnLast) {
+                this.outsideAnimationCall = null;
+                this.dropOnLast = false;
+            }
         }
     }
 
-    draw(x: number, y: number, height: number) {
-        const { yStart, xRange, speed } = this.getAnimationValues('idle');
+    callAnimation(animation: string|null) {
+        this.outsideAnimationCall = animation;
+    }
 
-        this.xRange = xRange;
-        this.maxCountTo = speed;
+    processAnimation() {
+        const animationType = this.outsideAnimationCall ?? 'idle'
+        const animation = this.getAnimationValues(animationType);
+        this.yStart = animation.yStart;
+        this.xRange = animation.xRange;
+        this.maxCountTo = animation.speed;
+        this.dropOnLast = animation.dropOnLast;
+    }
+
+    draw(x: number, y: number, height: number) {
+        this.processAnimation();
 
         this.animate();
 
@@ -80,7 +108,7 @@ export class SpriteSheet {
             this.context!.drawImage(
                 this.image,
                 this.xStart * oneImageSize,
-                yStart * oneImageSize,
+                this.yStart * oneImageSize,
                 clipWidth,
                 clipHeight,
                 placeImageX,
