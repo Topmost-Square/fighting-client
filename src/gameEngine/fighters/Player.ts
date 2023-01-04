@@ -81,11 +81,14 @@ export class Player extends Fighter {
             );
     }
 
+    checkHandKickPushed() {
+        return this.controls?.options.handKick.pushed &&
+            this.controls.options.handKick.prevReleased &&
+            this.spriteSheet?.outsideAnimationCall !== 'hand'
+    }
+
     handKickControlAction() {
-        if (
-            this.controls?.options.handKick.pushed &&
-            this.controls.options.handKick.prevReleased
-        ) {
+        if (this.checkHandKickPushed()) {
             this.spriteSheet?.callAnimation('hand');
 
             if (this.closeForDamage('hand')) {
@@ -93,6 +96,7 @@ export class Player extends Fighter {
             }
 
             this.handKickMask.show = true;
+
             this.controls?.dropReleaseFlag('handKick');
         } else {
             this.handKickMask.show = false;

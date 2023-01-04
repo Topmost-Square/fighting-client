@@ -1,5 +1,12 @@
-import BasicFighterSprite from '../images/sprites/32/basic.png';
-import GreenFighterSprite from '../images/sprites/32/green.png';
+import { spriteSheetFile } from "./SpriteSheetFile";
+import { getAnimationValues } from "./AnimationValues";
+
+export type Animation = {
+    yStart: number,
+    xRange: number,
+    speed: number,
+    dropOnLast: boolean,
+}
 
 export class SpriteSheet {
     image: HTMLImageElement|null = null;
@@ -17,45 +24,20 @@ export class SpriteSheet {
 
     constructor(spriteSheetName: string|null = null, context: CanvasRenderingContext2D) {
         this.image = new Image();
-        this.image.src = this.setSpriteSheetFile(spriteSheetName);
+        this.image.src = spriteSheetFile(spriteSheetName);
         this.context = context
     }
 
-    setSpriteSheetFile(spriteSheetName: string|null) {
-        switch (spriteSheetName){
-            case 'basis':
-                return BasicFighterSprite;
-            case 'green':
-                return GreenFighterSprite;
-            default:
-                return BasicFighterSprite;
-        }
-    }
-
     getAnimationValues(animation: string) {
-        switch (animation) {
-            case 'idle':
-                return {
-                    yStart: 1,
-                    xRange: 6,
-                    speed: 10,
-                    dropOnLast: false
-                }
-            case 'hand':
-                return {
-                    yStart: 2,
-                    xRange: 5,
-                    speed: 15,
-                    dropOnLast: true
-                }
-            default:
-                return {
-                    yStart: 1,
-                    xRange: 6,
-                    speed: 10,
-                    dropOnLast: false
-                }
+        if (!this.xRange) {
+            const animationValues: Animation = getAnimationValues(animation);
+
+            this.yStart = animationValues.yStart;
+            this.xRange = animationValues.xRange;
+            this.maxCountTo = animationValues.speed;
+            this.dropOnLast = animationValues.dropOnLast;
         }
+
     }
 
     animate() {
@@ -67,26 +49,28 @@ export class SpriteSheet {
         }
 
         if (this.xStart >= this.xRange) {
-            this.xStart = 1;
-
             if (this.dropOnLast) {
                 this.outsideAnimationCall = null;
                 this.dropOnLast = false;
             }
+
+            this.xStart = 1;
+            this.xRange = 0;
         }
     }
 
     callAnimation(animation: string|null) {
-        this.outsideAnimationCall = animation;
+        if (
+            animation !== this.outsideAnimationCall ||
+            !(this.dropOnLast && this.xStart < this.xRange)
+        ) {
+            this.outsideAnimationCall = animation;
+        }
     }
 
     processAnimation() {
         const animationType = this.outsideAnimationCall ?? 'idle'
-        const animation = this.getAnimationValues(animationType);
-        this.yStart = animation.yStart;
-        this.xRange = animation.xRange;
-        this.maxCountTo = animation.speed;
-        this.dropOnLast = animation.dropOnLast;
+        this.getAnimationValues(animationType);
     }
 
     draw(x: number, y: number, height: number) {
