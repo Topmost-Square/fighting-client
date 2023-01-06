@@ -16,6 +16,13 @@ export const getAnimationValues = (animation: string): Animation => {
                 speed: 4,
                 dropOnLast: true
             };
+        case 'walk':
+            return {
+                yStart: 18,
+                xRange: 7,
+                speed: 10,
+                dropOnLast: false
+            };
         default:
             return {
                 yStart: 1,

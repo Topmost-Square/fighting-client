@@ -1,8 +1,13 @@
 import {BaseControls} from "./BaseControls";
+import {Player} from "../fighters/Player";
 
 export class PlayerControls extends BaseControls {
-    constructor() {
+    fighter: Player|null = null;
+
+    constructor(fighter: Player|null) {
         super();
+
+        this.fighter = fighter;
 
         window.addEventListener('keydown', e => {
             switch (e.key) {
@@ -49,9 +54,11 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowLeft':
                     this.setOption('left', false);
+                    this.fighter?.dropAnimation();
                     break;
                 case 'ArrowRight':
                     this.setOption('right', false);
+                    this.fighter?.dropAnimation();
                     break;
                 case 'd':
                     this.options = {

@@ -12,7 +12,7 @@ export class Player extends Fighter {
     ) {
         super(x, y, canvas, context, spriteSheet);
 
-        this.controls = new PlayerControls();
+        this.controls = new PlayerControls(this);
     }
 
     upControlAction() {
@@ -48,6 +48,8 @@ export class Player extends Fighter {
             if (this.position.x! <= 0) {
                 this.position.x = 0;
             }
+
+            this.spriteSheet?.callAnimation('walk');
         }
     }
 
@@ -61,8 +63,14 @@ export class Player extends Fighter {
                 if (this.position.x + this.width >= this.canvas?.width!) {
                     this.position.x = this.canvas?.width! - this.width;
                 }
+
+                this.spriteSheet?.callAnimation('walk');
             }
         }
+    }
+
+    dropAnimation() {
+        this.spriteSheet?.dropAnimation();
     }
 
     closeForDamage(kickType: string) {

@@ -28,6 +28,10 @@ export class SpriteSheet {
         this.context = context
     }
 
+    dropAnimation() {
+        this.outsideAnimationCall = null;
+    }
+
     getAnimationValues(animation: string) {
         if (!this.xRange) {
             const animationValues: Animation = getAnimationValues(animation);
