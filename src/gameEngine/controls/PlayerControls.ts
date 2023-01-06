@@ -19,9 +19,11 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowLeft':
                     this.setOption('left', true);
+                    fighter?.callAnimation('walk');
                     break;
                 case 'ArrowRight':
                     this.setOption('right', true);
+                    fighter?.callAnimation('walk');
                     break;
                 case 'd':
                     this.options = {

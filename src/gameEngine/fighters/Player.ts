@@ -48,9 +48,11 @@ export class Player extends Fighter {
             if (this.position.x! <= 0) {
                 this.position.x = 0;
             }
-
-            this.spriteSheet?.callAnimation('walk');
         }
+    }
+
+    callAnimation(animation: string) {
+        this.spriteSheet?.callAnimation(animation);
     }
 
     rightControlAction() {
@@ -63,8 +65,6 @@ export class Player extends Fighter {
                 if (this.position.x + this.width >= this.canvas?.width!) {
                     this.position.x = this.canvas?.width! - this.width;
                 }
-
-                this.spriteSheet?.callAnimation('walk');
             }
         }
     }

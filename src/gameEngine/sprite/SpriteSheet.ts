@@ -30,6 +30,7 @@ export class SpriteSheet {
 
     dropAnimation() {
         this.outsideAnimationCall = null;
+        this.xRange = 0;
     }
 
     getAnimationValues(animation: string) {
@@ -68,6 +69,9 @@ export class SpriteSheet {
             animation !== this.outsideAnimationCall ||
             !(this.dropOnLast && this.xStart < this.xRange)
         ) {
+            if (animation === 'walk') {
+                this.xRange = 0;
+            }
             this.outsideAnimationCall = animation;
         }
     }
