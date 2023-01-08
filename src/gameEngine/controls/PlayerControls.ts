@@ -34,6 +34,15 @@ export class PlayerControls extends BaseControls {
                         }
                     }
                     break;
+                case 'e':
+                    this.options = {
+                        ...this.options,
+                        hand2Kick: {
+                            ...this.options.hand2Kick,
+                            pushed: true,
+                        }
+                    }
+                    break;
                 case 's':
                     this.options = {
                         ...this.options,
@@ -67,6 +76,16 @@ export class PlayerControls extends BaseControls {
                         ...this.options,
                         handKick: {
                             ...this.options.handKick,
+                            pushed: false,
+                            prevReleased: true
+                        }
+                    }
+                    break;
+                case 'e':
+                    this.options = {
+                        ...this.options,
+                        hand2Kick: {
+                            ...this.options.hand2Kick,
                             pushed: false,
                             prevReleased: true
                         }

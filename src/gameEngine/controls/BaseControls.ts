@@ -10,6 +10,10 @@ export class BaseControls {
             prevReleased: true,
             pushed: false
         },
+        hand2Kick: {
+            prevReleased: true,
+            pushed: false
+        },
         legKick: {
             prevReleased: true,
             pushed: false
@@ -30,7 +34,7 @@ export class BaseControls {
     preFightDelay() {
         setTimeout(() => {
             this.fightStarted = true;
-        }, 3000);
+        }, 100);
     }
 
     setFighter(fighter: Fighter) {

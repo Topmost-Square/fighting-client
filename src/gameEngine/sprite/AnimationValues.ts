@@ -13,6 +13,13 @@ export const getAnimationValues = (animation: string): Animation => {
             return {
                 yStart: 2,
                 xRange: 6,
+                speed: 3,
+                dropOnLast: true
+            };
+        case 'hand-2':
+            return {
+                yStart: 4,
+                xRange: 6,
                 speed: 4,
                 dropOnLast: true
             };
