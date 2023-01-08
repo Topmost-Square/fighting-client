@@ -97,13 +97,13 @@ export class Player extends Fighter {
 
     handKickControlAction() {
         if (this.checkHandKickPushed()) {
-            this.spriteSheet?.callAnimation('hand');
-
             if (this.closeForDamage('hand')) {
                 this.enemy?.getDamage(1);
             }
 
             this.handKickMask.show = true;
+
+            this.spriteSheet?.callAnimation('hand');
 
             this.controls?.dropReleaseFlag('handKick');
         } else {
@@ -111,16 +111,22 @@ export class Player extends Fighter {
         }
     }
 
+    checkLegKickPushed() {
+        return this.controls?.options.legKick.pushed &&
+            this.controls.options.legKick.prevReleased &&
+            this.spriteSheet?.outsideAnimationCall !== 'leg'
+    }
+
     legKickControlAction() {
-        if (
-            this.controls?.options.legKick.pushed &&
-            this.controls.options.legKick.prevReleased
-        ) {
+        if (this.checkLegKickPushed()) {
             if (this.closeForDamage('leg')) {
                 this.enemy?.getDamage(2);
             }
 
             this.legKickMask.show = true;
+
+            this.spriteSheet?.callAnimation('leg');
+
             this.controls?.dropReleaseFlag('legKick')
         } else {
             this.legKickMask.show = false;

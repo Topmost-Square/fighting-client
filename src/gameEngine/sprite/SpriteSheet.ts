@@ -42,7 +42,6 @@ export class SpriteSheet {
             this.maxCountTo = animationValues.speed;
             this.dropOnLast = animationValues.dropOnLast;
         }
-
     }
 
     animate() {

@@ -12,7 +12,7 @@ export const getAnimationValues = (animation: string): Animation => {
         case 'hand':
             return {
                 yStart: 2,
-                xRange: 5,
+                xRange: 6,
                 speed: 4,
                 dropOnLast: true
             };
@@ -29,6 +29,13 @@ export const getAnimationValues = (animation: string): Animation => {
                 xRange: 7,
                 speed: 10,
                 dropOnLast: false
+            };
+        case 'leg':
+            return {
+                yStart: 3,
+                xRange: 5,
+                speed: 6,
+                dropOnLast: true
             };
         default:
             return {
