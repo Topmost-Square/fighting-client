@@ -23,6 +23,13 @@ export const getAnimationValues = (animation: string): Animation => {
                 speed: 10,
                 dropOnLast: false
             };
+        case 'walk-back':
+            return {
+                yStart: 0,
+                xRange: 7,
+                speed: 10,
+                dropOnLast: false
+            };
         default:
             return {
                 yStart: 1,

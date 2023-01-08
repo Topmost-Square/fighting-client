@@ -69,7 +69,7 @@ export class SpriteSheet {
             animation !== this.outsideAnimationCall ||
             !(this.dropOnLast && this.xStart < this.xRange)
         ) {
-            if (animation === 'walk') {
+            if (animation === 'walk' || animation === 'walk-back') {
                 this.xRange = 0;
             }
             this.outsideAnimationCall = animation;
