@@ -213,13 +213,11 @@ export class Player extends Fighter {
 
     inAirAction() {
         if (this.isInTheAir()) {
-            if (this.spriteSheet?.outsideAnimationCall !== 'flip') {
-                if (this.controls!.options.left) {
+            if (this.spriteSheet?.outsideAnimationCall !== 'back-flip' && this.controls!.options.left) {
                     this.spriteSheet?.callAnimation('back-flip')
-                } else if (this.controls!.options.right) {
+                } else if (this.spriteSheet?.outsideAnimationCall !== 'flip' && this.controls!.options.right) {
                     this.spriteSheet?.callAnimation('flip')
                 }
-            }
 
             if (
                 this.controls!.options.handKick.pushed &&

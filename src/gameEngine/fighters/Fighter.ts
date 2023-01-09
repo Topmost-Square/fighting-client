@@ -34,6 +34,7 @@ export class Fighter {
     verticalAcceleration = 0;
     gravity = 20;
     speed = 5;
+    airSpeed = 10;
 
     spriteSheet: SpriteSheet|null = null;
 
@@ -146,11 +147,19 @@ export class Fighter {
     }
 
     goLeft() {
-        this.position.x! -= this.speed;
+        if (this.isInTheAir()) {
+            this.position.x! -= this.airSpeed;
+        } else {
+            this.position.x! -= this.speed;
+        }
     }
 
     goRight() {
-        this.position.x! += this.speed;
+        if (this.isInTheAir()) {
+            this.position.x! += this.airSpeed;
+        } else {
+            this.position.x! += this.speed;
+        }
     }
 
     isInTheAir() {
@@ -216,7 +225,7 @@ export class Fighter {
         }
 
         if (this.spriteSheet) {
-            this.spriteSheet.draw(this.position.x!, this.position.y!, this.height);
+            this.spriteSheet.draw(this.position.x! - 50, this.position.y!, this.height);
         }
     }
 }
