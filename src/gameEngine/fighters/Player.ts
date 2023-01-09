@@ -143,8 +143,12 @@ export class Player extends Fighter {
     }
 
     blockControlAction() {
-        if (this.controls?.options.block) {
-            this.callAnimation('block');
+        if (this.controls?.options.block && !this.isInTheAir()) {
+            if (this.controls.options.down) {
+                this.callAnimation('down-block');
+            } else {
+                this.callAnimation('block');
+            }
         }
     }
 

@@ -58,6 +58,13 @@ export const getAnimationValues = (animation: string): Animation => {
                 speed: 1,
                 dropOnLast: false
             };
+        case 'down-block':
+            return {
+                yStart: 12,
+                xRange: 1,
+                speed: 1,
+                dropOnLast: false
+            };
         default:
             return {
                 yStart: 1,
