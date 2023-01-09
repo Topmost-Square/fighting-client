@@ -78,7 +78,8 @@ export class SpriteSheet {
             if (
                 animation === 'walk' ||
                 animation === 'walk-back' ||
-                animation === 'sit'
+                animation === 'sit' ||
+                animation === 'flip'
             ) {
                 this.xRange = 0;
             }

@@ -211,6 +211,17 @@ export class Player extends Fighter {
         }
     }
 
+    flipAction() {
+        if (
+            this.isInTheAir() &&
+            (this.controls!.options.left || this.controls!.options.right) &&
+            this.spriteSheet?.outsideAnimationCall !== 'flip'
+        ) {
+            this.spriteSheet?.callAnimation('flip')
+        }
+
+    }
+
     update() {
         if (this.controls?.fightStarted) {
             this.upControlAction();
@@ -226,6 +237,8 @@ export class Player extends Fighter {
             this.legKick2ControlAction();
 
             this.blockControlAction();
+
+            this.flipAction();
         }
     }
 }

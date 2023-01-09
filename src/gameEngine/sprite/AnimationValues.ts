@@ -18,6 +18,8 @@ export const getAnimationValues = (animation: string): Animation => {
     switch (animation) {
         case 'idle':
             return passAnimationObject(1, 6, 10, false);
+        case 'flip':
+            return passAnimationObject(7, 7, 7, false);
         case 'sit':
             return passAnimationObject(13, 1, 1, false);
         case 'hand':
