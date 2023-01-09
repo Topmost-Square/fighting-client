@@ -50,6 +50,7 @@ export class SpriteSheet {
     animate() {
         this.counter++;
 
+        // todo: check for 1 frame
         const countTo = this.xStart === this.xRange - 1 ?
             this.maxCountTo + this.delayOnLast : this.maxCountTo;
 
@@ -79,7 +80,9 @@ export class SpriteSheet {
                 animation === 'walk' ||
                 animation === 'walk-back' ||
                 animation === 'sit' ||
-                animation === 'flip'
+                animation === 'flip' ||
+                animation === 'back-flip' ||
+                animation === 'up-hand'
             ) {
                 this.xRange = 0;
             }

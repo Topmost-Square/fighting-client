@@ -122,7 +122,7 @@ export class Player extends Fighter {
         const handKickReleased = kick === 'hand' ? this.controls?.options.handKick.prevReleased :
             this.controls?.options.hand2Kick.prevReleased;
 
-        return handKickPushed && handKickReleased && this.spriteSheet?.outsideAnimationCall !== kick
+        return handKickPushed && handKickReleased && !this.isInTheAir() && this.spriteSheet?.outsideAnimationCall !== kick
     }
 
     handKickControlAction() {
@@ -211,15 +211,25 @@ export class Player extends Fighter {
         }
     }
 
-    flipAction() {
-        if (
-            this.isInTheAir() &&
-            (this.controls!.options.left || this.controls!.options.right) &&
-            this.spriteSheet?.outsideAnimationCall !== 'flip'
-        ) {
-            this.spriteSheet?.callAnimation('flip')
-        }
+    inAirAction() {
+        if (this.isInTheAir()) {
+            if (this.spriteSheet?.outsideAnimationCall !== 'flip') {
+                if (this.controls!.options.left) {
+                    this.spriteSheet?.callAnimation('back-flip')
+                } else if (this.controls!.options.right) {
+                    this.spriteSheet?.callAnimation('flip')
+                }
+            }
 
+            if (
+                this.controls!.options.handKick.pushed &&
+                this.spriteSheet?.outsideAnimationCall !== 'up-hand' &&
+                this.spriteSheet?.outsideAnimationCall !== 'hand'
+            ) {
+                this.spriteSheet?.dropAnimation();
+                this.spriteSheet?.callAnimation('up-hand')
+            }
+        }
     }
 
     update() {
@@ -238,7 +248,7 @@ export class Player extends Fighter {
 
             this.blockControlAction();
 
-            this.flipAction();
+            this.inAirAction();
         }
     }
 }
