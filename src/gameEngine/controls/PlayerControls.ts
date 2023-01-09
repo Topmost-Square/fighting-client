@@ -15,7 +15,7 @@ export class PlayerControls extends BaseControls {
                     this.setOption('up', true);
                     break;
                 case 'ArrowDown':
-                    this.setOption('down', true);
+                    !this.options.hand2Kick.pushed && this.setOption('down', true);
                     break;
                 case 'ArrowLeft':
                     this.setOption('left', true);

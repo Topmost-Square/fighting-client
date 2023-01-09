@@ -22,12 +22,29 @@ export class Player extends Fighter {
     }
 
     downControlAction() {
-        if (this.controls?.options.down && !this.controls.options.block) {
+        if (
+            this.controls?.options.down &&
+            !this.controls.options.block &&
+            this.spriteSheet?.outsideAnimationCall !== 'uppercut'
+        ) {
             this.height = 200; // temporarily simulate fighter is down (sitting)
 
-            if (!this.verticalAcceleration && this.position.y! >= this.canvas?.height! - 500 - this.height) {
+            if (
+                !this.verticalAcceleration &&
+                this.position.y! >= this.canvas?.height! - 500 - this.height
+            ) {
                 this.position.y = this.canvas?.height! - 500 + 200;
-                this.spriteSheet?.callAnimation('sit');
+
+                if (this.controls.options.hand2Kick.pushed) {
+                    this.spriteSheet?.callAnimation('uppercut');
+
+                    if (this.closeForDamage('hand')) {
+                        this.enemy?.getDamage(5);
+                        // todo: enemy falls
+                    }
+                } else {
+                    this.spriteSheet?.callAnimation('sit');
+                }
             }
         }
 
@@ -125,9 +142,10 @@ export class Player extends Fighter {
     }
 
     hand2KickControlAction() {
-        if (this.checkHandKickPushed('hand-2')) {
+        if (this.checkHandKickPushed('hand-2') && !this.controls?.options.down) {
             if (this.closeForDamage('hand')) {
                 this.enemy?.getDamage(2);
+                // todo: enemy get face kick
             }
 
             this.handKickMask.show = true;

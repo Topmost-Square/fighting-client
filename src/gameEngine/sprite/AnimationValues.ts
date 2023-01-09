@@ -1,10 +1,17 @@
 import { Animation } from "./SpriteSheet";
 
-const passAnimationObject = (yStart: number, xRange: number, speed: number, dropOnLast: boolean) => ({
-        yStart,
-        xRange,
-        speed,
-        dropOnLast
+const passAnimationObject = (
+    yStart: number,
+    xRange: number,
+    speed: number,
+    dropOnLast: boolean,
+    delayOnLast: number = 0
+    ) => ({
+    yStart,
+    xRange,
+    speed,
+    dropOnLast,
+    delayOnLast
 });
 
 export const getAnimationValues = (animation: string): Animation => {
@@ -17,6 +24,8 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(2, 6, 3, true);
         case 'hand-2':
             return passAnimationObject(4, 6, 4, true);
+        case 'uppercut':
+            return passAnimationObject(17, 5, 4, true, 30);
         case 'walk':
             return passAnimationObject(18, 7, 10, false);
         case 'walk-back':

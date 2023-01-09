@@ -6,6 +6,7 @@ export type Animation = {
     xRange: number,
     speed: number,
     dropOnLast: boolean,
+    delayOnLast: number
 }
 
 export class SpriteSheet {
@@ -21,6 +22,7 @@ export class SpriteSheet {
     xStart = 1;
     yStart = 1;
     maxCountTo = 10;
+    delayOnLast = 0;
 
     constructor(spriteSheetName: string|null = null, context: CanvasRenderingContext2D) {
         this.image = new Image();
@@ -41,13 +43,17 @@ export class SpriteSheet {
             this.xRange = animationValues.xRange;
             this.maxCountTo = animationValues.speed;
             this.dropOnLast = animationValues.dropOnLast;
+            this.delayOnLast = animationValues.delayOnLast;
         }
     }
 
     animate() {
         this.counter++;
 
-        if (this.counter >= this.maxCountTo) {
+        const countTo = this.xStart === this.xRange - 1 ?
+            this.maxCountTo + this.delayOnLast : this.maxCountTo;
+
+        if (this.counter >= countTo) {
             this.xStart++;
             this.counter = 0;
         }
@@ -60,6 +66,7 @@ export class SpriteSheet {
 
             this.xStart = 1;
             this.xRange = 0;
+            this.delayOnLast = 0;
         }
     }
 
