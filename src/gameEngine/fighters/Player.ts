@@ -142,6 +142,12 @@ export class Player extends Fighter {
             this.spriteSheet?.outsideAnimationCall !== kick
     }
 
+    blockControlAction() {
+        if (this.controls?.options.block) {
+            this.callAnimation('block');
+        }
+    }
+
     legKickControlAction() {
         if (this.checkLegKickPushed('leg')) {
             if (this.closeForDamage('leg')) {
@@ -187,6 +193,8 @@ export class Player extends Fighter {
             this.hand2KickControlAction();
             this.legKickControlAction();
             this.legKick2ControlAction();
+
+            this.blockControlAction();
         }
     }
 }

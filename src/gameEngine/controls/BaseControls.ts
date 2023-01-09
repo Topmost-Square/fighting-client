@@ -6,6 +6,7 @@ export class BaseControls {
         down: false,
         left: false,
         right: false,
+        block: false,
         handKick: {
             prevReleased: true,
             pushed: false
