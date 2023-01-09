@@ -41,6 +41,10 @@ export class Player extends Fighter {
     }
 
     leftControlAction() {
+        if (this.controls?.options.down) {
+            return;
+        }
+
         if (this.controls?.options.left) {
             if (this.position.x! > 0) {
                 this.goLeft();
@@ -57,6 +61,10 @@ export class Player extends Fighter {
     }
 
     rightControlAction() {
+        if (this.controls?.options.down) {
+            return;
+        }
+
         if (this.position.x !== null) {
             if (this.controls?.options.right) {
                 if (this.position.x + this.width < this.canvas?.width!) {
@@ -105,8 +113,6 @@ export class Player extends Fighter {
             if (this.closeForDamage('hand')) {
                 this.enemy?.getDamage(1);
             }
-
-            this.spriteSheet?.dropAnimation();
 
             this.spriteSheet?.callAnimation('hand');
 

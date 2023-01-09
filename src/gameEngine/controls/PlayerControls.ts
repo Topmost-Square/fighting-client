@@ -19,11 +19,11 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowLeft':
                     this.setOption('left', true);
-                    fighter?.callAnimation('walk-back');
+                    !this.options.down && fighter?.callAnimation('walk-back');
                     break;
                 case 'ArrowRight':
                     this.setOption('right', true);
-                    fighter?.callAnimation('walk');
+                    !this.options.down && fighter?.callAnimation('walk');
                     break;
                 case ' ':
                     this.setOption('block', true);
@@ -78,11 +78,11 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowLeft':
                     this.setOption('left', false);
-                    this.fighter?.dropAnimation();
+                    !this.options.down && this.fighter?.dropAnimation();
                     break;
                 case 'ArrowRight':
                     this.setOption('right', false);
-                    this.fighter?.dropAnimation();
+                    !this.options.down && this.fighter?.dropAnimation();
                     break;
                 case ' ':
                     this.setOption('block', false);
