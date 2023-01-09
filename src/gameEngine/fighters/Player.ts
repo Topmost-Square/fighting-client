@@ -22,11 +22,12 @@ export class Player extends Fighter {
     }
 
     downControlAction() {
-        if (this.controls?.options.down) {
+        if (this.controls?.options.down && !this.controls.options.block) {
             this.height = 200; // temporarily simulate fighter is down (sitting)
 
             if (!this.verticalAcceleration && this.position.y! >= this.canvas?.height! - 500 - this.height) {
                 this.position.y = this.canvas?.height! - 500 + 200;
+                this.spriteSheet?.callAnimation('sit');
             }
         }
 
@@ -105,9 +106,11 @@ export class Player extends Fighter {
                 this.enemy?.getDamage(1);
             }
 
-            this.handKickMask.show = true;
+            this.spriteSheet?.dropAnimation();
 
             this.spriteSheet?.callAnimation('hand');
+
+            this.handKickMask.show = true;
 
             this.controls?.dropReleaseFlag('handKick');
 

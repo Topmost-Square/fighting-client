@@ -74,6 +74,7 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowDown':
                     this.setOption('down', false);
+                    this.fighter?.dropAnimation();
                     break;
                 case 'ArrowLeft':
                     this.setOption('left', false);

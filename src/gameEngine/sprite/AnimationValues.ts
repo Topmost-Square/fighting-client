@@ -11,6 +11,8 @@ export const getAnimationValues = (animation: string): Animation => {
     switch (animation) {
         case 'idle':
             return passAnimationObject(1, 6, 10, false);
+        case 'sit':
+            return passAnimationObject(13, 1, 1, false);
         case 'hand':
             return passAnimationObject(2, 6, 3, true);
         case 'hand-2':
