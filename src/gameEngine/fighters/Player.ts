@@ -110,7 +110,7 @@ export class Player extends Fighter {
             this.spriteSheet?.callAnimation('hand');
 
             this.controls?.dropReleaseFlag('handKick');
-        } else {
+
             this.handKickMask.show = false;
         }
     }
@@ -125,20 +125,25 @@ export class Player extends Fighter {
 
             this.spriteSheet?.callAnimation('hand-2');
 
-            this.controls?.dropReleaseFlag('handKick');
-        } else {
+            this.controls?.dropReleaseFlag('hand2Kick');
+
             this.handKickMask.show = false;
         }
     }
 
-    checkLegKickPushed() {
-        return this.controls?.options.legKick.pushed &&
-            this.controls.options.legKick.prevReleased &&
-            this.spriteSheet?.outsideAnimationCall !== 'leg'
+    checkLegKickPushed(kick: string) {
+        const legKickPushed = kick === 'leg' ? this.controls?.options.legKick.pushed :
+            this.controls?.options.leg2Kick.pushed;
+
+        const legKickReleased = kick === 'leg' ? this.controls?.options.legKick.prevReleased :
+            this.controls?.options.leg2Kick.prevReleased;
+
+        return legKickPushed && legKickReleased &&
+            this.spriteSheet?.outsideAnimationCall !== kick
     }
 
     legKickControlAction() {
-        if (this.checkLegKickPushed()) {
+        if (this.checkLegKickPushed('leg')) {
             if (this.closeForDamage('leg')) {
                 this.enemy?.getDamage(2);
             }
@@ -147,8 +152,24 @@ export class Player extends Fighter {
 
             this.spriteSheet?.callAnimation('leg');
 
-            this.controls?.dropReleaseFlag('legKick')
-        } else {
+            this.controls?.dropReleaseFlag('legKick');
+
+            this.legKickMask.show = false;
+        }
+    }
+
+    legKick2ControlAction() {
+        if (this.checkLegKickPushed('leg-2')) {
+            if (this.closeForDamage('leg')) {
+                this.enemy?.getDamage(2);
+            }
+
+            this.legKickMask.show = true;
+
+            this.spriteSheet?.callAnimation('leg-2');
+
+            this.controls?.dropReleaseFlag('leg2Kick');
+
             this.legKickMask.show = false;
         }
     }
@@ -165,6 +186,7 @@ export class Player extends Fighter {
             this.handKickControlAction();
             this.hand2KickControlAction();
             this.legKickControlAction();
+            this.legKick2ControlAction();
         }
     }
 }

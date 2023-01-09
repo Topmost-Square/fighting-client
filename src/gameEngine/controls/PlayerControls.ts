@@ -52,6 +52,15 @@ export class PlayerControls extends BaseControls {
                         }
                     }
                     break;
+                case 'w':
+                    this.options = {
+                        ...this.options,
+                        leg2Kick: {
+                            ...this.options.leg2Kick,
+                            pushed: true,
+                        }
+                    }
+                    break;
             }
         });
 
@@ -96,6 +105,16 @@ export class PlayerControls extends BaseControls {
                         ...this.options,
                         legKick: {
                             ...this.options.legKick,
+                            pushed: false,
+                            prevReleased: true
+                        }
+                    }
+                    break;
+                case 'w':
+                    this.options = {
+                        ...this.options,
+                        leg2Kick: {
+                            ...this.options.leg2Kick,
                             pushed: false,
                             prevReleased: true
                         }

@@ -18,6 +18,10 @@ export class BaseControls {
             prevReleased: true,
             pushed: false
         },
+        leg2Kick: {
+            prevReleased: true,
+            pushed: false
+        },
     };
 
     fightStarted = false;
