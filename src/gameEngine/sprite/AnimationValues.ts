@@ -1,76 +1,33 @@
 import { Animation } from "./SpriteSheet";
 
+const passAnimationObject = (yStart: number, xRange: number, speed: number, dropOnLast: boolean) => ({
+        yStart,
+        xRange,
+        speed,
+        dropOnLast
+});
+
 export const getAnimationValues = (animation: string): Animation => {
     switch (animation) {
         case 'idle':
-            return {
-                yStart: 1,
-                xRange: 6,
-                speed: 10,
-                dropOnLast: false
-            };
+            return passAnimationObject(1, 6, 10, false);
         case 'hand':
-            return {
-                yStart: 2,
-                xRange: 6,
-                speed: 3,
-                dropOnLast: true
-            };
+            return passAnimationObject(2, 6, 3, true);
         case 'hand-2':
-            return {
-                yStart: 4,
-                xRange: 6,
-                speed: 4,
-                dropOnLast: true
-            };
+            return passAnimationObject(4, 6, 4, true);
         case 'walk':
-            return {
-                yStart: 18,
-                xRange: 7,
-                speed: 10,
-                dropOnLast: false
-            };
+            return passAnimationObject(18, 7, 10, false);
         case 'walk-back':
-            return {
-                yStart: 0,
-                xRange: 7,
-                speed: 10,
-                dropOnLast: false
-            };
+            return passAnimationObject(0, 7, 10, false);
         case 'leg':
-            return {
-                yStart: 3,
-                xRange: 5,
-                speed: 6,
-                dropOnLast: true
-            };
+            return passAnimationObject(3, 5, 6, true);
         case 'leg-2':
-            return {
-                yStart: 5,
-                xRange: 5,
-                speed: 6,
-                dropOnLast: true
-            };
+            return passAnimationObject(5, 5, 6, true);
         case 'block':
-            return {
-                yStart: 16,
-                xRange: 1,
-                speed: 1,
-                dropOnLast: false
-            };
+            return passAnimationObject(16, 1, 1, false);
         case 'down-block':
-            return {
-                yStart: 12,
-                xRange: 1,
-                speed: 1,
-                dropOnLast: false
-            };
+            return passAnimationObject(12, 1, 1, false);
         default:
-            return {
-                yStart: 1,
-                xRange: 6,
-                speed: 10,
-                dropOnLast: false
-            };
+            return passAnimationObject(1, 6, 10, false);
     }
 }
