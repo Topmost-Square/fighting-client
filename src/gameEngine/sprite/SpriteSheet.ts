@@ -21,7 +21,7 @@ export class SpriteSheet {
     xRange = 0;
     xStart = 1;
     yStart = 1;
-    maxCountTo = 10;
+    speed = 10;
     delayOnLast = 0;
 
     constructor(spriteSheetName: string|null = null, context: CanvasRenderingContext2D) {
@@ -35,15 +35,23 @@ export class SpriteSheet {
         this.xRange = 0;
     }
 
-    getAnimationValues(animation: string) {
-        if (!this.xRange) {
-            const animationValues: Animation = getAnimationValues(animation);
+    spreadAnimationValues(animationValues: Animation) {
+        this.yStart = animationValues.yStart;
+        this.xRange = animationValues.xRange;
+        this.speed = animationValues.speed;
+        this.dropOnLast = animationValues.dropOnLast;
+        this.delayOnLast = animationValues.delayOnLast;
+    }
 
-            this.yStart = animationValues.yStart;
-            this.xRange = animationValues.xRange;
-            this.maxCountTo = animationValues.speed;
-            this.dropOnLast = animationValues.dropOnLast;
-            this.delayOnLast = animationValues.delayOnLast;
+    setAnimationValues(animation: string) {
+        if (!this.xRange) {
+            if (this.outsideAnimationCall === 'turn-leg') {
+                if (this.xStart === 1) {
+                    this.spreadAnimationValues(getAnimationValues(animation));
+                }
+            } else {
+                this.spreadAnimationValues(getAnimationValues(animation));
+            }
         }
     }
 
@@ -52,7 +60,7 @@ export class SpriteSheet {
 
         // todo: check for 1 frame
         const countTo = this.xStart === this.xRange - 1 ?
-            this.maxCountTo + this.delayOnLast : this.maxCountTo;
+            this.speed + this.delayOnLast : this.speed;
 
         if (this.counter >= countTo) {
             this.xStart++;
@@ -83,7 +91,8 @@ export class SpriteSheet {
                 animation === 'flip' ||
                 animation === 'back-flip' ||
                 animation === 'up-hand' ||
-                animation === 'up-leg'
+                animation === 'up-leg' ||
+                animation === 'turn-leg'
             ) {
                 this.xRange = 0;
             }
@@ -93,7 +102,7 @@ export class SpriteSheet {
 
     processAnimation() {
         const animationType = this.outsideAnimationCall ?? 'idle'
-        this.getAnimationValues(animationType);
+        this.setAnimationValues(animationType);
     }
 
     draw(x: number, y: number, height: number) {

@@ -63,12 +63,24 @@ export class Player extends Fighter {
         }
 
         if (this.controls?.options.left) {
-            if (this.position.x! > 0) {
-                this.goLeft();
-            }
+            if (this.controls.options.leg2Kick.pushed) {
+                this.spriteSheet?.dropAnimation();
+                this.spriteSheet?.callAnimation('turn-leg');
+            } else if (this.spriteSheet?.outsideAnimationCall !== 'turn-leg') {
+                if (
+                    !this.spriteSheet?.outsideAnimationCall ||
+                    this?.spriteSheet?.outsideAnimationCall !== 'walk-back'
+                ) {
+                    this.spriteSheet?.callAnimation('walk-back');
+                }
 
-            if (this.position.x! <= 0) {
-                this.position.x = 0;
+                if (this.position.x! > 0) {
+                    this.goLeft();
+                }
+
+                if (this.position.x! <= 0) {
+                    this.position.x = 0;
+                }
             }
         }
     }
@@ -167,6 +179,7 @@ export class Player extends Fighter {
 
         return legKickPushed && legKickReleased && !this.isInTheAir()
             && this.spriteSheet?.outsideAnimationCall !== kick
+            && this.spriteSheet?.outsideAnimationCall !== 'turn-leg'
     }
 
     blockControlAction() {
@@ -196,7 +209,7 @@ export class Player extends Fighter {
     }
 
     legKick2ControlAction() {
-        if (this.checkLegKickPushed('leg-2')) {
+        if (this.checkLegKickPushed('leg-2') && !this.controls?.options.left) {
             if (this.closeForDamage('leg')) {
                 this.enemy?.getDamage(2);
             }
