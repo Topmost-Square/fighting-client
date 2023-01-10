@@ -165,8 +165,8 @@ export class Player extends Fighter {
         const legKickReleased = kick === 'leg' ? this.controls?.options.legKick.prevReleased :
             this.controls?.options.leg2Kick.prevReleased;
 
-        return legKickPushed && legKickReleased &&
-            this.spriteSheet?.outsideAnimationCall !== kick
+        return legKickPushed && legKickReleased && !this.isInTheAir()
+            && this.spriteSheet?.outsideAnimationCall !== kick
     }
 
     blockControlAction() {
@@ -226,6 +226,15 @@ export class Player extends Fighter {
             ) {
                 this.spriteSheet?.dropAnimation();
                 this.spriteSheet?.callAnimation('up-hand')
+            }
+
+            if (
+                this.controls!.options.legKick.pushed &&
+                this.spriteSheet?.outsideAnimationCall !== 'up-leg' &&
+                this.spriteSheet?.outsideAnimationCall !== 'leg'
+            ) {
+                this.spriteSheet?.dropAnimation();
+                this.spriteSheet?.callAnimation('up-leg')
             }
         }
     }
