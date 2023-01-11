@@ -57,30 +57,37 @@ export class Player extends Fighter {
         }
     }
 
+    moveLeft() {
+        if (this.position.x! > 0) {
+            this.goLeft();
+        }
+
+        if (this.position.x! <= 0) {
+            this.position.x = 0;
+        }
+    }
+
     leftControlAction() {
         if (this.controls?.options.down) {
             return;
         }
 
         if (this.controls?.options.left) {
-            if (this.controls.options.leg2Kick.pushed) {
-                this.spriteSheet?.dropAnimation();
-                this.spriteSheet?.callAnimation('turn-leg');
-            } else if (this.spriteSheet?.outsideAnimationCall !== 'turn-leg') {
-                if (
-                    !this.spriteSheet?.outsideAnimationCall ||
-                    this?.spriteSheet?.outsideAnimationCall !== 'walk-back'
-                ) {
-                    this.spriteSheet?.callAnimation('walk-back');
+            if (this.side === 'left') {
+                if (this.controls.options.leg2Kick.pushed) {
+                    this.spriteSheet?.dropAnimation();
+                    this.spriteSheet?.callAnimation('turn-leg');
+                } else if (this.spriteSheet?.outsideAnimationCall !== 'turn-leg') {
+                    if (
+                        !this.spriteSheet?.outsideAnimationCall ||
+                        this?.spriteSheet?.outsideAnimationCall !== 'walk-back'
+                    ) {
+                        this.spriteSheet?.callAnimation('walk-back');
+                    }
+                    this.moveLeft();
                 }
-
-                if (this.position.x! > 0) {
-                    this.goLeft();
-                }
-
-                if (this.position.x! <= 0) {
-                    this.position.x = 0;
-                }
+            } else if (this.side === 'right') {
+                this.moveLeft();
             }
         }
     }

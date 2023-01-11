@@ -38,6 +38,10 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(18, 7, 10, false);
         case 'walk-back':
             return passAnimationObject(0, 7, 10, false);
+        case 'r-walk':
+            return passAnimationObject(37, 7, 10, false);
+        case 'r-walk-back':
+            return passAnimationObject(19, 7, 10, false);
         case 'leg':
             return passAnimationObject(3, 5, 6, true);
         case 'leg-2':

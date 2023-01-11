@@ -93,7 +93,9 @@ export class SpriteSheet {
         ) {
             if (
                 animation === 'walk' ||
+                animation === 'r-walk' ||
                 animation === 'walk-back' ||
+                animation === 'r-walk-back' ||
                 animation === 'sit' ||
                 animation === 'flip' ||
                 animation === 'back-flip' ||
@@ -108,7 +110,7 @@ export class SpriteSheet {
     }
 
     processAnimation() {
-        const animationType = this.outsideAnimationCall ?? this.fighter!.side === 'left' ? 'idle' : 'r-idle';
+        const animationType = this.outsideAnimationCall ? this.outsideAnimationCall : this.fighter!.side === 'left' ? 'idle' : 'r-idle';
         this.setAnimationValues(animationType);
     }
 
