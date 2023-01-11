@@ -1,5 +1,6 @@
 import { spriteSheetFile } from "./SpriteSheetFile";
 import { getAnimationValues } from "./AnimationValues";
+import {Fighter} from "../fighters/Fighter";
 
 export type Animation = {
     yStart: number,
@@ -13,6 +14,7 @@ export class SpriteSheet {
     image: HTMLImageElement|null = null;
     size = 400;
     context: CanvasRenderingContext2D|null = null;
+    fighter: Fighter|null = null;
 
     outsideAnimationCall: string|null = null;
     dropOnLast: boolean = false;
@@ -24,10 +26,15 @@ export class SpriteSheet {
     speed = 10;
     delayOnLast = 0;
 
-    constructor(spriteSheetName: string|null = null, context: CanvasRenderingContext2D) {
+    constructor(
+        spriteSheetName: string|null = null,
+        context: CanvasRenderingContext2D,
+        fighter: Fighter
+    ) {
         this.image = new Image();
         this.image.src = spriteSheetFile(spriteSheetName);
-        this.context = context
+        this.context = context;
+        this.fighter = fighter;
     }
 
     dropAnimation() {
@@ -101,7 +108,7 @@ export class SpriteSheet {
     }
 
     processAnimation() {
-        const animationType = this.outsideAnimationCall ?? 'idle'
+        const animationType = this.outsideAnimationCall ?? this.fighter!.side === 'left' ? 'idle' : 'r-idle';
         this.setAnimationValues(animationType);
     }
 

@@ -74,7 +74,7 @@ export class Fighter {
         this.position.y = y;
 
         if (spriteSheet) {
-            this.spriteSheet = new SpriteSheet(spriteSheet, context)
+            this.spriteSheet = new SpriteSheet(spriteSheet, context, this)
         }
 
         this.canvas = canvas;
@@ -224,8 +224,10 @@ export class Fighter {
             )
         }
 
+        const posX = this.side === 'left' ? this.position.x! - 50 : this.position.x! - 200
+
         if (this.spriteSheet) {
-            this.spriteSheet.draw(this.position.x! - 50, this.position.y!, this.height);
+            this.spriteSheet.draw(posX, this.position.y!, this.height);
         }
     }
 }
