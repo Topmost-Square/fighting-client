@@ -28,8 +28,12 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(13, 1, 1, false);
         case 'hand':
             return passAnimationObject(2, 6, 3, true);
+        case 'r-hand':
+            return passAnimationObject(21, 6, 3, true);
         case 'hand-2':
             return passAnimationObject(4, 6, 4, true);
+        case 'r-hand-2':
+            return passAnimationObject(23, 6, 4, true);
         case 'up-hand':
             return passAnimationObject(9, 1, 1, true, 30);
         case 'uppercut':

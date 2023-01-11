@@ -150,7 +150,11 @@ export class Player extends Fighter {
                 this.enemy?.getDamage(1);
             }
 
-            this.spriteSheet?.callAnimation('hand');
+            if (this.side === 'left') {
+                this.spriteSheet?.callAnimation('hand');
+            } else {
+                this.spriteSheet?.callAnimation('r-hand');
+            }
 
             this.handKickMask.show = true;
 
@@ -169,7 +173,11 @@ export class Player extends Fighter {
 
             this.handKickMask.show = true;
 
-            this.spriteSheet?.callAnimation('hand-2');
+            if (this.side === 'left') {
+                this.spriteSheet?.callAnimation('hand-2');
+            } else {
+                this.spriteSheet?.callAnimation('r-hand-2');
+            }
 
             this.controls?.dropReleaseFlag('hand2Kick');
 
