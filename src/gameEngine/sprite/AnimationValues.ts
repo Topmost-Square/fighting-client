@@ -68,8 +68,12 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(11, 8, 5, true, 30);
         case 'block':
             return passAnimationObject(16, 1, 1, false);
+        case 'r-block':
+            return passAnimationObject(35, 1, 1, false);
         case 'down-block':
             return passAnimationObject(12, 1, 1, false);
+        case 'r-down-block':
+            return passAnimationObject(31, 1, 1, false);
         default:
             return passAnimationObject(1, 6, 10, false);
     }
