@@ -25,7 +25,8 @@ export class Player extends Fighter {
         if (
             this.controls?.options.down &&
             !this.controls.options.block &&
-            this.spriteSheet?.outsideAnimationCall !== 'uppercut'
+            this.spriteSheet?.outsideAnimationCall !== 'uppercut' &&
+            this.spriteSheet?.outsideAnimationCall !== 'r-uppercut'
         ) {
             this.height = 200; // temporarily simulate fighter is down (sitting)
 
@@ -36,7 +37,11 @@ export class Player extends Fighter {
                 this.position.y = this.canvas?.height! - 500 + 200;
 
                 if (this.controls.options.hand2Kick.pushed) {
-                    this.spriteSheet?.callAnimation('uppercut');
+                    if (this.side === 'left') {
+                        this.spriteSheet?.callAnimation('uppercut');
+                    } else {
+                        this.spriteSheet?.callAnimation('r-uppercut');
+                    }
 
                     if (this.closeForDamage('hand')) {
                         this.enemy?.getDamage(5);

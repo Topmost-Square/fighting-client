@@ -46,6 +46,8 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(28, 1, 1, true, 30);
         case 'uppercut':
             return passAnimationObject(17, 5, 4, true, 30);
+        case 'r-uppercut':
+            return passAnimationObject(36, 5, 4, true, 30);
         case 'walk':
             return passAnimationObject(18, 7, 10, false);
         case 'walk-back':
