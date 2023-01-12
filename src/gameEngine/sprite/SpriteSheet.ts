@@ -52,7 +52,10 @@ export class SpriteSheet {
 
     setAnimationValues(animation: string) {
         if (!this.xRange) {
-            if (this.outsideAnimationCall === 'turn-leg') {
+            if (
+                this.outsideAnimationCall === 'turn-leg' ||
+                this.outsideAnimationCall === 'r-turn-leg'
+            ) {
                 if (this.xStart === 1) {
                     this.spreadAnimationValues(getAnimationValues(animation));
                 }
@@ -105,7 +108,8 @@ export class SpriteSheet {
                 animation === 'r-up-hand' ||
                 animation === 'up-leg' ||
                 animation === 'r-up-leg' ||
-                animation === 'turn-leg'
+                animation === 'turn-leg' ||
+                animation === 'r-turn-leg'
             ) {
                 this.xRange = 0;
             }

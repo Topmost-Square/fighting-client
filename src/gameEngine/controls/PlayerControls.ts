@@ -99,7 +99,9 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowRight':
                     this.setOption('right', false);
-                    !this.options.down && this.fighter?.dropAnimation();
+                    fighter?.spriteSheet?.outsideAnimationCall !== 'r-turn-leg' &&
+                    !this.options.down &&
+                    this.fighter?.dropAnimation();
                     break;
                 case ' ':
                     this.setOption('block', false);

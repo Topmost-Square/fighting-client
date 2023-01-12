@@ -95,7 +95,7 @@ export class Player extends Fighter {
                     }
                     this.moveLeft();
                 }
-            } else if (this.side === 'right') {
+            } else {
                 this.moveLeft();
             }
         }
@@ -105,19 +105,36 @@ export class Player extends Fighter {
         this.spriteSheet?.callAnimation(animation);
     }
 
+    moveRight() {
+        if (this.position.x !== null) {
+            if (this.position.x + this.width < this.canvas?.width!) {
+                this.goRight();
+            }
+
+            if (this.position.x + this.width >= this.canvas?.width!) {
+                this.position.x = this.canvas?.width! - this.width;
+            }
+        }
+    }
+
     rightControlAction() {
         if (this.controls?.options.down) {
             return;
         }
 
-        if (this.position.x !== null) {
-            if (this.controls?.options.right) {
-                if (this.position.x + this.width < this.canvas?.width!) {
-                    this.goRight();
-                }
-
-                if (this.position.x + this.width >= this.canvas?.width!) {
-                    this.position.x = this.canvas?.width! - this.width;
+        if (this.controls?.options.right) {
+            if (this.side === 'right') {
+                if (this.controls!.options.leg2Kick.pushed) {
+                    this.spriteSheet?.dropAnimation();
+                    this.spriteSheet?.callAnimation('r-turn-leg');
+                } else if (this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg') {
+                    if (
+                        !this.spriteSheet?.outsideAnimationCall ||
+                        this?.spriteSheet?.outsideAnimationCall !== 'r-walk-back'
+                    ) {
+                        this.spriteSheet?.callAnimation('r-walk-back');
+                    }
+                    this.moveRight();
                 }
             }
         }
@@ -204,6 +221,7 @@ export class Player extends Fighter {
         return legKickPushed && legKickReleased && !this.isInTheAir()
             && this.spriteSheet?.outsideAnimationCall !== kick
             && this.spriteSheet?.outsideAnimationCall !== 'turn-leg'
+            && this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg'
     }
 
     blockControlAction() {
