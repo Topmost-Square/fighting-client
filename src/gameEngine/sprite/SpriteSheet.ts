@@ -102,7 +102,9 @@ export class SpriteSheet {
                 animation === 'back-flip' ||
                 animation === 'r-back-flip' ||
                 animation === 'up-hand' ||
+                animation === 'r-up-hand' ||
                 animation === 'up-leg' ||
+                animation === 'r-up-leg' ||
                 animation === 'turn-leg'
             ) {
                 this.xRange = 0;

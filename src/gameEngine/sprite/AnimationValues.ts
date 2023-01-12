@@ -40,6 +40,8 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(23, 6, 4, true);
         case 'up-hand':
             return passAnimationObject(9, 1, 1, true, 30);
+        case 'r-up-hand':
+            return passAnimationObject(28, 1, 1, true, 30);
         case 'uppercut':
             return passAnimationObject(17, 5, 4, true, 30);
         case 'walk':
@@ -60,6 +62,8 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(24, 5, 6, true);
         case 'up-leg':
             return passAnimationObject(10, 1, 1, true, 30);
+        case 'r-up-leg':
+            return passAnimationObject(29, 1, 1, true, 30);
         case 'turn-leg':
             return passAnimationObject(11, 8, 5, true, 30);
         case 'block':

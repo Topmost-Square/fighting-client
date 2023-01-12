@@ -269,19 +269,31 @@ export class Player extends Fighter {
             if (
                 this.controls!.options.handKick.pushed &&
                 this.spriteSheet?.outsideAnimationCall !== 'up-hand' &&
-                this.spriteSheet?.outsideAnimationCall !== 'hand'
+                this.spriteSheet?.outsideAnimationCall !== 'r-up-hand' &&
+                this.spriteSheet?.outsideAnimationCall !== 'hand' &&
+                this.spriteSheet?.outsideAnimationCall !== 'r-hand'
             ) {
                 this.spriteSheet?.dropAnimation();
-                this.spriteSheet?.callAnimation('up-hand')
+                if (this.side === 'left') {
+                    this.spriteSheet?.callAnimation('up-hand');
+                } else {
+                    this.spriteSheet?.callAnimation('r-up-hand');
+                }
             }
 
             if (
                 this.controls!.options.legKick.pushed &&
                 this.spriteSheet?.outsideAnimationCall !== 'up-leg' &&
-                this.spriteSheet?.outsideAnimationCall !== 'leg'
+                this.spriteSheet?.outsideAnimationCall !== 'r-up-leg' &&
+                this.spriteSheet?.outsideAnimationCall !== 'leg' &&
+                this.spriteSheet?.outsideAnimationCall !== 'r-leg'
             ) {
                 this.spriteSheet?.dropAnimation();
-                this.spriteSheet?.callAnimation('up-leg')
+                if (this.side === 'left') {
+                    this.spriteSheet?.callAnimation('up-leg');
+                } else {
+                    this.spriteSheet?.callAnimation('r-up-leg');
+                }
             }
         }
     }
