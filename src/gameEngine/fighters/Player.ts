@@ -43,7 +43,11 @@ export class Player extends Fighter {
                         // todo: enemy falls
                     }
                 } else {
-                    this.spriteSheet?.callAnimation('sit');
+                    if (this.side === 'left') {
+                        this.spriteSheet?.callAnimation('sit');
+                    } else {
+                        this.spriteSheet?.callAnimation('r-sit');
+                    }
                 }
             }
         }

@@ -30,6 +30,8 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(39, 7, 5, false);
         case 'sit':
             return passAnimationObject(13, 1, 1, false);
+        case 'r-sit':
+            return passAnimationObject(32, 1, 1, false);
         case 'hand':
             return passAnimationObject(2, 6, 3, true);
         case 'r-hand':
