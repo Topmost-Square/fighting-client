@@ -24,10 +24,11 @@ export const Practice = () => {
         );
 
         aiFighter = new AIFighter(
-            canvas!.width - 200,
+            canvas!.width - 700,
             canvas!.height - 500,
             canvas,
-            c!
+            c!,
+            'green'
         );
 
         game = new PracticeGame(player, aiFighter);
