@@ -98,7 +98,9 @@ export class SpriteSheet {
                 animation === 'r-walk-back' ||
                 animation === 'sit' ||
                 animation === 'flip' ||
+                animation === 'r-flip' ||
                 animation === 'back-flip' ||
+                animation === 'r-back-flip' ||
                 animation === 'up-hand' ||
                 animation === 'up-leg' ||
                 animation === 'turn-leg'

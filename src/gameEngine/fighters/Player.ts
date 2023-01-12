@@ -215,7 +215,11 @@ export class Player extends Fighter {
 
             this.legKickMask.show = true;
 
-            this.spriteSheet?.callAnimation('leg');
+            if (this.side === 'left') {
+                this.spriteSheet?.callAnimation('leg');
+            } else {
+                this.spriteSheet?.callAnimation('r-leg');
+            }
 
             this.controls?.dropReleaseFlag('legKick');
 
@@ -231,7 +235,11 @@ export class Player extends Fighter {
 
             this.legKickMask.show = true;
 
-            this.spriteSheet?.callAnimation('leg-2');
+            if (this.side === 'left') {
+                this.spriteSheet?.callAnimation('leg-2');
+            } else {
+                this.spriteSheet?.callAnimation('r-leg-2');
+            }
 
             this.controls?.dropReleaseFlag('leg2Kick');
 
@@ -241,11 +249,22 @@ export class Player extends Fighter {
 
     inAirAction() {
         if (this.isInTheAir()) {
-            if (this.spriteSheet?.outsideAnimationCall !== 'back-flip' && this.controls!.options.left) {
+
+            if (this.side === 'left') {
+                if (this.spriteSheet?.outsideAnimationCall !== 'back-flip' && this.controls!.options.left) {
                     this.spriteSheet?.callAnimation('back-flip')
                 } else if (this.spriteSheet?.outsideAnimationCall !== 'flip' && this.controls!.options.right) {
                     this.spriteSheet?.callAnimation('flip')
                 }
+            }
+
+            if (this.side === 'right') {
+                if (this.spriteSheet?.outsideAnimationCall !== 'back-flip' && this.controls!.options.right) {
+                    this.spriteSheet?.callAnimation('r-back-flip')
+                } else if (this.spriteSheet?.outsideAnimationCall !== 'flip' && this.controls!.options.left) {
+                    this.spriteSheet?.callAnimation('r-flip')
+                }
+            }
 
             if (
                 this.controls!.options.handKick.pushed &&
