@@ -136,6 +136,8 @@ export class Player extends Fighter {
                     }
                     this.moveRight();
                 }
+            } else {
+                this.moveRight();
             }
         }
     }

@@ -118,8 +118,25 @@ export class SpriteSheet {
     }
 
     processAnimation() {
-        const animationType = this.outsideAnimationCall ? this.outsideAnimationCall : this.fighter!.side === 'left' ? 'idle' : 'r-idle';
-        this.setAnimationValues(animationType);
+        let animationType;
+
+        if (this.fighter?.side === 'left') {
+            if (this.outsideAnimationCall) {
+                animationType = this.outsideAnimationCall;
+            } else {
+                animationType = 'idle';
+            }
+        } else if (this.fighter?.side === 'right') {
+            if (this.outsideAnimationCall) {
+                animationType = this.outsideAnimationCall;
+            } else {
+                animationType = 'r-idle';
+            }
+        }
+
+        if (animationType) {
+            this.setAnimationValues(animationType);
+        }
     }
 
     draw(x: number, y: number, height: number) {
