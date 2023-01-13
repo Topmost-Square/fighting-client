@@ -83,7 +83,7 @@ export class Player extends Fighter {
 
         if (this.controls?.options.left) {
             if (this.side === 'left') {
-                if (this.controls.options.leg2Kick.pushed) {
+                if (this.controls.options.leg2Kick.pushed && this.spriteSheet?.outsideAnimationCall !== 'turn-leg') {
                     this.spriteSheet?.dropAnimation();
                     this.spriteSheet?.callAnimation('turn-leg');
                 } else if (this.spriteSheet?.outsideAnimationCall !== 'turn-leg') {
@@ -124,7 +124,7 @@ export class Player extends Fighter {
 
         if (this.controls?.options.right) {
             if (this.side === 'right') {
-                if (this.controls!.options.leg2Kick.pushed) {
+                if (this.controls!.options.leg2Kick.pushed && this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg') {
                     this.spriteSheet?.dropAnimation();
                     this.spriteSheet?.callAnimation('r-turn-leg');
                 } else if (this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg') {
