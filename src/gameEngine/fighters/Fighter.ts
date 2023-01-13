@@ -85,7 +85,14 @@ export class Fighter {
         this.enemy = enemy;
     }
 
-    getDamage(damage: number) {
+    /**
+     * getDamage
+     *
+     * @param damage - value to take from fighters health
+     * @param area - place fighter was kicked (head, torso)
+     * @param shouldFall - should player fall after kick
+     */
+    getDamage(damage: number, area: string, shouldFall: boolean) {
         this.health -= damage;
     }
 

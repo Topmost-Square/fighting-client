@@ -21,6 +21,18 @@ export class Player extends Fighter {
         }
     }
 
+    performUpperCut() {
+        if (this.side === 'left') {
+            this.spriteSheet?.callAnimation('uppercut');
+        } else {
+            this.spriteSheet?.callAnimation('r-uppercut');
+        }
+
+        if (this.closeForDamage('hand')) {
+            this.enemy?.getDamage(5, 'face', true);
+        }
+    }
+
     downControlAction() {
         if (
             this.controls?.options.down &&
@@ -28,7 +40,10 @@ export class Player extends Fighter {
             this.spriteSheet?.outsideAnimationCall !== 'uppercut' &&
             this.spriteSheet?.outsideAnimationCall !== 'r-uppercut'
         ) {
-            this.height = 200; // temporarily simulate fighter is down (sitting)
+
+            if (!this.isInTheAir()) {
+                this.height = 200; // fighter is down (sitting) / mask is twice smaller
+            }
 
             if (
                 !this.verticalAcceleration &&
@@ -37,16 +52,7 @@ export class Player extends Fighter {
                 this.position.y = this.canvas?.height! - 500 + 200;
 
                 if (this.controls.options.hand2Kick.pushed) {
-                    if (this.side === 'left') {
-                        this.spriteSheet?.callAnimation('uppercut');
-                    } else {
-                        this.spriteSheet?.callAnimation('r-uppercut');
-                    }
-
-                    if (this.closeForDamage('hand')) {
-                        this.enemy?.getDamage(5);
-                        // todo: enemy falls
-                    }
+                    this.performUpperCut();
                 } else {
                     if (this.side === 'left') {
                         this.spriteSheet?.callAnimation('sit');
@@ -175,7 +181,7 @@ export class Player extends Fighter {
     handKickControlAction() {
         if (this.checkHandKickPushed('hand')) {
             if (this.closeForDamage('hand')) {
-                this.enemy?.getDamage(1);
+                this.enemy?.getDamage(1, 'head', false);
             }
 
             if (this.side === 'left') {
@@ -195,8 +201,7 @@ export class Player extends Fighter {
     hand2KickControlAction() {
         if (this.checkHandKickPushed('hand-2') && !this.controls?.options.down) {
             if (this.closeForDamage('hand')) {
-                this.enemy?.getDamage(2);
-                // todo: enemy get face kick
+                this.enemy?.getDamage(2, 'head', false);
             }
 
             this.handKickMask.show = true;
@@ -247,7 +252,7 @@ export class Player extends Fighter {
     legKickControlAction() {
         if (this.checkLegKickPushed('leg')) {
             if (this.closeForDamage('leg')) {
-                this.enemy?.getDamage(2);
+                this.enemy?.getDamage(2, 'head', false);
             }
 
             this.legKickMask.show = true;
@@ -267,7 +272,7 @@ export class Player extends Fighter {
     legKick2ControlAction() {
         if (this.checkLegKickPushed('leg-2') && !this.controls?.options.left) {
             if (this.closeForDamage('leg')) {
-                this.enemy?.getDamage(2);
+                this.enemy?.getDamage(2, 'torso', false);
             }
 
             this.legKickMask.show = true;
@@ -286,7 +291,6 @@ export class Player extends Fighter {
 
     inAirAction() {
         if (this.isInTheAir()) {
-
             if (this.side === 'left') {
                 if (this.spriteSheet?.outsideAnimationCall !== 'back-flip' && this.controls!.options.left) {
                     this.spriteSheet?.callAnimation('back-flip')
