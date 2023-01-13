@@ -2,7 +2,6 @@ import {Fighter} from "./Fighter";
 import {PlayerControls} from "../controls/PlayerControls";
 
 export class Player extends Fighter {
-
     constructor(
         x: number,
         y: number,
@@ -13,12 +12,6 @@ export class Player extends Fighter {
         super(x, y, canvas, context, spriteSheet);
 
         this.controls = new PlayerControls(this);
-    }
-
-    upControlAction() {
-        if (this.controls?.options.up && this.verticalAcceleration === 0 && !this.isInTheAir()) {
-            this.verticalAcceleration = 50;
-        }
     }
 
     downControlAction() {
@@ -60,35 +53,10 @@ export class Player extends Fighter {
         }
     }
 
-    moveLeft() {
-        if (this.position.x! > 0) {
-            this.goLeft();
-        }
-
-        if (this.position.x! <= 0) {
-            this.position.x = 0;
-        }
-    }
-
     leftControlAction() {
-        if (this.controls?.options.down) {
-            return;
-        }
-
         if (this.controls?.options.left) {
             if (this.side === 'left') {
-                if (this.controls.options.leg2Kick.pushed && this.spriteSheet?.outsideAnimationCall !== 'turn-leg') {
-                    this.spriteSheet?.dropAnimation();
-                    this.spriteSheet?.callAnimation('turn-leg');
-                } else if (this.spriteSheet?.outsideAnimationCall !== 'turn-leg') {
-                    if (
-                        !this.spriteSheet?.outsideAnimationCall ||
-                        this?.spriteSheet?.outsideAnimationCall !== 'walk-back'
-                    ) {
-                        this.spriteSheet?.callAnimation('walk-back');
-                    }
-                    this.moveLeft();
-                }
+                this.sideControlAction('left');
             } else {
                 this.moveLeft();
             }
@@ -99,37 +67,10 @@ export class Player extends Fighter {
         this.spriteSheet?.callAnimation(animation);
     }
 
-    moveRight() {
-        if (this.position.x !== null) {
-            if (this.position.x + this.width < this.canvas?.width!) {
-                this.goRight();
-            }
-
-            if (this.position.x + this.width >= this.canvas?.width!) {
-                this.position.x = this.canvas?.width! - this.width;
-            }
-        }
-    }
-
     rightControlAction() {
-        if (this.controls?.options.down) {
-            return;
-        }
-
         if (this.controls?.options.right) {
             if (this.side === 'right') {
-                if (this.controls!.options.leg2Kick.pushed && this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg') {
-                    this.spriteSheet?.dropAnimation();
-                    this.spriteSheet?.callAnimation('r-turn-leg');
-                } else if (this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg') {
-                    if (
-                        !this.spriteSheet?.outsideAnimationCall ||
-                        this?.spriteSheet?.outsideAnimationCall !== 'r-walk-back'
-                    ) {
-                        this.spriteSheet?.callAnimation('r-walk-back');
-                    }
-                    this.moveRight();
-                }
+                this.sideControlAction('right');
             } else {
                 this.moveRight();
             }

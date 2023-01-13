@@ -85,6 +85,82 @@ export class Fighter {
         this.enemy = enemy;
     }
 
+    upControlAction() {
+        if (this.controls?.options.up && this.verticalAcceleration === 0 && !this.isInTheAir()) {
+            this.verticalAcceleration = 50;
+        }
+    }
+
+    sideControlAnimations(control: string) {
+        if (control === 'left')
+            return {
+                kick: 'turn-leg',
+                walk: 'walk-back'
+            }
+        else
+            return {
+                kick: 'r-turn-leg',
+                walk: 'r-walk-back'
+            }
+    }
+
+    moveLeft() {
+        if (this.position.x! > 0) {
+            this.goLeft();
+        }
+
+        if (this.position.x! <= 0) {
+            this.position.x = 0;
+        }
+    }
+
+    callMove(control: string) {
+        if (control === 'left') {
+            this.moveLeft();
+        } else {
+            this.moveRight();
+        }
+    }
+
+    moveRight() {
+        if (this.position.x !== null) {
+            if (this.position.x + this.width < this.canvas?.width!) {
+                this.goRight();
+            }
+
+            if (this.position.x + this.width >= this.canvas?.width!) {
+                this.position.x = this.canvas?.width! - this.width;
+            }
+        }
+    }
+
+    sideControlAction(control: string) {
+        if (this.controls?.options.down) {
+            return;
+        }
+
+        const sideControlAnimations =  this.sideControlAnimations(control);
+
+        if (
+            this.controls?.options.leg2Kick.pushed &&
+            this.spriteSheet?.outsideAnimationCall !== sideControlAnimations.kick
+        ) {
+            this.spriteSheet?.dropAnimation();
+            this.spriteSheet?.callAnimation(sideControlAnimations.kick);
+            if (this.closeForDamage('leg')) {
+                this.enemy?.getDamage(7, 'face', true);
+            }
+        } else if (this.spriteSheet?.outsideAnimationCall !== sideControlAnimations.kick) {
+            if (
+                !this.spriteSheet?.outsideAnimationCall ||
+                this?.spriteSheet?.outsideAnimationCall !== sideControlAnimations.walk
+            ) {
+                this.spriteSheet?.callAnimation(sideControlAnimations.walk);
+            }
+            this.callMove(control)
+        }
+    }
+
     /**
      * getDamage
      *
