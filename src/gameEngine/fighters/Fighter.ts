@@ -91,6 +91,94 @@ export class Fighter {
         }
     }
 
+    downControlAction() {
+        if (
+            this.controls?.options.down &&
+            !this.controls.options.block &&
+            this.spriteSheet?.outsideAnimationCall !== 'uppercut' &&
+            this.spriteSheet?.outsideAnimationCall !== 'r-uppercut'
+        ) {
+
+            if (!this.isInTheAir()) {
+                this.height = 200; // fighter is down (sitting) / mask is twice smaller
+            }
+
+            if (
+                !this.verticalAcceleration &&
+                this.position.y! >= this.canvas?.height! - 500 - this.height
+            ) {
+                this.position.y = this.canvas?.height! - 500 + 200;
+
+                if (this.controls.options.hand2Kick.pushed) {
+                    this.performUpperCut();
+                } else {
+                    if (this.side === 'left') {
+                        this.spriteSheet?.callAnimation('sit');
+                    } else {
+                        this.spriteSheet?.callAnimation('r-sit');
+                    }
+                }
+            }
+        }
+
+        if (!this.controls?.options.down && this.position.y) {
+            this.height = 400; // temporarily simulate fighter is up
+
+            if (!this.verticalAcceleration && this.position.y >= this.canvas?.height! - 500) {
+                this.position.y = this.canvas?.height! - 500;
+            }
+        }
+    }
+
+    leftControlAction() {
+        if (this.controls?.options.left) {
+            if (this.side === 'left') {
+                this.sideControlAction('left');
+            } else {
+                this.moveLeft();
+            }
+        }
+    }
+
+    rightControlAction() {
+        if (this.controls?.options.right) {
+            if (this.side === 'right') {
+                this.sideControlAction('right');
+            } else {
+                this.moveRight();
+            }
+        }
+    }
+
+    checkHandKickPushed(kick: string) {
+        const handKickPushed = kick === 'hand' ? this.controls?.options.handKick.pushed :
+            this.controls?.options.hand2Kick.pushed;
+
+        const handKickReleased = kick === 'hand' ? this.controls?.options.handKick.prevReleased :
+            this.controls?.options.hand2Kick.prevReleased;
+
+        return handKickPushed && handKickReleased && !this.isInTheAir() && this.spriteSheet?.outsideAnimationCall !== kick
+    }
+
+    performBasicKick(kick: string) {
+        if (this.shouldCommitDamage(kick)) {
+            const calculatedDamage = this.calculateDamage(kick)
+            this.enemy?.getDamage(
+                calculatedDamage.value,
+                calculatedDamage.area,
+                calculatedDamage.shouldFall
+            );
+        }
+
+        this.spriteSheet?.callAnimation(this.calculateKickAnimation(kick));
+
+        this.calculateAndToggleKickMask(kick, true);
+
+        this.controls?.dropReleaseFlag(kick === 'hand' ? 'handKick' : 'hand2Kick');
+
+        this.calculateAndToggleKickMask(kick, false);
+    }
+
     sideControlAnimations(control: string) {
         if (control === 'left')
             return {
@@ -344,6 +432,119 @@ export class Fighter {
 
     isInTheAir() {
         return !(this.position.y! >= (this.canvas!.height - 500))
+    }
+
+    callAnimation(animation: string) {
+        this.spriteSheet?.callAnimation(animation);
+    }
+
+    dropAnimation() {
+        this.spriteSheet?.dropAnimation();
+    }
+
+    legKickControlAction() {
+        if (this.checkLegKickPushed('leg')) {
+            this.performBasicKick('leg');
+        }
+    }
+
+    legKick2ControlAction() {
+        if (this.checkLegKickPushed('leg-2') && !this.controls?.options.left) {
+            this.performBasicKick('leg-2');
+        }
+    }
+
+    handKickControlAction() {
+        if (this.checkHandKickPushed('hand')) {
+            this.performBasicKick('hand');
+        }
+    }
+
+    hand2KickControlAction() {
+        if (this.checkHandKickPushed('hand-2') && !this.controls?.options.down) {
+            this.performBasicKick('hand-2');
+        }
+    }
+
+    checkLegKickPushed(kick: string) {
+        const legKickPushed = kick === 'leg' ? this.controls?.options.legKick.pushed :
+            this.controls?.options.leg2Kick.pushed;
+
+        const legKickReleased = kick === 'leg' ? this.controls?.options.legKick.prevReleased :
+            this.controls?.options.leg2Kick.prevReleased;
+
+        return legKickPushed && legKickReleased && !this.isInTheAir()
+            && this.spriteSheet?.outsideAnimationCall !== kick
+            && this.spriteSheet?.outsideAnimationCall !== 'turn-leg'
+            && this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg'
+    }
+
+    blockControlAction() {
+        if (this.controls?.options.block && !this.isInTheAir()) {
+            if (this.controls.options.down) {
+                if (this.side === 'left') {
+                    this.callAnimation('down-block');
+                } else {
+                    this.callAnimation('r-down-block');
+                }
+            } else {
+                if (this.side === 'left') {
+                    this.callAnimation('block');
+                } else {
+                    this.callAnimation('r-block');
+                }
+            }
+        }
+    }
+
+    inAirAction() {
+        if (this.isInTheAir()) {
+            if (this.side === 'left') {
+                if (this.spriteSheet?.outsideAnimationCall !== 'back-flip' && this.controls!.options.left) {
+                    this.spriteSheet?.callAnimation('back-flip')
+                } else if (this.spriteSheet?.outsideAnimationCall !== 'flip' && this.controls!.options.right) {
+                    this.spriteSheet?.callAnimation('flip')
+                }
+            }
+
+            if (this.side === 'right') {
+                if (this.spriteSheet?.outsideAnimationCall !== 'back-flip' && this.controls!.options.right) {
+                    this.spriteSheet?.callAnimation('r-back-flip')
+                } else if (this.spriteSheet?.outsideAnimationCall !== 'flip' && this.controls!.options.left) {
+                    this.spriteSheet?.callAnimation('r-flip')
+                }
+            }
+
+            if (
+                this.controls!.options.handKick.pushed &&
+                this.spriteSheet?.outsideAnimationCall !== 'up-hand' &&
+                this.spriteSheet?.outsideAnimationCall !== 'r-up-hand' &&
+                this.spriteSheet?.outsideAnimationCall !== 'hand' &&
+                this.spriteSheet?.outsideAnimationCall !== 'r-hand'
+            ) {
+                this.spriteSheet?.dropAnimation();
+                if (this.side === 'left') {
+                    this.spriteSheet?.callAnimation('up-hand');
+                } else {
+                    this.spriteSheet?.callAnimation('r-up-hand');
+                }
+            }
+
+            if (
+                this.controls!.options.legKick.pushed &&
+                this.spriteSheet?.outsideAnimationCall !== 'up-leg' &&
+                this.spriteSheet?.outsideAnimationCall !== 'r-up-leg' &&
+                this.spriteSheet?.outsideAnimationCall !== 'leg' &&
+                this.spriteSheet?.outsideAnimationCall !== 'r-leg'
+            ) {
+                this.spriteSheet?.dropAnimation();
+                if (this.side === 'left') {
+                    this.spriteSheet?.callAnimation('up-leg');
+                } else {
+                    this.spriteSheet?.callAnimation('r-up-leg');
+                }
+            }
+        }
     }
 
     showLegKick() {
