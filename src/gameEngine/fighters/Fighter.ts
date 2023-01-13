@@ -98,7 +98,6 @@ export class Fighter {
             this.spriteSheet?.outsideAnimationCall !== 'uppercut' &&
             this.spriteSheet?.outsideAnimationCall !== 'r-uppercut'
         ) {
-
             if (!this.isInTheAir()) {
                 this.height = 200; // fighter is down (sitting) / mask is twice smaller
             }
@@ -112,11 +111,7 @@ export class Fighter {
                 if (this.controls.options.hand2Kick.pushed) {
                     this.performUpperCut();
                 } else {
-                    if (this.side === 'left') {
-                        this.spriteSheet?.callAnimation('sit');
-                    } else {
-                        this.spriteSheet?.callAnimation('r-sit');
-                    }
+                    this.spriteSheet?.callAnimation(this.side === 'left' ? 'sit' : 'r-sit');
                 }
             }
         }
@@ -157,7 +152,45 @@ export class Fighter {
         const handKickReleased = kick === 'hand' ? this.controls?.options.handKick.prevReleased :
             this.controls?.options.hand2Kick.prevReleased;
 
-        return handKickPushed && handKickReleased && !this.isInTheAir() && this.spriteSheet?.outsideAnimationCall !== kick
+        return handKickPushed &&
+            handKickReleased &&
+            !this.isInTheAir() &&
+            this.spriteSheet?.outsideAnimationCall !== kick
+    }
+
+    checkLegKickPushed(kick: string) {
+        const legKickPushed = kick === 'leg' ? this.controls?.options.legKick.pushed :
+            this.controls?.options.leg2Kick.pushed;
+
+        const legKickReleased = kick === 'leg' ? this.controls?.options.legKick.prevReleased :
+            this.controls?.options.leg2Kick.prevReleased;
+
+        return legKickPushed &&
+            legKickReleased &&
+            !this.isInTheAir() &&
+            this.spriteSheet?.outsideAnimationCall !== kick &&
+            this.spriteSheet?.outsideAnimationCall !== 'turn-leg' &&
+            this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg'
+    }
+
+    calculateKickToDrop(kick: string) {
+        if (kick === 'hand') {
+            return 'handKick';
+        }
+
+        if (kick === 'hand-2') {
+            return 'hand2Kick';
+        }
+
+        if (kick === 'leg') {
+            return 'legKick';
+        }
+
+        if (kick === 'leg-2') {
+            return 'leg2Kick';
+        }
+
+        return 'handKick';
     }
 
     performBasicKick(kick: string) {
@@ -166,7 +199,9 @@ export class Fighter {
             this.enemy?.getDamage(
                 calculatedDamage.value,
                 calculatedDamage.area,
-                calculatedDamage.shouldFall
+                calculatedDamage.shouldFall,
+                calculatedDamage.up,
+                calculatedDamage.side
             );
         }
 
@@ -174,7 +209,9 @@ export class Fighter {
 
         this.calculateAndToggleKickMask(kick, true);
 
-        this.controls?.dropReleaseFlag(kick === 'hand' ? 'handKick' : 'hand2Kick');
+        const kickToDrop = this.calculateKickToDrop(kick);
+
+        this.controls?.dropReleaseFlag(kickToDrop);
 
         this.calculateAndToggleKickMask(kick, false);
     }
@@ -222,6 +259,14 @@ export class Fighter {
         }
     }
 
+    performTurnKick(kickAnimation: string) {
+        this.spriteSheet?.dropAnimation();
+        this.spriteSheet?.callAnimation(kickAnimation);
+        if (this.closeForDamage('leg')) {
+            this.enemy?.getDamage(7, 'face', true, 20, 50);
+        }
+    }
+
     sideControlAction(control: string) {
         if (this.controls?.options.down) {
             return;
@@ -233,11 +278,7 @@ export class Fighter {
             this.controls?.options.leg2Kick.pushed &&
             this.spriteSheet?.outsideAnimationCall !== sideControlAnimations.kick
         ) {
-            this.spriteSheet?.dropAnimation();
-            this.spriteSheet?.callAnimation(sideControlAnimations.kick);
-            if (this.closeForDamage('leg')) {
-                this.enemy?.getDamage(7, 'face', true);
-            }
+            this.performTurnKick(sideControlAnimations.kick);
         } else if (this.spriteSheet?.outsideAnimationCall !== sideControlAnimations.kick) {
             if (
                 !this.spriteSheet?.outsideAnimationCall ||
@@ -250,14 +291,24 @@ export class Fighter {
     }
 
     /**
-     * getDamage
+     *  getDamage
      *
      * @param damage - value to take from fighters health
      * @param area - place fighter was kicked (head, torso)
      * @param shouldFall - should player fall after kick
+     * @param up - how enemy should fly up %
+     * @param side - how enemy should fly to the side %
      */
-    getDamage(damage: number, area: string, shouldFall: boolean) {
+    getDamage(damage: number, area: string, shouldFall: boolean, up: number, side: number) {
         this.health -= damage;
+
+        // todo: area animation
+
+        // todo: should fall animation
+
+        // todo: move enemy up
+
+        // todo: move enemy side
     }
 
     closeForDamage(kickType: string) {
@@ -268,8 +319,8 @@ export class Fighter {
         return (
                 this.side === 'left' &&
                 this.enemy?.position.x! <=
-                this.position.x! + this.width + kickMaskWidth) ||
-            (
+                this.position.x! + this.width + kickMaskWidth
+            ) || (
                 this.side === 'right' &&
                 this.enemy?.position.x! + this.enemy?.width! >=
                 this.position.x! - kickMaskWidth
@@ -277,14 +328,10 @@ export class Fighter {
     }
 
     performUpperCut() {
-        if (this.side === 'left') {
-            this.spriteSheet?.callAnimation('uppercut');
-        } else {
-            this.spriteSheet?.callAnimation('r-uppercut');
-        }
+        this.spriteSheet?.callAnimation(this.side === 'left' ? 'uppercut' : 'r-uppercut');
 
         if (this.closeForDamage('hand')) {
-            this.enemy?.getDamage(5, 'face', true);
+            this.enemy?.getDamage(5, 'face', true, 50, 30);
         }
     }
 
@@ -299,20 +346,20 @@ export class Fighter {
 
     calculateDamage(kick: string) {
         if (kick === 'hand')
-            return { value: 1, area: 'head', shouldFall: false };
+            return { value: 1, area: 'head', shouldFall: false, up: 0, side: 0 };
 
         if (kick === 'hand-2')
             // todo: condition enemy will fall
-            return { value: 2, area: 'head', shouldFall: false };
+            return { value: 2, area: 'head', shouldFall: false, up: 0, side: 0 };
 
         if (kick === 'leg')
             // todo: condition enemy will fall
-            return { value: 4, area: 'head', shouldFall: false };
+            return { value: 4, area: 'head', shouldFall: false, up: 0, side: 0 };
 
         if (kick === 'leg-2')
-            return { value: 3, area: 'torso', shouldFall: false };
+            return { value: 3, area: 'torso', shouldFall: false, up: 0, side: 0 };
 
-        return { value: 0, area: '', shouldFall: false };
+        return { value: 0, area: '', shouldFall: false, up: 0, side: 0 };
     }
 
     calculateKickAnimation(kick: string) {
@@ -464,19 +511,6 @@ export class Fighter {
         if (this.checkHandKickPushed('hand-2') && !this.controls?.options.down) {
             this.performBasicKick('hand-2');
         }
-    }
-
-    checkLegKickPushed(kick: string) {
-        const legKickPushed = kick === 'leg' ? this.controls?.options.legKick.pushed :
-            this.controls?.options.leg2Kick.pushed;
-
-        const legKickReleased = kick === 'leg' ? this.controls?.options.legKick.prevReleased :
-            this.controls?.options.leg2Kick.prevReleased;
-
-        return legKickPushed && legKickReleased && !this.isInTheAir()
-            && this.spriteSheet?.outsideAnimationCall !== kick
-            && this.spriteSheet?.outsideAnimationCall !== 'turn-leg'
-            && this.spriteSheet?.outsideAnimationCall !== 'r-turn-leg'
     }
 
     blockControlAction() {
