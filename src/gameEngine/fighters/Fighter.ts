@@ -96,6 +96,34 @@ export class Fighter {
         this.health -= damage;
     }
 
+    closeForDamage(kickType: string) {
+        const kickMaskWidth = kickType === 'hand' ?
+            this.handKickMask.width :
+            this.legKickMask.width;
+
+        return (
+                this.side === 'left' &&
+                this.enemy?.position.x! <=
+                this.position.x! + this.width + kickMaskWidth) ||
+            (
+                this.side === 'right' &&
+                this.enemy?.position.x! + this.enemy?.width! >=
+                this.position.x! - kickMaskWidth
+            );
+    }
+
+    performUpperCut() {
+        if (this.side === 'left') {
+            this.spriteSheet?.callAnimation('uppercut');
+        } else {
+            this.spriteSheet?.callAnimation('r-uppercut');
+        }
+
+        if (this.closeForDamage('hand')) {
+            this.enemy?.getDamage(5, 'face', true);
+        }
+    }
+
     calculatePointer() {
         this.pointer.y = this.position.y! + 100;
 
