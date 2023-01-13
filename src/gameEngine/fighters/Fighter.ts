@@ -124,6 +124,75 @@ export class Fighter {
         }
     }
 
+
+    shouldCommitDamage(kick: string) {
+        if (kick === 'hand' || kick === 'hand-2')
+            return this.closeForDamage('hand');
+
+        if (kick === 'leg' || kick === 'leg-2')
+            return this.closeForDamage('leg');
+    }
+
+    calculateDamage(kick: string) {
+        if (kick === 'hand')
+            return { value: 1, area: 'head', shouldFall: false };
+
+        if (kick === 'hand-2')
+            // todo: condition enemy will fall
+            return { value: 2, area: 'head', shouldFall: false };
+
+        if (kick === 'leg')
+            // todo: condition enemy will fall
+            return { value: 4, area: 'head', shouldFall: false };
+
+        if (kick === 'leg-2')
+            return { value: 3, area: 'torso', shouldFall: false };
+
+        return { value: 0, area: '', shouldFall: false };
+    }
+
+    calculateKickAnimation(kick: string) {
+        if (this.side === 'left') {
+            if (kick === 'hand')
+                return 'hand';
+
+            if (kick === 'hand-2')
+                return 'hand-2';
+
+            if (kick === 'leg')
+                return 'leg';
+
+            if (kick === 'leg-2')
+                return 'leg-2';
+        }
+
+        if (this.side === 'right') {
+            if (kick === 'hand')
+                return 'r-hand';
+
+            if (kick === 'hand-2')
+                return 'r-hand-2';
+
+            if (kick === 'leg')
+                return 'r-leg';
+
+            if (kick === 'leg-2')
+                return 'r-leg-2';
+        }
+
+        return '';
+    }
+
+    calculateAndToggleKickMask(kick: string, show: boolean) {
+        if (kick === 'hand' || kick === 'hand-2') {
+            this.handKickMask.show = show;
+        }
+
+        if (kick === 'leg' || kick === 'leg-2') {
+            this.legKickMask.show = show;
+        }
+    }
+
     calculatePointer() {
         this.pointer.y = this.position.y! + 100;
 

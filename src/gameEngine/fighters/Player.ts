@@ -150,34 +150,46 @@ export class Player extends Fighter {
         return handKickPushed && handKickReleased && !this.isInTheAir() && this.spriteSheet?.outsideAnimationCall !== kick
     }
 
-    performHandKick(kick: string) {
-        if (this.closeForDamage('hand')) {
-            this.enemy?.getDamage(kick === 'hand' ? 1 : 2, 'head', false);
-            // todo: condition when after hand2kick enemy falls
+    performBasicKick(kick: string) {
+        if (this.shouldCommitDamage(kick)) {
+            const calculatedDamage = this.calculateDamage(kick)
+                this.enemy?.getDamage(
+                    calculatedDamage.value,
+                    calculatedDamage.area,
+                    calculatedDamage.shouldFall
+                );
         }
 
-        if (this.side === 'left') {
-            this.spriteSheet?.callAnimation(kick === 'hand' ? 'hand' : 'hand-2');
-        } else {
-            this.spriteSheet?.callAnimation(kick === 'hand' ? 'r-hand' : 'r-hand-2');
-        }
+        this.spriteSheet?.callAnimation(this.calculateKickAnimation(kick));
 
-        this.handKickMask.show = true;
+        this.calculateAndToggleKickMask(kick, true);
 
         this.controls?.dropReleaseFlag(kick === 'hand' ? 'handKick' : 'hand2Kick');
 
-        this.handKickMask.show = false;
+        this.calculateAndToggleKickMask(kick, false);
+    }
+
+    legKickControlAction() {
+        if (this.checkLegKickPushed('leg')) {
+            this.performBasicKick('leg');
+        }
+    }
+
+    legKick2ControlAction() {
+        if (this.checkLegKickPushed('leg-2') && !this.controls?.options.left) {
+            this.performBasicKick('leg-2');
+        }
     }
 
     handKickControlAction() {
         if (this.checkHandKickPushed('hand')) {
-            this.performHandKick('hand');
+            this.performBasicKick('hand');
         }
     }
 
     hand2KickControlAction() {
         if (this.checkHandKickPushed('hand-2') && !this.controls?.options.down) {
-            this.performHandKick('hand-2');
+            this.performBasicKick('hand-2');
         }
     }
 
@@ -209,46 +221,6 @@ export class Player extends Fighter {
                     this.callAnimation('r-block');
                 }
             }
-        }
-    }
-
-    legKickControlAction() {
-        if (this.checkLegKickPushed('leg')) {
-            if (this.closeForDamage('leg')) {
-                this.enemy?.getDamage(2, 'head', false);
-            }
-
-            this.legKickMask.show = true;
-
-            if (this.side === 'left') {
-                this.spriteSheet?.callAnimation('leg');
-            } else {
-                this.spriteSheet?.callAnimation('r-leg');
-            }
-
-            this.controls?.dropReleaseFlag('legKick');
-
-            this.legKickMask.show = false;
-        }
-    }
-
-    legKick2ControlAction() {
-        if (this.checkLegKickPushed('leg-2') && !this.controls?.options.left) {
-            if (this.closeForDamage('leg')) {
-                this.enemy?.getDamage(2, 'torso', false);
-            }
-
-            this.legKickMask.show = true;
-
-            if (this.side === 'left') {
-                this.spriteSheet?.callAnimation('leg-2');
-            } else {
-                this.spriteSheet?.callAnimation('r-leg-2');
-            }
-
-            this.controls?.dropReleaseFlag('leg2Kick');
-
-            this.legKickMask.show = false;
         }
     }
 
