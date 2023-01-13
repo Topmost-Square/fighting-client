@@ -302,9 +302,13 @@ export class Fighter {
     getDamage(damage: number, area: string, shouldFall: boolean, up: number, side: number) {
         this.health -= damage;
 
-        // todo: area animation
         if (area === 'head') {
             this.callAnimation(this.side === 'left' ? 'face-kicked' : 'r-face-kicked');
+            setTimeout(() => {
+                this.dropAnimation();
+            }, 500);
+        } else if (area === 'torso') {
+            this.callAnimation(this.side === 'left' ? 'torso-kicked' : 'r-torso-kicked');
             setTimeout(() => {
                 this.dropAnimation();
             }, 500);

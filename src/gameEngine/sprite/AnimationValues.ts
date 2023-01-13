@@ -84,6 +84,10 @@ export const getAnimationValues = (animation: string): Animation => {
             return passAnimationObject(8, 1, 1, false);
         case 'r-face-kicked':
             return passAnimationObject(27, 1, 1, false);
+        case 'torso-kicked':
+            return passAnimationObject(15, 1, 1, false);
+        case 'r-torso-kicked':
+            return passAnimationObject(34, 1, 1, false);
         default:
             return passAnimationObject(1, 6, 10, false);
     }
