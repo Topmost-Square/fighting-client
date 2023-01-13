@@ -10,6 +10,19 @@ export type Animation = {
     delayOnLast: number
 }
 
+const dropRangeAnimations = [
+    'turn-leg',
+    'r-turn-leg',
+    'hand',
+    'r-hand',
+    'hand-2',
+    'r-hand-2',
+    'leg',
+    'r-leg',
+    'leg-2',
+    'r-leg-2'
+];
+
 export class SpriteSheet {
     image: HTMLImageElement|null = null;
     size = 400;
@@ -52,10 +65,7 @@ export class SpriteSheet {
 
     setAnimationValues(animation: string) {
         if (!this.xRange) {
-            if (
-                this.outsideAnimationCall === 'turn-leg' ||
-                this.outsideAnimationCall === 'r-turn-leg'
-            ) {
+            if (dropRangeAnimations.includes(this.outsideAnimationCall!)) {
                 if (this.xStart === 1) {
                     this.spreadAnimationValues(getAnimationValues(animation));
                 }
@@ -94,25 +104,7 @@ export class SpriteSheet {
             animation !== this.outsideAnimationCall ||
             !(this.dropOnLast && this.xStart < this.xRange)
         ) {
-            if (
-                animation === 'walk' ||
-                animation === 'r-walk' ||
-                animation === 'walk-back' ||
-                animation === 'r-walk-back' ||
-                animation === 'sit' ||
-                animation === 'flip' ||
-                animation === 'r-flip' ||
-                animation === 'back-flip' ||
-                animation === 'r-back-flip' ||
-                animation === 'up-hand' ||
-                animation === 'r-up-hand' ||
-                animation === 'up-leg' ||
-                animation === 'r-up-leg' ||
-                animation === 'turn-leg' ||
-                animation === 'r-turn-leg'
-            ) {
-                this.xRange = 0;
-            }
+            this.xRange = 0;
             this.outsideAnimationCall = animation;
         }
     }

@@ -263,7 +263,7 @@ export class Fighter {
         this.spriteSheet?.dropAnimation();
         this.spriteSheet?.callAnimation(kickAnimation);
         if (this.closeForDamage('leg')) {
-            this.enemy?.getDamage(7, 'face', true, 20, 50);
+            this.enemy?.getDamage(7, 'head', true, 20, 50);
         }
     }
 
@@ -303,6 +303,12 @@ export class Fighter {
         this.health -= damage;
 
         // todo: area animation
+        if (area === 'head') {
+            this.callAnimation(this.side === 'left' ? 'face-kicked' : 'r-face-kicked');
+            setTimeout(() => {
+                this.dropAnimation();
+            }, 500);
+        }
 
         // todo: should fall animation
 
@@ -331,7 +337,7 @@ export class Fighter {
         this.spriteSheet?.callAnimation(this.side === 'left' ? 'uppercut' : 'r-uppercut');
 
         if (this.closeForDamage('hand')) {
-            this.enemy?.getDamage(5, 'face', true, 50, 30);
+            this.enemy?.getDamage(5, 'head', true, 50, 30);
         }
     }
 
