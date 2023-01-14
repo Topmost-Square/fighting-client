@@ -20,7 +20,9 @@ const dropRangeAnimations = [
     'leg',
     'r-leg',
     'leg-2',
-    'r-leg-2'
+    'r-leg-2',
+    'fall',
+    'r-fall',
 ];
 
 export class SpriteSheet {

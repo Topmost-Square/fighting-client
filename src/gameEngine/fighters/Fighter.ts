@@ -32,6 +32,7 @@ export class Fighter {
     height = 400;
 
     verticalAcceleration = 0;
+    horizontalAcceleration = 0;
     gravity = 20;
     speed = 5;
     airSpeed = 10;
@@ -263,7 +264,7 @@ export class Fighter {
         this.spriteSheet?.dropAnimation();
         this.spriteSheet?.callAnimation(kickAnimation);
         if (this.closeForDamage('leg')) {
-            this.enemy?.getDamage(7, 'head', true, 20, 50);
+            this.enemy?.getDamage(7, 'head', true, 30, 50);
         }
     }
 
@@ -290,6 +291,18 @@ export class Fighter {
         }
     }
 
+    getDamageAnimation(area: string) {
+        if (area === 'head') {
+            return this.side === 'left' ? 'face-kicked' : 'r-face-kicked';
+        }
+
+        if (area === 'torso') {
+            return this.side === 'left' ? 'torso-kicked' : 'r-torso-kicked';
+        }
+
+        return this.side === 'left' ? 'face-kicked' : 'r-face-kicked';
+    }
+
     /**
      *  getDamage
      *
@@ -302,23 +315,24 @@ export class Fighter {
     getDamage(damage: number, area: string, shouldFall: boolean, up: number, side: number) {
         this.health -= damage;
 
-        if (area === 'head') {
-            this.callAnimation(this.side === 'left' ? 'face-kicked' : 'r-face-kicked');
-            setTimeout(() => {
-                this.dropAnimation();
-            }, 500);
-        } else if (area === 'torso') {
-            this.callAnimation(this.side === 'left' ? 'torso-kicked' : 'r-torso-kicked');
+        this.callAnimation(this.getDamageAnimation(area));
+        if (!shouldFall) {
             setTimeout(() => {
                 this.dropAnimation();
             }, 500);
         }
 
-        // todo: should fall animation
+        if (shouldFall) {
+            this.callAnimation(this.side === 'left' ? 'fall' : 'r-fall');
+        }
 
-        // todo: move enemy up
+        if (up) {
+            this.verticalAcceleration = up;
+        }
 
-        // todo: move enemy side
+        if (side) {
+            this.horizontalAcceleration = this.side === 'left' ? side : -side;
+        }
     }
 
     closeForDamage(kickType: string) {
@@ -467,6 +481,18 @@ export class Fighter {
         }
     }
 
+    useHorizontalAcceleration() {
+        if (this.horizontalAcceleration < 0) {
+            this.horizontalAcceleration++;
+            this.moveRight();
+        }
+
+        if (this.horizontalAcceleration > 0) {
+            this.horizontalAcceleration--;
+            this.moveLeft();
+        }
+    }
+
     setSide(side: string) {
         this.side = side;
     }
@@ -609,6 +635,7 @@ export class Fighter {
 
     draw() {
         this.useGravity();
+        this.useHorizontalAcceleration();
 
         this.calculatePointer();
         this.drawPointer();
