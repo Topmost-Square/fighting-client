@@ -39,15 +39,6 @@ export class Fighter {
 
     spriteSheet: SpriteSheet|null = null;
 
-    // temp. for debugging
-    pointer: KickMask = {
-        x: null,
-        y: null,
-        width: 50,
-        height: 50,
-        show: true
-    }
-
     handKickMask: KickMask = {
         show: false,
         x: null,
@@ -428,29 +419,6 @@ export class Fighter {
         }
     }
 
-    calculatePointer() {
-        this.pointer.y = this.position.y! + 100;
-
-        if (this.side === 'left') {
-            this.pointer.x = this.position.x! + this.width
-        }
-
-        if (this.side === 'right') {
-            this.pointer.x = this.position.x! - this.pointer.width
-        }
-    }
-
-    drawPointer() {
-        this.context!.fillStyle = "brown";
-
-        this.context!.fillRect(
-            this.pointer.x!,
-            this.pointer.y!,
-            this.pointer.width,
-            this.pointer.height
-        );
-    }
-
     drawKickMasks() {
         this.handKickMask.y = this.position.y! + this.height / 4;
         this.legKickMask.y = this.position.y! + this.height / 2;
@@ -636,45 +604,6 @@ export class Fighter {
     draw() {
         this.useGravity();
         this.useHorizontalAcceleration();
-
-        this.calculatePointer();
-        this.drawPointer();
-
-        // draw fighter
-        this.context!.fillStyle = "black";
-
-        this.context!.fillRect(
-            this.position.x!,
-            this.position.y!,
-            this.width,
-            this.height
-        );
-
-        this.drawKickMasks();
-
-        // draw hand kick
-        this.context!.fillStyle = "red";
-
-        if (this.handKickMask.show) {
-            this.context?.fillRect(
-                this.handKickMask.x!,
-                this.handKickMask.y!,
-                this.handKickMask.width,
-                this.handKickMask.height
-            )
-        }
-
-        // draw leg kick
-        this.context!.fillStyle = "green";
-
-        if (this.legKickMask.show) {
-            this.context?.fillRect(
-                this.legKickMask.x!,
-                this.legKickMask.y!,
-                this.legKickMask.width,
-                this.legKickMask.height
-            )
-        }
 
         const posX = this.side === 'left' ? this.position.x! - 50 : this.position.x! - 200
 

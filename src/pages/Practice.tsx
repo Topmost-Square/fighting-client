@@ -72,7 +72,7 @@ export const Practice = () => {
 
     return (
         <div>
-            <canvas className='bg-violet-800' ref={canvasRef}></canvas>
+            <canvas className='bg-slate-500' ref={canvasRef}></canvas>
         </div>
     );
 }
