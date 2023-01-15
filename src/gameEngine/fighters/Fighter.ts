@@ -20,6 +20,8 @@ export class Fighter {
 
     health: number = 100;
 
+    isDown: boolean = false;
+
     enemy: Fighter|null = null;
 
     side: null|string = null;
@@ -306,8 +308,8 @@ export class Fighter {
     getDamage(damage: number, area: string, shouldFall: boolean, up: number, side: number) {
         this.health -= damage;
 
-        this.callAnimation(this.getDamageAnimation(area));
         if (!shouldFall) {
+            this.callAnimation(this.getDamageAnimation(area));
             setTimeout(() => {
                 this.dropAnimation();
             }, 500);
@@ -323,6 +325,18 @@ export class Fighter {
 
         if (side) {
             this.horizontalAcceleration = this.side === 'left' ? side : -side;
+        }
+    }
+
+    setFighterDown() {
+        if (!this.isDown) {
+            this.isDown = true;
+        }
+    }
+
+    setFighterUp() {
+        if (this.isDown) {
+            this.isDown = false;
         }
     }
 

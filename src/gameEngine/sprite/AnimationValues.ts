@@ -89,9 +89,13 @@ export const getAnimationValues = (animation: string): Animation => {
         case 'r-torso-kicked':
             return passAnimationObject(34, 1, 1, false);
         case 'fall':
-            return passAnimationObject(6, 7, 10, true, 30);
+            return passAnimationObject(6, 7, 10, false);
         case 'r-fall':
-            return passAnimationObject(25, 7, 10, true, 30);
+            return passAnimationObject(25, 7, 10, false);
+        case 'stand-up':
+            return passAnimationObject(14, 7, 12, true);
+        case 'r-stand-up':
+            return passAnimationObject(33, 7, 12, true);
         default:
             return passAnimationObject(1, 6, 10, false);
     }

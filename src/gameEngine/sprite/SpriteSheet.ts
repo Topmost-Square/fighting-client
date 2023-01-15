@@ -23,6 +23,8 @@ const dropRangeAnimations = [
     'r-leg-2',
     'fall',
     'r-fall',
+    'stand-up',
+    'r-stand-up',
 ];
 
 export class SpriteSheet {
@@ -37,9 +39,14 @@ export class SpriteSheet {
     counter = 0;
     xRange = 0;
     xStart = 1;
-    yStart = 1;
+
+    // yStart = 1;
+    yStart: number|null = null;
+
     speed = 10;
     delayOnLast = 0;
+
+    isDownCounter = 0;
 
     constructor(
         spriteSheetName: string|null = null,
@@ -80,9 +87,14 @@ export class SpriteSheet {
     animate() {
         this.counter++;
 
-        // todo: check for 1 frame
         const countTo = this.xStart === this.xRange - 1 ?
             this.speed + this.delayOnLast : this.speed;
+
+        if (this.outsideAnimationCall === 'stand-up' || this.outsideAnimationCall === 'r-stand-up') {
+            if (this.xStart === this.xRange - 1) {
+                this.fighter?.setFighterUp();
+            }
+        }
 
         if (this.counter >= countTo) {
             this.xStart++;
@@ -102,10 +114,7 @@ export class SpriteSheet {
     }
 
     callAnimation(animation: string|null) {
-        if (
-            animation !== this.outsideAnimationCall ||
-            !(this.dropOnLast && this.xStart < this.xRange)
-        ) {
+        if (animation !== this.outsideAnimationCall) {
             this.xRange = 0;
             this.outsideAnimationCall = animation;
         }
@@ -118,13 +127,13 @@ export class SpriteSheet {
             if (this.outsideAnimationCall) {
                 animationType = this.outsideAnimationCall;
             } else {
-                animationType = 'idle';
+                animationType = !this.fighter.isDown ? 'idle' : 'fall';
             }
         } else if (this.fighter?.side === 'right') {
             if (this.outsideAnimationCall) {
                 animationType = this.outsideAnimationCall;
             } else {
-                animationType = 'r-idle';
+                animationType = !this.fighter.isDown ? 'r-idle' : 'r-fall';
             }
         }
 
@@ -133,10 +142,40 @@ export class SpriteSheet {
         }
     }
 
-    draw(x: number, y: number, height: number) {
-        this.processAnimation();
 
-        this.animate();
+    draw(x: number, y: number, height: number) {
+        if (
+            !this.fighter?.isDown
+            || this.outsideAnimationCall === 'stand-up' ||
+            this.outsideAnimationCall === 'r-stand-up'
+        ) {
+            this.processAnimation();
+        }
+
+        if (this.outsideAnimationCall === 'fall' || this.outsideAnimationCall === 'r-fall') {
+            if (this.xStart === this.xRange - 1) {
+                this.fighter?.setFighterDown();
+            }
+        }
+
+        if (
+            !this.fighter?.isDown
+            || this.outsideAnimationCall === 'stand-up' ||
+            this.outsideAnimationCall === 'r-stand-up'
+        ) {
+            this.animate();
+        }
+
+        if (
+            this.fighter?.isDown
+        ) {
+            if (this.isDownCounter === 30) {
+                this.callAnimation(this.fighter!.side === 'left' ? 'stand-up' : 'r-stand-up');
+                this.isDownCounter = 0;
+            } else {
+                this.isDownCounter++
+            }
+        }
 
         if (this.image) {
             const oneImageSize = 32;
@@ -152,7 +191,7 @@ export class SpriteSheet {
             this.context!.drawImage(
                 this.image,
                 this.xStart * oneImageSize,
-                this.yStart * oneImageSize,
+                this.yStart! * oneImageSize,
                 clipWidth,
                 clipHeight,
                 placeImageX,
