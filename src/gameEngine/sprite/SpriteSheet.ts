@@ -40,8 +40,9 @@ export class SpriteSheet {
     xRange = 0;
     xStart = 1;
 
-    // yStart = 1;
-    yStart: number|null = null;
+    yStart = 1;
+
+    lastAnimation: string = '';
 
     speed = 10;
     delayOnLast = 0;
@@ -76,9 +77,11 @@ export class SpriteSheet {
         if (!this.xRange) {
             if (dropRangeAnimations.includes(this.outsideAnimationCall!)) {
                 if (this.xStart === 1) {
+                    this.lastAnimation = animation;
                     this.spreadAnimationValues(getAnimationValues(animation));
                 }
             } else {
+                this.lastAnimation = animation;
                 this.spreadAnimationValues(getAnimationValues(animation));
             }
         }
@@ -107,6 +110,22 @@ export class SpriteSheet {
                 this.dropOnLast = false;
             }
 
+            if (this.lastAnimation === 'fall') {
+                this.yStart = 14;
+            }
+
+            if (this.lastAnimation === 'stand-up') {
+                this.yStart = 1;
+            }
+
+            if (this.lastAnimation === 'r-fall') {
+                this.yStart = 33;
+            }
+
+            if (this.lastAnimation === 'r-stand-up') {
+                this.yStart = 20;
+            }
+
             this.xStart = 1;
             this.xRange = 0;
             this.delayOnLast = 0;
@@ -127,17 +146,20 @@ export class SpriteSheet {
             if (this.outsideAnimationCall) {
                 animationType = this.outsideAnimationCall;
             } else {
-                animationType = !this.fighter.isDown ? 'idle' : 'fall';
+                animationType = 'idle';
             }
         } else if (this.fighter?.side === 'right') {
             if (this.outsideAnimationCall) {
                 animationType = this.outsideAnimationCall;
-            } else {
-                animationType = !this.fighter.isDown ? 'r-idle' : 'r-fall';
+            } else if (!this.fighter.isDown) {
+                animationType = 'r-idle';
             }
         }
 
         if (animationType) {
+
+
+
             this.setAnimationValues(animationType);
         }
     }
