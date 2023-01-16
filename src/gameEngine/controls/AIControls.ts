@@ -11,7 +11,7 @@ export class AIControls extends BaseControls {
     kickSelected: string|null = null;
     kickPerformed: boolean = false;
 
-    kickSpeed = 200;
+    kickSpeed = 500;
 
     attackingTimeoutId: any = null;
     waitingTimeoutId: any = null;
@@ -183,6 +183,7 @@ export class AIControls extends BaseControls {
                 }
 
                 this.checkAndHandKick();
+
             } else if (this.kickSelected === 'leg' && !this.kickPerformed) {
                 this.moveTo = this.whereToMoveLegKick();
 
@@ -199,6 +200,7 @@ export class AIControls extends BaseControls {
                 }
 
                 this.checkAndLegKick();
+
             }
         }
     }
@@ -209,24 +211,30 @@ export class AIControls extends BaseControls {
     }
 
     isCloseForLegKick() {
-        if (!this.isVerticallyKickable())
+        if (!this.isVerticallyKickable() && this.fighter?.isInTheAir()) {
             return false;
+        }
 
         if (this.fighter?.side === 'left' &&
             this.fighter!.enemy!.position.x! <=
                 this.fighter.position.x! + this.fighter.width +
-                    this.fighter.legKickMask.width)
+                    this.fighter.legKickMask.width) {
+
             return true;
+        }
 
         if (this.fighter?.side === 'right' &&
             this.fighter.enemy!.position.x! + this.fighter.enemy!.width >=
-                this.fighter.position.x! - this.fighter.legKickMask.width)
+                this.fighter.position.x! - this.fighter.legKickMask.width) {
+
             return true;
+        }
     }
 
     isCloseForHandKick() {
-        if (!this.isVerticallyKickable())
+        if (!this.isVerticallyKickable() && this.fighter?.isInTheAir()) {
             return false;
+        }
 
         if (this.fighter?.side === 'left' &&
             this.fighter!.enemy!.position.x! <=
@@ -291,34 +299,45 @@ export class AIControls extends BaseControls {
     }
 
     checkAndHandKick() {
-        if (this.isCloseForHandKick()) {
-            this.fighter?.showHandKick();
+        if (
+            this.isCloseForHandKick()
+        ) {
 
-            this.kickSelected = null;
-            this.kickPerformed = true;
+            if (
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand'
+            ) {
+                this.fighter?.performBasicKick('hand');
 
-            this.fighter?.enemy!.getDamage(1, 'head', false, 0, 0);
+                this.kickSelected = null;
+                this.kickPerformed = true;
 
-            setTimeout(() => {
-                this.fighter?.hideHandKick();
-                this.kickPerformed = false;
-            }, this.kickSpeed);
+                setTimeout(() => {
+                    this.fighter?.hideHandKick();
+                    this.kickPerformed = false;
+                }, this.kickSpeed);
+            }
         }
     }
 
     checkAndLegKick() {
-        if (this.isCloseForLegKick()) {
-            this.fighter?.showLegKick();
+        if (
+            this.isCloseForLegKick()
+        ) {
+            this.fighter?.performBasicKick('leg');
 
-            this.kickSelected = null;
-            this.kickPerformed = true;
+            if (
+            this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
+            this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand'
+            ) {
+                this.kickSelected = null;
+                this.kickPerformed = true;
 
-            this.fighter?.enemy!.getDamage(2, 'torso', false, 0, 0);
-
-            setTimeout(() => {
-                this.fighter?.hideLegKick();
-                this.kickPerformed = false;
-            }, this.kickSpeed);
+                setTimeout(() => {
+                    this.fighter?.hideLegKick();
+                    this.kickPerformed = false;
+                }, this.kickSpeed);
+            }
         }
     }
 
@@ -339,7 +358,12 @@ export class AIControls extends BaseControls {
                     this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                     this.fighter?.goLeft();
                 }
-            } else {
+            } else if (
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-leg' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'leg'
+            ) {
                 this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'idle' : 'r-idle');
             }
 
