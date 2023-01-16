@@ -183,7 +183,7 @@ export class AIControls extends BaseControls {
                         this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                         this.fighter?.goLeft();
                     } else if (this.leftMoveCheck()) {
-                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'right' ? 'walk' : 'r-walk-back');
+                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk' : 'r-walk-back');
                         this.fighter?.goRight();
                     }
                 }
@@ -207,7 +207,7 @@ export class AIControls extends BaseControls {
                     }
 
                     if (this.leftMoveCheck()) {
-                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'right' ? 'walk' : 'r-walk-back');
+                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk' : 'r-walk-back');
                         this.fighter?.goRight();
                     }
                 }
