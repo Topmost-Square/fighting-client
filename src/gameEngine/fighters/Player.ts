@@ -15,7 +15,7 @@ export class Player extends Fighter {
     }
 
     update() {
-        if (this.controls?.fightStarted) {
+        if (this.controls?.fightStarted && !this.isDown) {
             this.upControlAction();
             this.downControlAction();
 

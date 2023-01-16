@@ -387,7 +387,7 @@ export class AIControls extends BaseControls {
     }
 
     behave() {
-        if (this.fightStarted) {
+        if (this.fightStarted && !this.fighter?.isDown) {
             this.didGetDamage();
 
             if (!this.isWaiting && !this.isAttacking) {
