@@ -11,6 +11,7 @@ export class AIControls extends BaseControls {
     kickSelected: string|null = null;
     kickPerformed: boolean = false;
 
+    // todo: one of the options for harder AI -> higher speed
     kickSpeed = 500;
 
     attackingTimeoutId: any = null;
@@ -27,7 +28,7 @@ export class AIControls extends BaseControls {
 
     counterTop = 0;
 
-    seriesEnergy = 1;
+    kicks = ['hand', 'hand-2', 'leg', 'leg-2', 'uppercut', 'turn'];
 
     receiveDamage(damage: number) {
         this.damageReceived = true;
@@ -162,14 +163,19 @@ export class AIControls extends BaseControls {
             this.fighter?.enemy?.controls?.options.right;
     }
 
-    kicks = ['hand', 'leg'];
-
     calculateAndMove() {
         if (!this.kickSelected) {
-            const randomKickIndex = Math.floor(Math.random() * 2);
+            const randomKickIndex = Math.floor(Math.random() * this.kicks.length );
             this.kickSelected = this.kicks[randomKickIndex];
         } else {
-            if (this.kickSelected === 'hand' && !this.kickPerformed) {
+            if (
+                (
+                    this.kickSelected === 'hand' ||
+                    this.kickSelected === 'hand-2' ||
+                    this.kickSelected === 'uppercut'
+                )
+                && !this.kickPerformed
+            ) {
                 this.moveTo = this.whereToMoveHandKick();
 
                 if (!this.fighter?.enemy?.isInTheAir()) {
@@ -184,7 +190,14 @@ export class AIControls extends BaseControls {
 
                 this.checkAndHandKick();
 
-            } else if (this.kickSelected === 'leg' && !this.kickPerformed) {
+            } else if (
+                (
+                    this.kickSelected === 'leg' ||
+                    this.kickSelected === 'leg-2' ||
+                    this.kickSelected === 'turn'
+                )
+                && !this.kickPerformed
+            ) {
                 this.moveTo = this.whereToMoveLegKick();
 
                 if (!this.fighter?.enemy?.isInTheAir()) {
@@ -307,7 +320,11 @@ export class AIControls extends BaseControls {
                 this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
                 this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand'
             ) {
-                this.fighter?.performBasicKick('hand');
+                if (this.kickSelected === 'uppercut') {
+                    this.fighter?.performUpperCut();
+                } else {
+                    this.fighter?.performBasicKick(this.kickSelected!);
+                }
 
                 this.kickSelected = null;
                 this.kickPerformed = true;
@@ -324,7 +341,12 @@ export class AIControls extends BaseControls {
         if (
             this.isCloseForLegKick()
         ) {
-            this.fighter?.performBasicKick('leg');
+            if (this.kickSelected === 'turn') {
+                const turnKickAnimation = this.fighter?.sideControlAnimations(this.fighter?.side!)
+                this.fighter?.performTurnKick(turnKickAnimation?.kick!)
+            } else {
+                this.fighter?.performBasicKick(this.kickSelected!);
+            }
 
             if (
             this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
@@ -360,9 +382,17 @@ export class AIControls extends BaseControls {
                 }
             } else if (
                 this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand-2' &&
                 this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand-2' &&
                 this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-leg' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'leg'
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-leg-2' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'leg' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'leg-2' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'turn-leg' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-turn-leg' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'uppercut' &&
+                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-uppercut'
             ) {
                 this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'idle' : 'r-idle');
             }
