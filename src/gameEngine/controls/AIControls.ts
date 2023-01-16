@@ -30,6 +30,29 @@ export class AIControls extends BaseControls {
 
     kicks = ['hand', 'hand-2', 'leg', 'leg-2', 'uppercut', 'turn'];
 
+    breakIdleAnimations = [
+        'hand',
+        'hand-2',
+        'r-hand',
+        'r-hand-2',
+        'r-leg',
+        'r-leg-2',
+        'leg',
+        'leg-2',
+        'turn-leg',
+        'r-turn-leg',
+        'uppercut',
+        'r-uppercut',
+        'fall',
+        'r-fall',
+        'stand-up',
+        'r-stand-up',
+        'torso-kicked',
+        'r-torso-kicked',
+        'face-kicked',
+        'r-face-kicked'
+    ];
+
     receiveDamage(damage: number) {
         this.damageReceived = true;
         //todo: lower health
@@ -380,20 +403,7 @@ export class AIControls extends BaseControls {
                     this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                     this.fighter?.goLeft();
                 }
-            } else if (
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand-2' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand-2' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-leg' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-leg-2' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'leg' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'leg-2' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'turn-leg' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-turn-leg' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'uppercut' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-uppercut'
-            ) {
+            } else if (!this.breakIdleAnimations.includes(this.fighter?.spriteSheet?.outsideAnimationCall!)) {
                 this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'idle' : 'r-idle');
             }
 
