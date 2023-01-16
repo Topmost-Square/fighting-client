@@ -24,7 +24,7 @@ export const Practice = () => {
         );
 
         aiFighter = new AIFighter(
-            canvas!.width - 700,
+            canvas!.width - 200,
             canvas!.height - 500,
             canvas,
             c!,

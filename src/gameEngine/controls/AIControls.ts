@@ -144,7 +144,8 @@ export class AIControls extends BaseControls {
     }
 
     rightMoveCheck() {
-        return this.moveTo! < 0 && this.fighter?.side === 'right'
+        return this.moveTo! < 0
+            && this.fighter?.side === 'right'
     }
 
     leftMoveCheck() {
@@ -164,9 +165,6 @@ export class AIControls extends BaseControls {
     kicks = ['hand', 'leg'];
 
     calculateAndMove() {
-        // todo: make something with enemy movement
-        // if (!this.isEnemyMoving()) {
-
         if (!this.kickSelected) {
             const randomKickIndex = Math.floor(Math.random() * 2);
             this.kickSelected = this.kicks[randomKickIndex];
@@ -175,11 +173,13 @@ export class AIControls extends BaseControls {
                 this.moveTo = this.whereToMoveHandKick();
 
                 if (!this.fighter?.enemy?.isInTheAir()) {
-                    if (this.rightMoveCheck())
+                    if (this.rightMoveCheck()) {
+                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                         this.fighter?.goLeft();
-
-                    if (this.leftMoveCheck())
+                    } else if (this.leftMoveCheck()) {
+                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'right' ? 'walk' : 'r-walk-back');
                         this.fighter?.goRight();
+                    }
                 }
 
                 this.checkAndHandKick();
@@ -187,11 +187,15 @@ export class AIControls extends BaseControls {
                 this.moveTo = this.whereToMoveLegKick();
 
                 if (!this.fighter?.enemy?.isInTheAir()) {
-                    if (this.rightMoveCheck())
+                    if (this.rightMoveCheck()) {
+                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                         this.fighter?.goLeft();
+                    }
 
-                    if (this.leftMoveCheck())
+                    if (this.leftMoveCheck()) {
+                        this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'right' ? 'walk' : 'r-walk-back');
                         this.fighter?.goRight();
+                    }
                 }
 
                 this.checkAndLegKick();
@@ -275,11 +279,14 @@ export class AIControls extends BaseControls {
         }
     }
 
+    /**
+     * this fixes a lag when distance isn't divisible by speed
+     */
     distancePerfectToMove() {
         return Math.abs(this.moveTo! - this.fighter?.position.x!) >= this.fighter?.speed!
     }
 
-    shouldMoveFromEnemy() {
+    shouldMove() {
         return this.isWaiting && !this.isAttacking && this.moveTo && this.distancePerfectToMove();
     }
 
@@ -324,12 +331,16 @@ export class AIControls extends BaseControls {
             }
 
             // move out of enemy after attack
-            if (this.shouldMoveFromEnemy()) {
-                if (this.moveTo! > this.fighter?.position.x!)
+            if (this.shouldMove()) {
+                if (this.moveTo! > this.fighter?.position.x!) {
+                    this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk' : 'r-walk-back');
                     this.fighter?.goRight();
-
-                if (this.moveTo! < this.fighter?.position.x!)
+                } else if (this.moveTo! < this.fighter?.position.x!) {
+                    this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                     this.fighter?.goLeft();
+                }
+            } else {
+                this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'idle' : 'r-idle');
             }
 
             if (this.isAttacking) {

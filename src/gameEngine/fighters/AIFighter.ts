@@ -18,6 +18,6 @@ export class AIFighter extends Fighter {
     }
 
     update() {
-        // this.controls?.behave();
+        this.controls?.behave();
     }
 }
