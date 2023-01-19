@@ -407,7 +407,7 @@ export class AIControls extends BaseControls {
                 this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'idle' : 'r-idle');
             }
 
-            if (this.isAttacking) {
+            if (this.isAttacking && !this.fighter?.enemy?.isDown) {
                 this.calculateAndMove();
             }
         }
