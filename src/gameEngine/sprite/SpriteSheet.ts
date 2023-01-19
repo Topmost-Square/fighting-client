@@ -51,7 +51,7 @@ export class SpriteSheet {
 
     constructor(
         spriteSheetName: string|null = null,
-        context: CanvasRenderingContext2D,
+        context: CanvasRenderingContext2D|null,
         fighter: Fighter
     ) {
         this.image = new Image();

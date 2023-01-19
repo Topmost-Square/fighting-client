@@ -1,6 +1,6 @@
 import {Fighter} from "../fighters/Fighter";
 
-export class BaseControls {
+export abstract class BaseControls {
     options = {
         up: false,
         down: false,
@@ -64,4 +64,6 @@ export class BaseControls {
             };
         }
     }
+
+    abstract behave (): void;
 }

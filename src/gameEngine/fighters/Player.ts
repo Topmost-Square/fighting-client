@@ -1,19 +1,6 @@
 import {Fighter} from "./Fighter";
-import {PlayerControls} from "../controls/PlayerControls";
 
 export class Player extends Fighter {
-    constructor(
-        x: number,
-        y: number,
-        canvas: HTMLCanvasElement|null,
-        context: CanvasRenderingContext2D,
-        spriteSheet: string|null
-    ) {
-        super(x, y, canvas, context, spriteSheet);
-
-        this.controls = new PlayerControls(this);
-    }
-
     update() {
         if (this.controls?.fightStarted && !this.isDown) {
             this.upControlAction();

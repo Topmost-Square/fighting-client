@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from "react";
 import {Player} from "../gameEngine/fighters/Player";
 import {AIFighter} from "../gameEngine/fighters/AIFighter";
 import {PracticeGame} from "../gameEngine/game/PracticeGame";
+import {PlayerControls} from "../gameEngine/controls/PlayerControls";
+import {AIControls} from "../gameEngine/controls/AIControls";
 
 export const Practice = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -15,25 +17,29 @@ export const Practice = () => {
         let game: PracticeGame|null = null;
         let gameState: boolean = true;
 
-        player =  new Player(
-            100,
-            canvas!.height - 500,
-            canvas,
-            c!,
-            'basic'
-        );
+        player =  new Player();
+        const playerControls = new PlayerControls();
+        playerControls.setFighter(player);
 
-        aiFighter = new AIFighter(
-            canvas!.width - 200,
-            canvas!.height - 500,
-            canvas,
-            c!,
-            'green'
-        );
+        player.setInitialX(canvas!.width - 200);
+        player.setInitialY(canvas!.height - 500);
+        player.setCanvas(canvas);
+        player.setContext(c!);
+        player.setSpriteSheet('basic');
+        player.setControls(playerControls);
+
+        aiFighter = new AIFighter();
+        const aiControls = new AIControls();
+        aiControls.setFighter(aiFighter);
+
+        aiFighter.setInitialX(100);
+        aiFighter.setInitialY(canvas!.height - 500);
+        aiFighter.setCanvas(canvas);
+        aiFighter.setContext(c!);
+        aiFighter.setSpriteSheet('green');
+        aiFighter.setControls(aiControls);
 
         game = new PracticeGame(player, aiFighter);
-
-
 
         const animate = () => {
             requestAnimationFrame(animate);

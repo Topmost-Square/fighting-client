@@ -57,22 +57,28 @@ export class Fighter {
         height: 70
     }
 
-    constructor(
-        x: number,
-        y: number,
-        canvas: HTMLCanvasElement|null,
-        context: CanvasRenderingContext2D,
-        spriteSheet: string|null = null
-    ) {
-        this.position.x = x;
-        this.position.y = y;
+    setControls(controls: BaseControls) {
+        this.controls = controls;
+    }
 
-        if (spriteSheet) {
-            this.spriteSheet = new SpriteSheet(spriteSheet, context, this)
-        }
-
-        this.canvas = canvas;
+    setContext(context: CanvasRenderingContext2D) {
         this.context = context;
+    }
+
+    setSpriteSheet(spriteSheet: string|null) {
+        this.spriteSheet = new SpriteSheet(spriteSheet, this.context, this)
+    }
+
+    setCanvas(canvas: HTMLCanvasElement|null) {
+        this.canvas = canvas;
+    }
+
+    setInitialX(x: number) {
+        this.position.x = x;
+    }
+
+    setInitialY(y: number) {
+        this.position.y = y;
     }
 
     setEnemy(enemy: Fighter) {

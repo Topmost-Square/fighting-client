@@ -1,13 +1,8 @@
 import {BaseControls} from "./BaseControls";
-import {Player} from "../fighters/Player";
 
 export class PlayerControls extends BaseControls {
-    fighter: Player|null = null;
-
-    constructor(fighter: Player|null) {
+    constructor() {
         super();
-
-        this.fighter = fighter;
 
         window.addEventListener('keydown', e => {
             switch (e.key) {
@@ -32,7 +27,7 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowRight':
                     this.setOption('right', true);
-                    if (!this.options.down && !fighter?.isInTheAir()) {
+                    if (!this.options.down && !this.fighter?.isInTheAir()) {
                         if (this.fighter?.side === 'left') {
                             this.fighter?.callAnimation('walk-back');
                         } else {
@@ -93,13 +88,13 @@ export class PlayerControls extends BaseControls {
                     break;
                 case 'ArrowLeft':
                     this.setOption('left', false);
-                    fighter?.spriteSheet?.outsideAnimationCall !== 'turn-leg' &&
+                    this.fighter?.spriteSheet?.outsideAnimationCall !== 'turn-leg' &&
                     !this.options.down &&
                     this.fighter?.dropAnimation();
                     break;
                 case 'ArrowRight':
                     this.setOption('right', false);
-                    fighter?.spriteSheet?.outsideAnimationCall !== 'r-turn-leg' &&
+                    this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-turn-leg' &&
                     !this.options.down &&
                     this.fighter?.dropAnimation();
                     break;
@@ -150,4 +145,6 @@ export class PlayerControls extends BaseControls {
             }
         });
     }
+
+    behave() {}
 }
