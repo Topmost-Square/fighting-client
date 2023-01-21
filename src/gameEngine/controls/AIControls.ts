@@ -28,7 +28,8 @@ export class AIControls extends BaseControls {
 
     counterTop = 0;
 
-    kicks = ['hand', 'hand-2', 'leg', 'leg-2', 'uppercut', 'turn'];
+    // kicks = ['hand', 'hand-2', 'leg', 'leg-2', 'uppercut', 'turn'];
+    kicks = ['uppercut'];
     calculateAndMoveHand = ['hand', 'hand-2', 'uppercut'];
     calculateAndMoveLeg = ['leg', 'leg-2', 'turn'];
 
@@ -316,7 +317,7 @@ export class AIControls extends BaseControls {
     }
 
     checkAndHandKick() {
-        if (this.isCloseForHandKick()) {
+        if (this.isCloseForHandKick() && !this.fighter?.enemy?.kicked && !this.fighter?.enemy?.isDown) {
             if (this.kickSelected === 'uppercut') {
                 this.fighter?.performUpperCut();
             } else {
@@ -334,7 +335,7 @@ export class AIControls extends BaseControls {
     }
 
     checkAndLegKick() {
-        if (this.isCloseForLegKick()) {
+        if (this.isCloseForLegKick()  && !this.fighter?.enemy?.kicked && !this.fighter?.enemy?.isDown) {
             if (this.kickSelected === 'turn') {
                 const turnKickAnimation = this.fighter?.sideControlAnimations(this.fighter?.side!)
                 this.fighter?.performTurnKick(turnKickAnimation?.kick!)

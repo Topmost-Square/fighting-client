@@ -2,8 +2,6 @@ import {Fighter} from "./Fighter";
 
 export class Player extends Fighter {
     update() {
-
-        // console.log(this.kicked)
         if (this.controls!.fightStarted && !this.isDown && !this.kicked) {
             this.upControlAction();
             this.downControlAction();

@@ -336,6 +336,8 @@ export class Fighter {
 
         if (shouldFall) {
             this.setKicked();
+            this.setFighterDown();
+            this.dropAnimation();
             this.callAnimation(this.side === 'left' ? 'fall' : 'r-fall');
         }
 
@@ -478,6 +480,28 @@ export class Fighter {
 
         if (this.verticalAcceleration === 1) {
             this.verticalAcceleration = 0;
+        }
+
+        if (
+            this.verticalAcceleration === 0 &&
+            this.kicked &&
+            this.spriteSheet?.outsideAnimationCall !== 'stand-up' &&
+            this.spriteSheet?.outsideAnimationCall !== 'r-stand-up' &&
+            this.spriteSheet?.outsideAnimationCall !== 'fall' &&
+            this.spriteSheet?.outsideAnimationCall !== 'r-fall'
+        ) {
+            this.setNotKicked();
+        }
+
+        if (
+            this.verticalAcceleration === 0 &&
+            this.kicked &&
+            this.spriteSheet?.outsideAnimationCall !== 'stand-up' &&
+            this.spriteSheet?.outsideAnimationCall !== 'r-stand-up' &&
+            this.spriteSheet?.outsideAnimationCall !== 'fall' &&
+            this.spriteSheet?.outsideAnimationCall !== 'r-fall'
+        ) {
+            this.setNotKicked();
         }
     }
 

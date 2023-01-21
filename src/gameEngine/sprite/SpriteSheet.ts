@@ -163,13 +163,7 @@ export class SpriteSheet {
 
 
     draw(x: number, y: number, height: number) {
-        if (
-            !this.fighter?.isDown
-            || this.outsideAnimationCall === 'stand-up' ||
-            this.outsideAnimationCall === 'r-stand-up'
-        ) {
-            this.processAnimation();
-        }
+        this.processAnimation();
 
         if (this.outsideAnimationCall === 'fall' || this.outsideAnimationCall === 'r-fall') {
             if (this.xStart === this.xRange - 1) {
@@ -177,29 +171,15 @@ export class SpriteSheet {
             }
         }
 
-        if (this.outsideAnimationCall === 'stand-up' || this.outsideAnimationCall === 'r-stand-up') {
-            if (this.xStart === this.xRange - 1) {
-                this.fighter?.setNotKicked();
-            }
-        }
+        this.animate();
 
-        if (
-            !this.fighter?.isDown
-            || this.outsideAnimationCall === 'stand-up' ||
-            this.outsideAnimationCall === 'r-stand-up'
-        ) {
-            this.animate();
-        }
-
-        if (
-            this.fighter?.isDown
-        ) {
-            if (this.isDownCounter === 30) {
-                this.callAnimation(this.fighter!.side === 'left' ? 'stand-up' : 'r-stand-up');
-                this.isDownCounter = 0;
-            } else {
+        if (this.fighter?.isDown && this.isDownCounter < 30) {
                 this.isDownCounter++
-            }
+        }
+
+        if (this.fighter?.isDown && this.isDownCounter === 30 && !this.fighter.isInTheAir()) {
+            this.callAnimation(this.fighter!.side === 'left' ? 'stand-up' : 'r-stand-up');
+            this.isDownCounter = 0;
         }
 
         if (this.image) {
