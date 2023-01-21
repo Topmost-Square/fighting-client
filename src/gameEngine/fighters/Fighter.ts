@@ -13,6 +13,8 @@ type KickMask = {
 export class Fighter {
     controls: BaseControls|null = null;
 
+    kicked: boolean = false;
+
     position: Position  = {
         x: null,
         y: null
@@ -194,14 +196,11 @@ export class Fighter {
     }
 
     performBasicKick(kick: string) {
-        if (this.shouldCommitDamage(kick)) {
+        if (this.shouldCommitDamage(kick) && !this.enemy?.isDown) {
             const calculatedDamage = this.calculateDamage(kick)
             this.enemy?.getDamage(
                 calculatedDamage.value,
-                calculatedDamage.area,
-                calculatedDamage.shouldFall,
-                calculatedDamage.up,
-                calculatedDamage.side
+                calculatedDamage.area
             );
         }
 
@@ -262,7 +261,7 @@ export class Fighter {
     performTurnKick(kickAnimation: string) {
         this.spriteSheet?.dropAnimation();
         this.spriteSheet?.callAnimation(kickAnimation);
-        if (this.closeForDamage('leg')) {
+        if (this.closeForDamage('leg') && !this.enemy?.isDown) {
             this.enemy?.getDamage(7, 'head', true, 30, 50);
         }
     }
@@ -302,6 +301,14 @@ export class Fighter {
         return this.side === 'left' ? 'face-kicked' : 'r-face-kicked';
     }
 
+    setKicked() {
+        this.kicked = true;
+    }
+
+    setNotKicked() {
+        this.kicked = false;
+    }
+
     /**
      *  getDamage
      *
@@ -311,7 +318,13 @@ export class Fighter {
      * @param up - how enemy should fly up %
      * @param side - how enemy should fly to the side %
      */
-    getDamage(damage: number, area: string, shouldFall: boolean, up: number, side: number) {
+    getDamage(
+        damage: number,
+        area: string,
+        shouldFall: boolean = false,
+        up: number = 0,
+        side: number = 0
+    ) {
         this.health -= damage;
 
         if (!shouldFall) {
@@ -322,6 +335,7 @@ export class Fighter {
         }
 
         if (shouldFall) {
+            this.setKicked();
             this.callAnimation(this.side === 'left' ? 'fall' : 'r-fall');
         }
 
@@ -365,7 +379,7 @@ export class Fighter {
     performUpperCut() {
         this.spriteSheet?.callAnimation(this.side === 'left' ? 'uppercut' : 'r-uppercut');
 
-        if (this.closeForDamage('hand')) {
+        if (this.closeForDamage('hand') && !this.enemy?.isDown) {
             this.enemy?.getDamage(5, 'head', true, 50, 30);
         }
     }
@@ -381,20 +395,18 @@ export class Fighter {
 
     calculateDamage(kick: string) {
         if (kick === 'hand')
-            return { value: 1, area: 'head', shouldFall: false, up: 0, side: 0 };
+            return { value: 1, area: 'head' };
 
         if (kick === 'hand-2')
-            // todo: condition enemy will fall
-            return { value: 2, area: 'head', shouldFall: false, up: 0, side: 0 };
+            return { value: 2, area: 'head' };
 
         if (kick === 'leg')
-            // todo: condition enemy will fall
-            return { value: 4, area: 'head', shouldFall: false, up: 0, side: 0 };
+            return { value: 4, area: 'head' };
 
         if (kick === 'leg-2')
-            return { value: 3, area: 'torso', shouldFall: false, up: 0, side: 0 };
+            return { value: 3, area: 'torso' };
 
-        return { value: 0, area: '', shouldFall: false, up: 0, side: 0 };
+        return { value: 0, area: '' };
     }
 
     calculateKickAnimation(kick: string) {

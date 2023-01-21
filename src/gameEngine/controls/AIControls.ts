@@ -29,6 +29,8 @@ export class AIControls extends BaseControls {
     counterTop = 0;
 
     kicks = ['hand', 'hand-2', 'leg', 'leg-2', 'uppercut', 'turn'];
+    calculateAndMoveHand = ['hand', 'hand-2', 'uppercut'];
+    calculateAndMoveLeg = ['leg', 'leg-2', 'turn'];
 
     breakIdleAnimations = [
         'hand',
@@ -52,11 +54,6 @@ export class AIControls extends BaseControls {
         'face-kicked',
         'r-face-kicked'
     ];
-
-    receiveDamage(damage: number) {
-        this.damageReceived = true;
-        //todo: lower health
-    }
 
     moveFromEnemy() {
         if (this.fighter?.side === 'left') {
@@ -155,7 +152,6 @@ export class AIControls extends BaseControls {
             return this.fighter!.enemy!.position.x! -
                 (this.fighter.width +
                     this.fighter.legKickMask.width);
-
         }
 
         if (this.fighter?.side === 'right') {
@@ -191,17 +187,10 @@ export class AIControls extends BaseControls {
             const randomKickIndex = Math.floor(Math.random() * this.kicks.length );
             this.kickSelected = this.kicks[randomKickIndex];
         } else {
-            if (
-                (
-                    this.kickSelected === 'hand' ||
-                    this.kickSelected === 'hand-2' ||
-                    this.kickSelected === 'uppercut'
-                )
-                && !this.kickPerformed
-            ) {
+            if (this.calculateAndMoveHand.includes(this.kickSelected) && !this.kickPerformed) {
                 this.moveTo = this.whereToMoveHandKick();
 
-                if (!this.fighter?.enemy?.isInTheAir()) {
+                if (!this.fighter?.enemy?.isInTheAir() && !this.fighter?.isDown && !this.fighter?.isInTheAir()) {
                     if (this.rightMoveCheck()) {
                         this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                         this.fighter?.goLeft();
@@ -213,17 +202,10 @@ export class AIControls extends BaseControls {
 
                 this.checkAndHandKick();
 
-            } else if (
-                (
-                    this.kickSelected === 'leg' ||
-                    this.kickSelected === 'leg-2' ||
-                    this.kickSelected === 'turn'
-                )
-                && !this.kickPerformed
-            ) {
+            } else if (this.calculateAndMoveLeg.includes(this.kickSelected) && !this.kickPerformed) {
                 this.moveTo = this.whereToMoveLegKick();
 
-                if (!this.fighter?.enemy?.isInTheAir()) {
+                if (!this.fighter?.enemy?.isInTheAir() && !this.fighter?.isDown && !this.fighter?.isInTheAir()) {
                     if (this.rightMoveCheck()) {
                         this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                         this.fighter?.goLeft();
@@ -236,7 +218,6 @@ export class AIControls extends BaseControls {
                 }
 
                 this.checkAndLegKick();
-
             }
         }
     }
@@ -335,35 +316,25 @@ export class AIControls extends BaseControls {
     }
 
     checkAndHandKick() {
-        if (
-            this.isCloseForHandKick()
-        ) {
-
-            if (
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
-                this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand'
-            ) {
-                if (this.kickSelected === 'uppercut') {
-                    this.fighter?.performUpperCut();
-                } else {
-                    this.fighter?.performBasicKick(this.kickSelected!);
-                }
-
-                this.kickSelected = null;
-                this.kickPerformed = true;
-
-                setTimeout(() => {
-                    this.fighter?.hideHandKick();
-                    this.kickPerformed = false;
-                }, this.kickSpeed);
+        if (this.isCloseForHandKick()) {
+            if (this.kickSelected === 'uppercut') {
+                this.fighter?.performUpperCut();
+            } else {
+                this.fighter?.performBasicKick(this.kickSelected!);
             }
+
+            this.kickSelected = null;
+            this.kickPerformed = true;
+
+            setTimeout(() => {
+                this.fighter?.hideHandKick();
+                this.kickPerformed = false;
+            }, this.kickSpeed);
         }
     }
 
     checkAndLegKick() {
-        if (
-            this.isCloseForLegKick()
-        ) {
+        if (this.isCloseForLegKick()) {
             if (this.kickSelected === 'turn') {
                 const turnKickAnimation = this.fighter?.sideControlAnimations(this.fighter?.side!)
                 this.fighter?.performTurnKick(turnKickAnimation?.kick!)
@@ -371,43 +342,42 @@ export class AIControls extends BaseControls {
                 this.fighter?.performBasicKick(this.kickSelected!);
             }
 
-            if (
-            this.fighter?.spriteSheet?.outsideAnimationCall !== 'hand' &&
-            this.fighter?.spriteSheet?.outsideAnimationCall !== 'r-hand'
-            ) {
-                this.kickSelected = null;
-                this.kickPerformed = true;
+            this.kickSelected = null;
+            this.kickPerformed = true;
 
-                setTimeout(() => {
-                    this.fighter?.hideLegKick();
-                    this.kickPerformed = false;
-                }, this.kickSpeed);
-            }
+            setTimeout(() => {
+                this.fighter?.hideLegKick();
+                this.kickPerformed = false;
+            }, this.kickSpeed);
         }
     }
 
     behave() {
-        if (this.fightStarted && !this.fighter?.isDown) {
+
+
+
+
+        if (this.fightStarted) {
             this.didGetDamage();
 
-            if (!this.isWaiting && !this.isAttacking) {
+            if (!this.isWaiting && !this.isAttacking && !this.fighter?.isDown) {
                 this.makeChoice();
             }
 
             // move out of enemy after attack
-            if (this.shouldMove()) {
+            if (this.shouldMove() && !this.fighter?.isDown && !this.fighter?.isInTheAir()) {
                 if (this.moveTo! > this.fighter?.position.x!) {
                     this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk' : 'r-walk-back');
                     this.fighter?.goRight();
-                } else if (this.moveTo! < this.fighter?.position.x!) {
+                } else if (this.moveTo! < this.fighter?.position.x! && !this.fighter?.isDown) {
                     this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
                     this.fighter?.goLeft();
                 }
-            } else if (!this.breakIdleAnimations.includes(this.fighter?.spriteSheet?.outsideAnimationCall!)) {
+            } else if (!this.breakIdleAnimations.includes(this.fighter?.spriteSheet?.outsideAnimationCall!) && !this.fighter?.isInTheAir()) {
                 this.fighter?.spriteSheet?.callAnimation(this.fighter?.side === 'left' ? 'idle' : 'r-idle');
             }
 
-            if (this.isAttacking && !this.fighter?.enemy?.isDown) {
+            if (this.isAttacking && !this.fighter?.enemy?.isDown && !this.fighter?.isDown) {
                 this.calculateAndMove();
             }
         }

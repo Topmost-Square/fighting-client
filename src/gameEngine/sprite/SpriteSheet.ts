@@ -94,7 +94,7 @@ export class SpriteSheet {
             this.speed + this.delayOnLast : this.speed;
 
         if (this.outsideAnimationCall === 'stand-up' || this.outsideAnimationCall === 'r-stand-up') {
-            if (this.xStart === this.xRange - 1) {
+            if (this.xStart === this.xRange - 1 && !this.fighter?.isInTheAir()) {
                 this.fighter?.setFighterUp();
             }
         }
@@ -157,9 +157,6 @@ export class SpriteSheet {
         }
 
         if (animationType) {
-
-
-
             this.setAnimationValues(animationType);
         }
     }
@@ -177,6 +174,12 @@ export class SpriteSheet {
         if (this.outsideAnimationCall === 'fall' || this.outsideAnimationCall === 'r-fall') {
             if (this.xStart === this.xRange - 1) {
                 this.fighter?.setFighterDown();
+            }
+        }
+
+        if (this.outsideAnimationCall === 'stand-up' || this.outsideAnimationCall === 'r-stand-up') {
+            if (this.xStart === this.xRange - 1) {
+                this.fighter?.setNotKicked();
             }
         }
 

@@ -2,7 +2,9 @@ import {Fighter} from "./Fighter";
 
 export class Player extends Fighter {
     update() {
-        if (this.controls?.fightStarted && !this.isDown) {
+
+        // console.log(this.kicked)
+        if (this.controls!.fightStarted && !this.isDown && !this.kicked) {
             this.upControlAction();
             this.downControlAction();
 
@@ -19,5 +21,6 @@ export class Player extends Fighter {
 
             this.inAirAction();
         }
+
     }
 }
