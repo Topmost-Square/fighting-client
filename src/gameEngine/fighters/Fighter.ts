@@ -321,7 +321,7 @@ export class Fighter {
     performUpperCut() {
         this.spriteSheet?.callAnimation(this.side === 'left' ? 'uppercut' : 'r-uppercut');
 
-        if (this.closeForDamage('hand') && !this.enemy?.isDown) {
+        if (this.closeForDamage('hand') && !this.enemy?.isDown && !this.enemy?.controls?.options.down) {
             this.enemy?.getDamage(5, 'head', true, 50, 30);
         }
     }
