@@ -28,8 +28,7 @@ export class AIControls extends BaseControls {
 
     counterTop = 0;
 
-    // kicks = ['hand', 'hand-2', 'leg', 'leg-2', 'uppercut', 'turn'];
-    kicks = ['uppercut'];
+    kicks = ['hand', 'hand-2', 'leg', 'leg-2', 'uppercut', 'turn'];
     calculateAndMoveHand = ['hand', 'hand-2', 'uppercut'];
     calculateAndMoveLeg = ['leg', 'leg-2', 'turn'];
 
