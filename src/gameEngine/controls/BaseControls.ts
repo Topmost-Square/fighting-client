@@ -1,35 +1,43 @@
 import {Fighter} from "../fighters/Fighter";
 
+const initOptions = () => ({
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+    block: false,
+    handKick: {
+        prevReleased: true,
+        pushed: false
+    },
+    hand2Kick: {
+        prevReleased: true,
+        pushed: false
+    },
+    legKick: {
+        prevReleased: true,
+        pushed: false
+    },
+    leg2Kick: {
+        prevReleased: true,
+        pushed: false
+    },
+});
+
 export abstract class BaseControls {
-    options = {
-        up: false,
-        down: false,
-        left: false,
-        right: false,
-        block: false,
-        handKick: {
-            prevReleased: true,
-            pushed: false
-        },
-        hand2Kick: {
-            prevReleased: true,
-            pushed: false
-        },
-        legKick: {
-            prevReleased: true,
-            pushed: false
-        },
-        leg2Kick: {
-            prevReleased: true,
-            pushed: false
-        },
-    };
+    options: any = null;
+
+    dropOption() {
+        this.options = initOptions();
+    }
 
     fightStarted = false;
 
     fighter: Fighter|null = null;
 
     constructor() {
+        this.options = initOptions();
+
         // wait for 3 seconds to prepare for fight
         if (!this.fightStarted) {
             this.preFightDelay();

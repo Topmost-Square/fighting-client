@@ -6,6 +6,39 @@ export class PlayerControls extends BaseControls {
         return this.fightStarted && !this.fighter!.isDown && !this.fighter!.kicked;
     }
 
+    sideArrowCheck() {
+        return !this.options.down && !this.fighter?.isInTheAir();
+    }
+
+    leftArrow() {
+        if (this.sideArrowCheck())
+            this.fighter?.callAnimation(this.fighter?.side === 'left' ? 'walk-back' : 'r-walk');
+    }
+
+    rightArrow() {
+        if (this.sideArrowCheck())
+            this.fighter?.callAnimation(this.fighter?.side === 'left' ? 'walk' : 'r-walk-back');
+    }
+
+    spreadPushAndReleased(kick: string, pushed: boolean) {
+        const spreadKick = {
+            ...this.options[kick],
+            pushed
+        }
+
+        if (!pushed) {
+            spreadKick.prevReleased = true;
+        }
+
+        this.options = {
+            ...this.options,
+
+            [kick]: {
+                ...spreadKick
+            }
+        }
+    }
+
     keyDown(e: KeyboardEvent) {
         if (!this.generalCheck()) {
             return;
@@ -20,65 +53,26 @@ export class PlayerControls extends BaseControls {
                 break;
             case 'ArrowLeft':
                 this.setOption('left', true);
-                if (
-                    !this.options.down &&
-                    !this.fighter?.isInTheAir()
-                ) {
-                    if (this.fighter?.side === 'left') {
-                        this.fighter?.callAnimation('walk-back');
-                    } else {
-                        this.fighter?.callAnimation('r-walk');
-                    }
-                }
+                this.leftArrow();
                 break;
             case 'ArrowRight':
                 this.setOption('right', true);
-                if (!this.options.down && !this.fighter?.isInTheAir()) {
-                    if (this.fighter?.side === 'left') {
-                        this.fighter?.callAnimation('walk');
-                    } else {
-                        this.fighter?.callAnimation('r-walk-back');
-                    }
-                }
+                this.rightArrow();
                 break;
             case ' ':
                 this.setOption('block', true);
                 break;
             case 'd':
-                this.options = {
-                    ...this.options,
-                    handKick: {
-                        ...this.options.handKick,
-                        pushed: true,
-                    }
-                }
+                this.spreadPushAndReleased('handKick', true);
                 break;
             case 'e':
-                this.options = {
-                    ...this.options,
-                    hand2Kick: {
-                        ...this.options.hand2Kick,
-                        pushed: true,
-                    }
-                }
+                this.spreadPushAndReleased('hand2Kick', true);
                 break;
             case 's':
-                this.options = {
-                    ...this.options,
-                    legKick: {
-                        ...this.options.legKick,
-                        pushed: true,
-                    }
-                }
+                this.spreadPushAndReleased('legKick', true);
                 break;
             case 'w':
-                this.options = {
-                    ...this.options,
-                    leg2Kick: {
-                        ...this.options.leg2Kick,
-                        pushed: true,
-                    }
-                }
+                this.spreadPushAndReleased('leg2Kick', true);
                 break;
         }
     }
@@ -113,44 +107,16 @@ export class PlayerControls extends BaseControls {
                 this.fighter?.dropAnimation();
                 break;
             case 'd':
-                this.options = {
-                    ...this.options,
-                    handKick: {
-                        ...this.options.handKick,
-                        pushed: false,
-                        prevReleased: true
-                    }
-                }
+                this.spreadPushAndReleased('handKick', false);
                 break;
             case 'e':
-                this.options = {
-                    ...this.options,
-                    hand2Kick: {
-                        ...this.options.hand2Kick,
-                        pushed: false,
-                        prevReleased: true
-                    }
-                }
+                this.spreadPushAndReleased('hand2Kick', false);
                 break;
             case 's':
-                this.options = {
-                    ...this.options,
-                    legKick: {
-                        ...this.options.legKick,
-                        pushed: false,
-                        prevReleased: true
-                    }
-                }
+                this.spreadPushAndReleased('legKick', false);
                 break;
             case 'w':
-                this.options = {
-                    ...this.options,
-                    leg2Kick: {
-                        ...this.options.leg2Kick,
-                        pushed: false,
-                        prevReleased: true
-                    }
-                }
+                this.spreadPushAndReleased('leg2Kick', false);
                 break;
         }
     }

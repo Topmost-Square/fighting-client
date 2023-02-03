@@ -96,6 +96,7 @@ export class SpriteSheet {
         if (this.outsideAnimationCall === 'stand-up' || this.outsideAnimationCall === 'r-stand-up') {
             if (this.xStart === this.xRange - 1 && !this.fighter?.isInTheAir()) {
                 this.fighter?.setFighterUp();
+                this.fighter?.controls?.dropOption();
             }
         }
 
