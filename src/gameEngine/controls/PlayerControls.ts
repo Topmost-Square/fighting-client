@@ -39,6 +39,11 @@ export class PlayerControls extends BaseControls {
         }
     }
 
+    dropMovement() {
+        this.setOption('left', false);
+        this.setOption('right', false);
+    }
+
     keyDown(e: KeyboardEvent) {
         if (!this.generalCheck()) {
             return;
@@ -63,15 +68,19 @@ export class PlayerControls extends BaseControls {
                 this.setOption('block', true);
                 break;
             case 'd':
+                this.dropMovement();
                 this.spreadPushAndReleased('handKick', true);
                 break;
             case 'e':
+                this.dropMovement();
                 this.spreadPushAndReleased('hand2Kick', true);
                 break;
             case 's':
+                this.dropMovement();
                 this.spreadPushAndReleased('legKick', true);
                 break;
             case 'w':
+                this.dropMovement();
                 this.spreadPushAndReleased('leg2Kick', true);
                 break;
         }

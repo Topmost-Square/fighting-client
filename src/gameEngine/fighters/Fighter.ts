@@ -87,28 +87,34 @@ export class Fighter {
         this.enemy = enemy;
     }
 
-    checkHandKickPushed(kick: string) {
+    handKickCheck(kick: string) {
         const handKickPushed = kick === 'hand' ? this.controls?.options.handKick.pushed :
             this.controls?.options.hand2Kick.pushed;
 
         const handKickReleased = kick === 'hand' ? this.controls?.options.handKick.prevReleased :
             this.controls?.options.hand2Kick.prevReleased;
 
-        return handKickPushed &&
-            handKickReleased &&
-            !this.isInTheAir() &&
-            this.spriteSheet?.outsideAnimationCall !== kick
+        return handKickPushed && handKickReleased;
     }
 
-    checkLegKickPushed(kick: string) {
+    legKickCheck(kick: string) {
         const legKickPushed = kick === 'leg' ? this.controls?.options.legKick.pushed :
             this.controls?.options.leg2Kick.pushed;
 
         const legKickReleased = kick === 'leg' ? this.controls?.options.legKick.prevReleased :
             this.controls?.options.leg2Kick.prevReleased;
 
-        return legKickPushed &&
-            legKickReleased &&
+        return legKickPushed && legKickReleased;
+    }
+
+    checkHandKickPushed(kick: string) {
+        return this.handKickCheck(kick) &&
+            !this.isInTheAir() &&
+            this.spriteSheet?.outsideAnimationCall !== kick
+    }
+
+    checkLegKickPushed(kick: string) {
+        return this.legKickCheck(kick) &&
             !this.isInTheAir() &&
             this.spriteSheet?.outsideAnimationCall !== kick &&
             this.spriteSheet?.outsideAnimationCall !== 'turn-leg' &&

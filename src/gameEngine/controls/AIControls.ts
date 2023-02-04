@@ -353,10 +353,6 @@ export class AIControls extends BaseControls {
     }
 
     behave() {
-
-
-
-
         if (this.fightStarted) {
             this.didGetDamage();
 
