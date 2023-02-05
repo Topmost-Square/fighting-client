@@ -54,6 +54,9 @@ export const Register = () => {
             const registerResponse = await submitRegister({
                 variables: {
                     ...form
+                },
+                context: {
+                    clientName: 'auth'
                 }
             });
 

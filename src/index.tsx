@@ -5,19 +5,26 @@ import App from './App';
 import {
     ApolloClient,
     createHttpLink,
-    ApolloLink,
     InMemoryCache,
-    ApolloProvider
+    ApolloProvider,
+    from,
+    split
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import {getToken} from "./utils/auth";
 
-const httpLink = createHttpLink({
-    uri: process.env.REACT_APP_SERVER,
+const authServiceLink = createHttpLink({
+    uri: process.env.REACT_APP_AUTH_SERVICE,
+    credentials: 'include'
+});
+
+const dataServiceLink = createHttpLink({
+    uri: process.env.REACT_APP_DATA_SERVICE,
     credentials: 'include'
 });
 
 const authLink = setContext((_, { headers }) => {
-    const token = '';
+    const token = getToken();
     return {
         headers: {
             ...headers,
@@ -26,8 +33,17 @@ const authLink = setContext((_, { headers }) => {
     }
 });
 
+const dataWithAuthLick = from([
+    dataServiceLink,
+    authLink
+]);
+
 const client = new ApolloClient({
-    link: ApolloLink.from([authLink, httpLink]),
+    link: split(
+        operation => operation.getContext().clientName === 'auth',
+        authServiceLink,
+        dataWithAuthLick
+    ),
     cache: new InMemoryCache()
 });
 
