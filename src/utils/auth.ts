@@ -1,4 +1,6 @@
 import jwtDecode from "jwt-decode";
+import {useEffect, useState} from "react";
+import {useRefreshMutation} from "../generated/graphql";
 
 export const saveToken = (token: string) => localStorage.setItem('token', token);
 export const getToken = () => localStorage.getItem('token');
@@ -10,5 +12,31 @@ export const isAuth = () => {
         return false;
 
     const decodedToken: { exp: number } = jwtDecode(token);
+
     return decodedToken.exp > (new Date().getTime()) / 1000;
+}
+
+export const useAuth = () => {
+    const [refresh, { error, loading }] = useRefreshMutation();
+
+    useEffect(() => {
+        if (!isAuth()) {
+            const token = getToken();
+            if (token) {
+                refresh({
+                    context: {
+                        clientName: 'auth'
+                    }
+                })
+                    .then(res => {
+                        if (res.data?.refresh?.token) {
+                            saveToken(res.data?.refresh?.token)
+                        } else {
+                            removeToken();
+                        }
+                    })
+                    .catch(err => console.log(err, 'err'))
+            }
+        }
+    }, []);
 }

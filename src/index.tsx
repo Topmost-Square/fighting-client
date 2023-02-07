@@ -11,7 +11,7 @@ import {
     split
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import {getToken} from "./utils/auth";
+import { getToken } from "./utils/auth";
 
 const authServiceLink = createHttpLink({
     uri: process.env.REACT_APP_AUTH_SERVICE,

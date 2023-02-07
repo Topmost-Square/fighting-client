@@ -8,24 +8,25 @@ import {
 import {Register} from "./pages/Register";
 import {Login} from "./pages/Login";
 import {Menu} from "./pages/Menu";
-import {isAuth} from "./utils/auth";
+import {isAuth, useAuth} from "./utils/auth";
 import {Practice} from "./pages/Practice";
 
-const AuthRoute = ({ children }: any) => {
-    if (isAuth()) {
+const App = () => {
+    useAuth();
+
+    const AuthRoute = ({ children }: any) => {
+        if (isAuth()) {
+            return children
+        }
+        return <Navigate to='/login' />
+    }
+
+    const UnAuthRoute = ({ children }: any) => {
+        if (isAuth()) {
+            return <Navigate to='/' />
+        }
         return children
     }
-    return <Navigate to='/login' />
-}
-
-const UnAuthRoute = ({ children }: any) => {
-    if (isAuth()) {
-        return <Navigate to='/' />
-    }
-    return children
-}
-
-const App = () => {
 
   return (
           <BrowserRouter>

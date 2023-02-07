@@ -52,6 +52,9 @@ export const Login = () => {
             const loginResponse = await submitLogin({
                 variables: {
                     ...form
+                },
+                context: {
+                    clientName: 'auth'
                 }
             });
 
