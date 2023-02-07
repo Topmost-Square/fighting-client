@@ -1,7 +1,6 @@
 import jwtDecode from "jwt-decode";
 import { useEffect } from "react";
 import { useRefreshMutation } from "../generated/graphql";
-import { useLocation } from "react-router-dom";
 
 export const saveToken = (token: string) => localStorage.setItem('token', token);
 export const getToken = () => localStorage.getItem('token');
@@ -19,7 +18,6 @@ export const isAuth = () => {
 
 export const useAuth = () => {
     const [refresh, { error, loading }] = useRefreshMutation();
-    const location = useLocation();
 
     const checkAndRefreshToken = () => {
         if (!isAuth()) {
@@ -43,5 +41,6 @@ export const useAuth = () => {
     }
 
     useEffect(() => checkAndRefreshToken(), []);
-    useEffect(() => checkAndRefreshToken(), [location]);
+
+    return { checkAndRefreshToken };
 }
