@@ -19,7 +19,7 @@ export const isAuth = () => {
 export const useAuth = () => {
     const [refresh, { error, loading }] = useRefreshMutation();
 
-    const checkAndRefreshToken = () => {
+    const checkAndRefreshToken = (method: any = null) => {
         if (!isAuth()) {
             const token = getToken();
             if (token) {
@@ -31,12 +31,16 @@ export const useAuth = () => {
                     .then(res => {
                         if (res.data?.refresh?.token) {
                             saveToken(res.data?.refresh?.token)
+                            method && method()
                         } else {
                             removeToken();
+                            method && method()
                         }
                     })
                     .catch(err => console.log(err, 'err'))
             }
+        } else if (method) {
+            method()
         }
     }
 
