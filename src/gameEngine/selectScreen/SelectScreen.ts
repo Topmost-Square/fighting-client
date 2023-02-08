@@ -1,4 +1,5 @@
 import { charactersList } from "./charactersList";
+import {IdleAnimation} from "./IdleAnimation";
 
 type Character = {
     face: HTMLImageElement,
@@ -13,6 +14,8 @@ export class SelectScreen {
     canvas: HTMLCanvasElement|null = null;
 
     context: CanvasRenderingContext2D|null = null;
+
+    idleAnimation: IdleAnimation|null = null;
 
     characters: Array<Character> = [];
 
@@ -36,12 +39,20 @@ export class SelectScreen {
         })
     }
 
+    setDefaultAnimation() {
+        this.setIdleAnimation(this.characters[this.pointer].idle)
+    }
+
     setCanvas(canvas: HTMLCanvasElement|null) {
         this.canvas = canvas;
     }
 
     setContext(context: CanvasRenderingContext2D) {
         this.context = context;
+    }
+
+    setIdleAnimation(sprite: HTMLImageElement|null) {
+        this.idleAnimation = new IdleAnimation(sprite, this.context)
     }
 
     constructor() {
@@ -59,6 +70,8 @@ export class SelectScreen {
                     } else {
                         this.pointer--;
                     }
+
+                    this.setIdleAnimation(this.characters[this.pointer].idle)
                     break;
                 case 'ArrowRight':
                     if (this.pointer >= this.characters.length - 1) {
@@ -66,16 +79,14 @@ export class SelectScreen {
                     } else {
                         this.pointer++;
                     }
+
+                    this.setIdleAnimation(this.characters[this.pointer].idle)
                     break;
             }
         });
     }
 
-    draw() {
-        const placeY = 300;
-        const imageSize = 32
-        const sizeToDisplay = imageSize * 3; // thrice the original
-
+    drawFaces(sizeToDisplay: number, imageSize: number, placeY: number) {
         this.characters.forEach((character, index) => {
             if (character) {
                 this.context!.imageSmoothingEnabled = false;
@@ -95,7 +106,9 @@ export class SelectScreen {
                 );
             }
         });
+    }
 
+    drawPointer(sizeToDisplay: number, placeY: number) {
         const pointerX = sizeToDisplay * (this.pointer + 1) + this.canvas?.width! / 3
 
         this.context!.strokeStyle = 'yellow';
@@ -103,10 +116,26 @@ export class SelectScreen {
         this.context!.beginPath();
         this.context!.rect(pointerX, placeY, sizeToDisplay, sizeToDisplay);
         this.context!.stroke();
+    }
 
+    drawFighterName() {
         this.context!.font = '30px Arial';
         this.context!.fillStyle = 'white';
 
         this.context!.fillText(this.characters[this.pointer].name, this.canvas?.width! / 2 - 100, 200)
+    }
+
+    draw() {
+        const placeY = 300;
+        const imageSize = 32
+        const sizeToDisplay = imageSize * 3; // thrice the original
+
+        this.drawFaces(sizeToDisplay, imageSize, placeY);
+
+        this.drawPointer(sizeToDisplay, placeY);
+
+        this.drawFighterName();
+
+        this.idleAnimation?.draw(sizeToDisplay + this.canvas?.width! / 3, 700, 100)
     }
 }

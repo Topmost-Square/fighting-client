@@ -12,6 +12,7 @@ export const SelectPracticeFighter = () => {
         selectScreen.setContext(c!);
         selectScreen.loadImages();
         selectScreen.setCanvas(canvas);
+        selectScreen.setDefaultAnimation();
 
         const animate = () => {
             requestAnimationFrame(animate);
