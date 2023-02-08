@@ -11,6 +11,7 @@ export const SelectPracticeFighter = () => {
         const selectScreen = new SelectScreen();
         selectScreen.setContext(c!);
         selectScreen.loadImages();
+        selectScreen.setCanvas(canvas);
 
         const animate = () => {
             requestAnimationFrame(animate);
@@ -26,7 +27,6 @@ export const SelectPracticeFighter = () => {
             }
 
             selectScreen.draw()
-
         }
 
         canvas!.width = window.innerWidth;
