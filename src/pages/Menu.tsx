@@ -2,22 +2,21 @@ import {MenuItem} from "../components/MenuItem";
 import {removeToken, useAuth} from "../utils/auth";
 import {useNavigate} from "react-router-dom";
 import React from "react";
+import {navigateToPage} from "../utils/navigation";
 
 export const Menu = () => {
     const navigate = useNavigate();
 
-    const { checkAndRefreshToken } = useAuth()
+    const { checkAndRefreshToken } = useAuth();
 
     const exit = () => {
         removeToken();
         document.location.reload();
     }
 
-    const navigateToPage = (page: string) => checkAndRefreshToken(() => navigate(page))
-
     return (
         <div className='flex flex-col items-center h-screen'>
-            <MenuItem name='Practice' top click={() => navigateToPage('practice')} />
+            <MenuItem name='Practice' top click={() => navigateToPage('/select/practice', navigate, checkAndRefreshToken)} />
             <MenuItem name='Online' />
             <MenuItem name='Inventory' />
             <MenuItem name='Settings' />

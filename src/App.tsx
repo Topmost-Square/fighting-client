@@ -5,6 +5,7 @@ import { Login } from "./pages/Login";
 import { Menu } from "./pages/Menu";
 import { isAuth } from "./utils/auth";
 import { Practice } from "./pages/Practice";
+import {SelectPracticeFighter} from "./pages/SelectPracticeFighter";
 
 const App = () => {
     const AuthRoute = ({ children }: any) => {
@@ -45,6 +46,14 @@ const App = () => {
                 <AuthRoute>
                     <Menu />
                 </AuthRoute>
+              }
+          />
+          <Route
+              path='/select/practice'
+              element={
+                  <AuthRoute>
+                      <SelectPracticeFighter />
+                  </AuthRoute>
               }
           />
           <Route
