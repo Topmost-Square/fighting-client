@@ -4,9 +4,14 @@ import {AIFighter} from "../gameEngine/fighters/AIFighter";
 import {PracticeGame} from "../gameEngine/game/PracticeGame";
 import {PlayerControls} from "../gameEngine/controls/PlayerControls";
 import {AIControls} from "../gameEngine/controls/AIControls";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "../utils/auth";
+import {navigateToPage} from "../utils/navigation";
 
 export const Practice = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const navigate = useNavigate();
+    const { checkAndRefreshToken } = useAuth();
 
     useEffect(() => {
         const canvas = canvasRef?.current;
@@ -21,11 +26,17 @@ export const Practice = () => {
         const playerControls = new PlayerControls();
         playerControls.setFighter(player);
 
+        const fight = JSON.parse(localStorage.getItem('fight')!);
+
+        if (!fight) {
+            navigateToPage('/', navigate, checkAndRefreshToken)
+        }
+
         player.setInitialX(canvas!.width - 200);
         player.setInitialY(canvas!.height - 500);
         player.setCanvas(canvas);
         player.setContext(c!);
-        player.setSpriteSheet('purple');
+        player.setSpriteSheet(fight.fighter);
         player.setControls(playerControls);
 
         aiFighter = new AIFighter();
@@ -36,7 +47,7 @@ export const Practice = () => {
         aiFighter.setInitialY(canvas!.height - 500);
         aiFighter.setCanvas(canvas);
         aiFighter.setContext(c!);
-        aiFighter.setSpriteSheet('green');
+        aiFighter.setSpriteSheet(fight.enemy);
         aiFighter.setControls(aiControls);
 
         game = new PracticeGame(player, aiFighter);

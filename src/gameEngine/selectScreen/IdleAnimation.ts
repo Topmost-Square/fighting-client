@@ -3,6 +3,8 @@ export class IdleAnimation {
     context: CanvasRenderingContext2D|null = null;
     sprite: HTMLImageElement|null = null;
 
+    doAnimate = true;
+
     size = 400;
 
     counter = 0;
@@ -14,6 +16,10 @@ export class IdleAnimation {
     constructor(sprite: HTMLImageElement|null, context: CanvasRenderingContext2D|null,) {
         this.context = context;
         this.sprite = sprite;
+    }
+
+    stopAnimating() {
+        this.doAnimate = false;
     }
 
     animate() {
@@ -31,7 +37,7 @@ export class IdleAnimation {
 
     draw(x: number, y: number, height: number) {
 
-        this.animate();
+        this.doAnimate && this.animate();
 
         if (this.sprite) {
             const oneImageSize = 32;

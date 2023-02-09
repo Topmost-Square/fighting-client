@@ -10,6 +10,8 @@ import GreenFighterIdle from "../images/idle/green.png";
 import PurpleFighterIdle from "../images/idle/purple.png";
 import RedFighterIdle from "../images/idle/red.png";
 
+export const characters = ['purple', 'green', 'black', 'blue', 'red'];
+
 export const charactersList = () => {
     return [
         { name: 'Purple', face: PurpleFighterFace, idle: PurpleFighterIdle },

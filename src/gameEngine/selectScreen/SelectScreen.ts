@@ -58,29 +58,31 @@ export class SelectScreen {
     constructor() {
         window.addEventListener('keydown', e => {
             switch (e.key) {
-                case 'ArrowUp':
-                    console.log('UP');
-                    break;
-                case 'ArrowDown':
-                    console.log('DOWN');
+                case ' ':
+                    console.log('select');
+                    this.selected = true;
                     break;
                 case 'ArrowLeft':
-                    if (this.pointer === 0) {
-                        this.pointer = this.characters.length - 1;
-                    } else {
-                        this.pointer--;
-                    }
+                    if (!this.selected) {
+                        if (this.pointer === 0) {
+                            this.pointer = this.characters.length - 1;
+                        } else {
+                            this.pointer--;
+                        }
 
-                    this.setIdleAnimation(this.characters[this.pointer].idle)
+                        this.setIdleAnimation(this.characters[this.pointer].idle)
+                    }
                     break;
                 case 'ArrowRight':
-                    if (this.pointer >= this.characters.length - 1) {
-                        this.pointer = 0;
-                    } else {
-                        this.pointer++;
-                    }
+                    if (!this.selected) {
+                        if (this.pointer >= this.characters.length - 1) {
+                            this.pointer = 0;
+                        } else {
+                            this.pointer++;
+                        }
 
-                    this.setIdleAnimation(this.characters[this.pointer].idle)
+                        this.setIdleAnimation(this.characters[this.pointer].idle)
+                    }
                     break;
             }
         });
