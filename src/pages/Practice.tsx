@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef} from "react";
 import {Player} from "../gameEngine/fighters/Player";
 import {AIFighter} from "../gameEngine/fighters/AIFighter";
 import {PracticeGame} from "../gameEngine/game/PracticeGame";
@@ -25,7 +25,7 @@ export const Practice = () => {
         player.setInitialY(canvas!.height - 500);
         player.setCanvas(canvas);
         player.setContext(c!);
-        player.setSpriteSheet('basic');
+        player.setSpriteSheet('purple');
         player.setControls(playerControls);
 
         aiFighter = new AIFighter();

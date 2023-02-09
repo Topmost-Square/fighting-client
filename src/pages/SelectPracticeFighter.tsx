@@ -21,7 +21,7 @@ export const SelectPracticeFighter = () => {
             c!.font = '30px Arial';
             c!.fillStyle = 'white';
 
-            c!.fillText('Select You Fighter', canvas?.width! / 2 - 100, 100)
+            c!.fillText('Select Your Fighter', canvas?.width! / 2 - 100, 100)
 
             if (selectScreen.selected) {
                 // go to fighting
