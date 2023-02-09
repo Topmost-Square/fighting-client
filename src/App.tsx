@@ -3,11 +3,13 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Menu } from "./pages/Menu";
-import { isAuth } from "./utils/auth";
+import {isAuth, useAuth} from "./utils/auth";
 import { Practice } from "./pages/Practice";
 import {SelectPracticeFighter} from "./pages/SelectPracticeFighter";
 
 const App = () => {
+    useAuth();
+
     const AuthRoute = ({ children }: any) => {
         if (isAuth()) {
             return children
