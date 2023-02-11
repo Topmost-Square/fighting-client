@@ -32,7 +32,7 @@ export const Practice = () => {
             navigateToPage('/', navigate, checkAndRefreshToken)
         }
 
-        player.setInitialX(canvas!.width - 200);
+        player.setInitialX(100);
         player.setInitialY(canvas!.height - 500);
         player.setCanvas(canvas);
         player.setContext(c!);
@@ -43,7 +43,7 @@ export const Practice = () => {
         const aiControls = new AIControls();
         aiControls.setFighter(aiFighter);
 
-        aiFighter.setInitialX(100);
+        aiFighter.setInitialX(canvas!.width - 200);
         aiFighter.setInitialY(canvas!.height - 500);
         aiFighter.setCanvas(canvas);
         aiFighter.setContext(c!);

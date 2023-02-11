@@ -26,9 +26,7 @@ export class PlayerControls extends BaseControls {
             pushed
         }
 
-        if (!pushed) {
-            spreadKick.prevReleased = true;
-        }
+        spreadKick.prevReleased = pushed;
 
         this.options = {
             ...this.options,
@@ -80,7 +78,13 @@ export class PlayerControls extends BaseControls {
                 this.spreadPushAndReleased('legKick', true);
                 break;
             case 'w':
-                this.dropMovement();
+                if (this.fighter?.side === 'left') {
+                    this.setOption('right', false);
+                }
+
+                if (this.fighter?.side === 'right') {
+                    this.setOption('left', false);
+                }
                 this.spreadPushAndReleased('leg2Kick', true);
                 break;
         }
