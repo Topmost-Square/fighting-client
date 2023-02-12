@@ -3,8 +3,12 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {useLoginMutation} from "../generated/graphql";
 import {ApolloError} from "@apollo/client";
 import {saveToken} from "../utils/auth";
+import { setUserId } from "../redux/userSlice";
+import { useDispatch } from "react-redux";
 
 export const Login = () => {
+    const dispatch = useDispatch();
+
     type LoginForm = {
         email: string
         password: string
@@ -59,6 +63,8 @@ export const Login = () => {
             });
 
             if (loginResponse.data?.login) {
+                dispatch(setUserId(loginResponse.data?.login.id))
+
                 saveToken(
                     loginResponse!.data!.login!.token as string
                 )

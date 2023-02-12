@@ -13,6 +13,8 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { getToken } from "./utils/auth";
+import {store} from "./store";
+import {Provider} from "react-redux";
 
 const authServiceLink = createHttpLink({
     uri: process.env.REACT_APP_AUTH_SERVICE,
@@ -56,7 +58,9 @@ root.render(
   <React.StrictMode>
       <ApolloProvider client={client}>
           <BrowserRouter>
-            <App />
+              <Provider store={store}>
+                  <App />
+              </Provider>
           </BrowserRouter>
       </ApolloProvider>
   </React.StrictMode>
