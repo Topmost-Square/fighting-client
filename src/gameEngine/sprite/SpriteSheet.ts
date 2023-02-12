@@ -29,6 +29,24 @@ const dropRangeAnimations = [
     'r-uppercut'
 ];
 
+const kickAnimationsLeft = [
+    'uppercut',
+    'turn-leg',
+    'hand',
+    'hand-2',
+    'leg',
+    'leg-2',
+];
+
+const kickAnimationsRight = [
+    'r-uppercut',
+    'r-turn-leg',
+    'r-hand',
+    'r-hand-2',
+    'r-leg',
+    'r-leg-2',
+];
+
 export class SpriteSheet {
     image: HTMLImageElement|null = null;
     size = 400;
@@ -113,11 +131,11 @@ export class SpriteSheet {
             }
 
             // start:fix for uppercut kick received while performing... uppercut
-            if (this.lastAnimation === 'uppercut' && this.fighter?.kicked) {
+            if (kickAnimationsLeft.includes(this.lastAnimation) && this.fighter?.kicked) {
                 this.callAnimation('fall');
             }
 
-            if (this.lastAnimation === 'r-uppercut' && this.fighter?.kicked) {
+            if (kickAnimationsRight.includes(this.lastAnimation)  && this.fighter?.kicked) {
                 this.callAnimation('r-fall');
             }
             // :end
