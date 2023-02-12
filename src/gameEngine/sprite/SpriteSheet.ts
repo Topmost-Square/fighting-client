@@ -25,6 +25,8 @@ const dropRangeAnimations = [
     'r-fall',
     'stand-up',
     'r-stand-up',
+    'uppercut',
+    'r-uppercut'
 ];
 
 export class SpriteSheet {
@@ -90,8 +92,7 @@ export class SpriteSheet {
     animate() {
         this.counter++;
 
-        const countTo = this.xStart === this.xRange - 1 ?
-            this.speed + this.delayOnLast : this.speed;
+        const countTo = this.xStart === this.xRange - 1 ? this.speed + this.delayOnLast : this.speed;
 
         if (this.outsideAnimationCall === 'stand-up' || this.outsideAnimationCall === 'r-stand-up') {
             if (this.xStart === this.xRange - 1 && !this.fighter?.isInTheAir()) {
@@ -110,6 +111,16 @@ export class SpriteSheet {
                 this.outsideAnimationCall = null;
                 this.dropOnLast = false;
             }
+
+            // start:fix for uppercut kick received while performing... uppercut
+            if (this.lastAnimation === 'uppercut' && this.fighter?.kicked) {
+                this.callAnimation('fall');
+            }
+
+            if (this.lastAnimation === 'r-uppercut' && this.fighter?.kicked) {
+                this.callAnimation('r-fall');
+            }
+            // :end
 
             if (this.lastAnimation === 'fall') {
                 this.yStart = 14;

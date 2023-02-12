@@ -43,7 +43,7 @@ export const Practice = () => {
         const aiControls = new AIControls();
         aiControls.setFighter(aiFighter);
 
-        aiFighter.setInitialX(canvas!.width - 200);
+        aiFighter.setInitialX(canvas!.width - 400);
         aiFighter.setInitialY(canvas!.height - 500);
         aiFighter.setCanvas(canvas);
         aiFighter.setContext(c!);
