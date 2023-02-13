@@ -1,6 +1,8 @@
 import jwtDecode from "jwt-decode";
 import { useEffect } from "react";
-import { useRefreshMutation } from "../generated/graphql";
+import {useMeLazyQuery, useRefreshMutation} from "../generated/graphql";
+import {setUserId} from "../redux/userSlice";
+import {useDispatch} from "react-redux";
 
 export const saveToken = (token: string) => localStorage.setItem('token', token);
 export const getToken = () => localStorage.getItem('token');
@@ -17,7 +19,14 @@ export const isAuth = () => {
 }
 
 export const useAuth = () => {
+    const dispatch = useDispatch();
     const [refresh, { error, loading }] = useRefreshMutation();
+
+    const [getMe, { data }] = useMeLazyQuery();
+
+    if (data && data.me) {
+        dispatch(setUserId(data.me.id))
+    }
 
     const checkAndRefreshToken = (method: any = null) => {
         if (!isAuth()) {
@@ -44,7 +53,10 @@ export const useAuth = () => {
         }
     }
 
-    useEffect(() => checkAndRefreshToken(), []);
+    useEffect(() => {
+        checkAndRefreshToken();
+        getMe({ context: { clientName: 'auth' }})
+    }, []);
 
     return { checkAndRefreshToken };
 }
