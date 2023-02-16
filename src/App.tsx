@@ -6,6 +6,7 @@ import { Menu } from "./pages/Menu";
 import {isAuth, useAuth} from "./utils/auth";
 import { Practice } from "./pages/Practice";
 import {SelectPracticeFighter} from "./pages/SelectPracticeFighter";
+import {FightResult} from "./pages/FightResult";
 
 const App = () => {
     useAuth();
@@ -63,6 +64,14 @@ const App = () => {
               element={
                   <AuthRoute>
                       <Practice />
+                  </AuthRoute>
+              }
+          />
+          <Route
+              path='/result'
+              element={
+                  <AuthRoute>
+                      <FightResult />
                   </AuthRoute>
               }
           />

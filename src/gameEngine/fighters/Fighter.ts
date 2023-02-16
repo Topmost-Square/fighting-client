@@ -1,5 +1,6 @@
 import {BaseControls} from "../controls/BaseControls";
 import {SpriteSheet} from "../sprite/SpriteSheet";
+import {DataCollector} from "../DataCollector/DataCollector";
 
 export type Position = { x: number|null, y: number|null };
 type KickMask = {
@@ -11,6 +12,12 @@ type KickMask = {
 };
 
 export class Fighter {
+    dataCollector: DataCollector|null = null;
+
+    setDataCollector(dataCollector: DataCollector) {
+        this.dataCollector = dataCollector;
+    }
+
     controls: BaseControls|null = null;
 
     kicked: boolean = false;
@@ -20,7 +27,7 @@ export class Fighter {
         y: null
     };
 
-    health: number = 100;
+    health: number = 10;
 
     isDown: boolean = false;
 
@@ -57,6 +64,12 @@ export class Fighter {
         y: null,
         width: 250,
         height: 70
+    }
+
+    gameState: boolean|null = null;
+
+    setGameState(gameState: boolean) {
+        this.gameState = gameState;
     }
 
     setControls(controls: BaseControls) {
@@ -141,12 +154,33 @@ export class Fighter {
         return 'handKick';
     }
 
+    //todo: refactor this
+    mapKickForDataCollector(kick: string) {
+        if (kick === 'hand')
+            return 'hand1';
+
+        if (kick === 'hand-2')
+            return 'hand2';
+
+        if (kick === 'leg')
+            return 'leg1';
+
+        if (kick === 'leg-2')
+            return 'leg-2';
+
+        return '';
+    }
+
     performBasicKick(kick: string) {
         if (this.shouldCommitDamage(kick) && !this.enemy?.isDown) {
-            const calculatedDamage = this.calculateDamage(kick)
+            const calculatedDamage = this.calculateDamage(kick);
             this.enemy?.getDamage(
                 calculatedDamage.value,
-                calculatedDamage.area
+                calculatedDamage.area,
+                false,
+                0,
+                0,
+                this.mapKickForDataCollector(kick)
             );
         }
 
@@ -208,7 +242,7 @@ export class Fighter {
         this.spriteSheet?.dropAnimation();
         this.spriteSheet?.callAnimation(kickAnimation);
         if (this.closeForDamage('leg') && !this.enemy?.isDown) {
-            this.enemy?.getDamage(7, 'head', true, 30, 50);
+            this.enemy?.getDamage(7, 'head', true, 30, 50, 'turnLeg');
         }
     }
 
@@ -223,6 +257,7 @@ export class Fighter {
             this.controls?.options.leg2Kick.pushed &&
             this.spriteSheet?.outsideAnimationCall !== sideControlAnimations.kick
         ) {
+            this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'turnLeg' });
             this.performTurnKick(sideControlAnimations.kick);
         } else if (this.spriteSheet?.outsideAnimationCall !== sideControlAnimations.kick) {
             if (
@@ -263,14 +298,19 @@ export class Fighter {
      * @param shouldFall - should player fall after kick
      * @param up - how enemy should fly up %
      * @param side - how enemy should fly to the side %
+     * @param kick - kick string for DataCollector
      */
     getDamage(
         damage: number,
         area: string,
         shouldFall: boolean = false,
         up: number = 0,
-        side: number = 0
+        side: number = 0,
+        kick: string = ''
     ) {
+        // currently, only for AI fight
+        this.dataCollector?.updateKick({ type: 'damageReceived', kick });
+
         this.health -= damage;
 
         if (!shouldFall) {
@@ -328,7 +368,7 @@ export class Fighter {
         this.spriteSheet?.callAnimation(this.side === 'left' ? 'uppercut' : 'r-uppercut');
 
         if (this.closeForDamage('hand') && !this.enemy?.isDown && !this.enemy?.controls?.options.down) {
-            this.enemy?.getDamage(5, 'head', true, 50, 30);
+            this.enemy?.getDamage(5, 'head', true, 50, 30, 'uppercut');
         }
     }
 

@@ -7,24 +7,27 @@ import {AIControls} from "../gameEngine/controls/AIControls";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../utils/auth";
 import {navigateToPage} from "../utils/navigation";
+import {useDispatch} from "react-redux";
+import {DataCollector} from "../gameEngine/DataCollector/DataCollector";
+import {clearState, setCharacter, setWinner, updateKick} from "../redux/fightSlice";
 
 export const Practice = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
     const navigate = useNavigate();
     const { checkAndRefreshToken } = useAuth();
+    const dispatch = useDispatch();
+
+    const actions = {
+        clearState: clearState,
+        setCharacter: setCharacter,
+        updateKick: updateKick,
+        setWinner: setWinner
+    };
 
     useEffect(() => {
-        const canvas = canvasRef?.current;
-        const c = canvas?.getContext('2d');
-
-        let player: Player|null = null;
-        let aiFighter: AIFighter|null = null;
-        let game: PracticeGame|null = null;
-        let gameState: boolean = true;
-
-        player =  new Player();
-        const playerControls = new PlayerControls();
-        playerControls.setFighter(player);
+        let newCanvas = canvasRef?.current;
+        let newContext = newCanvas?.getContext('2d');
 
         const fight = JSON.parse(localStorage.getItem('fight')!);
 
@@ -32,58 +35,80 @@ export const Practice = () => {
             navigateToPage('/', navigate, checkAndRefreshToken)
         }
 
-        player.setInitialX(100);
-        player.setInitialY(canvas!.height - 500);
-        player.setCanvas(canvas);
-        player.setContext(c!);
-        player.setSpriteSheet(fight.fighter);
-        player.setControls(playerControls);
+        const dataCollector = new DataCollector();
 
-        aiFighter = new AIFighter();
+        dataCollector.setDispatch(dispatch);
+        dataCollector.setActions(actions);
+        // clear fighting state in the beginning of every fight
+        dataCollector.clearState();
+
+        dataCollector.setCharacter({ type: 'player', character: fight.fighter });
+        dataCollector.setCharacter({ type: 'enemy', character: fight.enemy });
+
+        const newPlayer = new Player();
+
+        const playerControls = new PlayerControls();
+
+        playerControls.setFighter(newPlayer!);
+
+        newPlayer!.setInitialX(100);
+        newPlayer!.setInitialY(newCanvas!.height - 500);
+        newPlayer!.setCanvas(newCanvas);
+        newPlayer!.setContext(newContext!);
+        newPlayer!.setSpriteSheet(fight.fighter);
+        newPlayer!.setControls(playerControls);
+        newPlayer!.setDataCollector(dataCollector);
+        newPlayer!.setGameState(true);
+
+        const newAIFighter = new AIFighter();
+
         const aiControls = new AIControls();
-        aiControls.setFighter(aiFighter);
 
-        aiFighter.setInitialX(canvas!.width - 400);
-        aiFighter.setInitialY(canvas!.height - 500);
-        aiFighter.setCanvas(canvas);
-        aiFighter.setContext(c!);
-        aiFighter.setSpriteSheet(fight.enemy);
-        aiFighter.setControls(aiControls);
+        aiControls.setFighter(newAIFighter!);
 
-        game = new PracticeGame(player, aiFighter);
+        newAIFighter!.setInitialX(newCanvas!.width - 400);
+        newAIFighter!.setInitialY(newCanvas!.height - 500);
+        newAIFighter!.setCanvas(newCanvas);
+        newAIFighter!.setContext(newContext!);
+        newAIFighter!.setSpriteSheet(fight.enemy);
+        newAIFighter!.setControls(aiControls);
+        newAIFighter!.setGameState(true);
+
+        const game = new PracticeGame(newPlayer!, newAIFighter!);
 
         const animate = () => {
             requestAnimationFrame(animate);
-            c!.clearRect(0, 0, canvas!.width, canvas!.height);
-            if (player?.health! <= 0 || aiFighter?.health! <= 0) {
-                // game over
-                gameState = false;
-            }
 
-            c!.font = '30px Arial';
-            c!.fillStyle = 'white';
+            newContext!.clearRect(0, 0, newCanvas!.width, newCanvas!.height);
 
-            if (gameState) {
-                c!.fillText(`AI Fighter ${aiFighter!.health}`, canvas?.width! - 300, 100)
-                c!.fillText(`Player ${player!.health}`, 100, 100)
-            } else {
-                const winner = player?.health! > aiFighter?.health! ? 'Player' : 'AI Fighter';
-                c!.fillText(`${winner} wins`, 400, 100)
-            }
+            newContext!.font = '30px Arial';
+            newContext!.fillStyle = 'white';
 
-            aiFighter!.draw();
-            player!.draw();
+            newContext!.fillText(`AI Fighter ${newAIFighter!.health}`, newCanvas?.width! - 300, 100)
+            newContext!.fillText(`Player ${newPlayer!.health}`, 100, 100)
 
-            if (gameState) {
-                player!.update();
-                aiFighter!.update();
-            }
+            newPlayer!.update();
+            newAIFighter!.update();
+
+            newAIFighter!.draw();
+            newPlayer!.draw();
 
             game!.update();
+
+            if (newPlayer.health <= 0 || newAIFighter.health <= 0) {
+
+                const winner = newPlayer.health! > newAIFighter.health! ? 'player' : 'ai';
+                newContext!.fillText(`${winner === 'ai' ? fight.enemy : fight.fighter} wins`, 400, 100)
+                dataCollector.setWinner(winner)
+
+                setTimeout(() => {
+                    window.location.href = '/result';
+                }, 3000);
+            }
         }
 
-        canvas!.width = window.innerWidth;
-        canvas!.height = window.innerHeight;
+        newCanvas!.width = window.innerWidth;
+        newCanvas!.height = window.innerHeight;
         animate();
     }, []);
 

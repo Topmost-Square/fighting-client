@@ -25,6 +25,7 @@ export class Player extends Fighter {
                 this.position.y = this.canvas?.height! - 500 + 200;
 
                 if (this.controls.options.hand2Kick.pushed) {
+                    this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'uppercut' });
                     this.performUpperCut();
                 } else {
                     this.spriteSheet?.callAnimation(this.side === 'left' ? 'sit' : 'r-sit');
@@ -63,24 +64,28 @@ export class Player extends Fighter {
 
     legKickControlAction() {
         if (this.checkLegKickPushed('leg')) {
+            this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'leg1' });
             this.performBasicKick('leg');
         }
     }
 
     legKick2ControlAction() {
         if (this.checkLegKickPushed('leg-2') && !this.controls?.options.left) {
+            this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'leg2' });
             this.performBasicKick('leg-2');
         }
     }
 
     handKickControlAction() {
         if (this.checkHandKickPushed('hand')) {
+            this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'hand1' });
             this.performBasicKick('hand');
         }
     }
 
     hand2KickControlAction() {
         if (this.checkHandKickPushed('hand-2') && !this.controls?.options.down) {
+            this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'hand2' });
             this.performBasicKick('hand-2');
         }
     }
@@ -147,8 +152,10 @@ export class Player extends Fighter {
                 this.spriteSheet?.dropAnimation();
                 if (this.side === 'left') {
                     this.spriteSheet?.callAnimation('up-leg');
+                    //todo: inflict damage
                 } else {
                     this.spriteSheet?.callAnimation('r-up-leg');
+                    //todo: inflict damage
                 }
             }
         }

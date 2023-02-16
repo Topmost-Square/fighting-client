@@ -1,8 +1,6 @@
 import {BaseControls} from "./BaseControls";
 
 export class AIControls extends BaseControls {
-    damageReceived = false;
-
     moveTo: number|null = null;
 
     isAttacking = false;
@@ -93,22 +91,6 @@ export class AIControls extends BaseControls {
         }
 
         return 0;
-    }
-
-    didGetDamage() {
-        if (this.damageReceived) {
-            // make decision to move out of enemy
-            this.moveTo = this.moveFromEnemy();
-
-            this.attackingTimeoutId = null;
-            this.waitingTimeoutId = null;
-            this.moveToTimeoutId = null;
-
-            this.isWaiting = false;
-            this.isAttacking = false;
-        }
-
-        this.damageReceived = false;
     }
 
     shouldMoveFromLeft() {
@@ -354,8 +336,6 @@ export class AIControls extends BaseControls {
 
     behave() {
         if (this.fightStarted) {
-            this.didGetDamage();
-
             if (!this.isWaiting && !this.isAttacking && !this.fighter?.isDown) {
                 this.makeChoice();
             }
