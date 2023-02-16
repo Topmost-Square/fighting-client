@@ -87,16 +87,15 @@ export const Practice = () => {
             newContext!.fillText(`AI Fighter ${newAIFighter!.health}`, newCanvas?.width! - 300, 100)
             newContext!.fillText(`Player ${newPlayer!.health}`, 100, 100)
 
-            newPlayer!.update();
-            newAIFighter!.update();
-
             newAIFighter!.draw();
             newPlayer!.draw();
 
             game!.update();
 
-            if (newPlayer.health <= 0 || newAIFighter.health <= 0) {
-
+            if (newPlayer.health > 0 && newAIFighter.health > 0) {
+                newPlayer!.update();
+                newAIFighter!.update();
+            } else {
                 const winner = newPlayer.health! > newAIFighter.health! ? 'player' : 'ai';
                 newContext!.fillText(`${winner === 'ai' ? fight.enemy : fight.fighter} wins`, 400, 100)
                 dataCollector.setWinner(winner)

@@ -27,7 +27,7 @@ export class Fighter {
         y: null
     };
 
-    health: number = 10;
+    health: number = 50;
 
     isDown: boolean = false;
 

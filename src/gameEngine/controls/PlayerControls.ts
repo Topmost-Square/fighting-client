@@ -3,7 +3,10 @@ import {BaseControls} from "./BaseControls";
 export class PlayerControls extends BaseControls {
 
     generalCheck() {
-        return this.fightStarted && !this.fighter!.isDown && !this.fighter!.kicked;
+        return this.fightStarted &&
+            !this.fighter!.isDown &&
+            !this.fighter!.kicked &&
+            !(this.fighter?.health! <= 0 || this.fighter?.enemy?.health! <= 0)
     }
 
     sideArrowCheck() {
