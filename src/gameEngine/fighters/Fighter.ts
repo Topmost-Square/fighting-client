@@ -572,10 +572,12 @@ export class Fighter {
 
         const posX = this.side === 'left' ? this.position.x! - 50 : this.position.x! - 200
 
-        if (this.spriteSheet && this.health > 0) {
+        if (this.spriteSheet && this.health > 0 && this.enemy?.health! > 0) {
             this.spriteSheet.draw(posX, this.position.y!, this.height);
+        } else if (this.health <= 0) {
+            this.painter?.draw(posX, this.position.y!, this.height, this.side!);
         } else {
-            this.painter?.draw(posX, this.position.y!, this.height, this.side!)
+            this.painter?.draw(posX, this.position.y!, this.height, 'win');
         }
     }
 }

@@ -1,8 +1,9 @@
 import {painterFile} from "./PainterFile";
 
-type DeathImage = {
+type StaticImage = {
     left: HTMLImageElement,
     right: HTMLImageElement,
+    win: HTMLImageElement,
 }
 
 export class Painter {
@@ -15,19 +16,43 @@ export class Painter {
 
     name: string|null = null;
 
-    deathImage: DeathImage|null = null;
+    staticImage: StaticImage|null = null;
 
     setContext(context: CanvasRenderingContext2D) {
         this.context = context;
     }
 
     setImages(name: string) {
-        this.deathImage = { left: new Image(), right: new Image() };
-        this.deathImage.left.src = painterFile(`${name}-dead-left`);
-        this.deathImage.right.src = painterFile(`${name}-dead-right`);
+        this.staticImage = {
+            left: new Image(),
+            right: new Image(),
+            win: new Image()
+        };
+
+        this.staticImage.left.src = painterFile(`${name}-dead-left`);
+        this.staticImage.right.src = painterFile(`${name}-dead-right`);
+        this.staticImage.win.src = painterFile(`${name}-win`);
     }
 
-    draw(x: number, y: number, height: number, side: string) {
+    parseImage(name: string) {
+        if (name === 'left')
+            return this.staticImage!.left;
+
+        if (name === 'right')
+            return this.staticImage!.right;
+
+        if (name === 'win')
+            return this.staticImage!.win;
+
+        return this.staticImage!.win;
+    }
+
+    draw(
+        x: number,
+        y: number,
+        height: number,
+        name: string
+    ) {
         const clipWidth = 32;
         const clipHeight = 32;
         const placeImageX = x
@@ -36,7 +61,7 @@ export class Painter {
         const heightImage = this.size;
 
         this.context!.drawImage(
-            side === 'left' ? this.deathImage!.left : this.deathImage!.right,
+            this.parseImage(name),
             0,
             0,
             clipWidth,

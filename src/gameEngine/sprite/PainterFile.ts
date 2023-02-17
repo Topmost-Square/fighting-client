@@ -13,6 +13,12 @@ import GreenDeadRight from '../images/dead/green/right.png';
 import BlueDeadLeft from '../images/dead/blue/left.png';
 import BlueDeadRight from '../images/dead/blue/right.png';
 
+import BlackWin from '../images/win/black-win.png';
+import BlueWin from '../images/win/blue-win.png';
+import GreenWin from '../images/win/green-win.png';
+import PurpleWin from '../images/win/purple-win.png';
+import RedWin from '../images/win/red-win.png';
+
 export const painterFile = (name: string|null) => {
     switch (name) {
         case 'black-dead-left':
@@ -35,6 +41,18 @@ export const painterFile = (name: string|null) => {
             return BlueDeadLeft;
         case 'blue-dead-right':
             return BlueDeadRight;
+
+        case 'red-win':
+            return RedWin;
+        case 'black-win':
+            return BlackWin;
+        case 'blue-win':
+            return BlueWin;
+        case 'green-win':
+            return GreenWin;
+        case 'purple-win':
+            return PurpleWin;
+
         default:
             return BlackDeadLeft;
     }
