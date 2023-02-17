@@ -156,14 +156,6 @@ export class SpriteSheet {
                 this.yStart = 20;
             }
 
-            // if (this.fighter?.health! <= 0 && this.fighter?.side === 'left') {
-            //     this.yStart = 6;
-            // }
-            //
-            // if (this.fighter?.health! <= 0 && this.fighter?.side === 'right') {
-            //     this.yStart = 25;
-            // }
-
             this.xStart = 1;
             this.xRange = 0;
             this.delayOnLast = 0;

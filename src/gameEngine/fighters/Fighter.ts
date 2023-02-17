@@ -1,6 +1,7 @@
 import {BaseControls} from "../controls/BaseControls";
 import {SpriteSheet} from "../sprite/SpriteSheet";
 import {DataCollector} from "../DataCollector/DataCollector";
+import {Painter} from "../sprite/Painter";
 
 export type Position = { x: number|null, y: number|null };
 type KickMask = {
@@ -13,6 +14,20 @@ type KickMask = {
 
 export class Fighter {
     dataCollector: DataCollector|null = null;
+
+    name: string|null = null;
+
+    painter: Painter|null = null;
+
+    setName(name: string) {
+        this.name = name;
+    }
+
+    setPainter() {
+        this.painter = new Painter();
+        this.painter.setImages(this.name!);
+        this.painter.setContext(this.context!);
+    }
 
     setDataCollector(dataCollector: DataCollector) {
         this.dataCollector = dataCollector;
@@ -27,7 +42,7 @@ export class Fighter {
         y: null
     };
 
-    health: number = 50;
+    health: number = 10;
 
     isDown: boolean = false;
 
@@ -557,8 +572,10 @@ export class Fighter {
 
         const posX = this.side === 'left' ? this.position.x! - 50 : this.position.x! - 200
 
-        if (this.spriteSheet) {
+        if (this.spriteSheet && this.health > 0) {
             this.spriteSheet.draw(posX, this.position.y!, this.height);
+        } else {
+            this.painter?.draw(posX, this.position.y!, this.height, this.side!)
         }
     }
 }

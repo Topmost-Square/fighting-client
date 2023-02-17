@@ -31,6 +31,8 @@ export const Practice = () => {
 
         const fight = JSON.parse(localStorage.getItem('fight')!);
 
+        console.log(fight, 'fight')
+
         if (!fight) {
             navigateToPage('/', navigate, checkAndRefreshToken)
         }
@@ -51,10 +53,12 @@ export const Practice = () => {
 
         playerControls.setFighter(newPlayer!);
 
+        newPlayer.setName(fight.fighter);
         newPlayer!.setInitialX(100);
         newPlayer!.setInitialY(newCanvas!.height - 500);
         newPlayer!.setCanvas(newCanvas);
         newPlayer!.setContext(newContext!);
+        newPlayer.setPainter();
         newPlayer!.setSpriteSheet(fight.fighter);
         newPlayer!.setControls(playerControls);
         newPlayer!.setDataCollector(dataCollector);
@@ -66,10 +70,12 @@ export const Practice = () => {
 
         aiControls.setFighter(newAIFighter!);
 
+        newAIFighter.setName(fight.enemy);
         newAIFighter!.setInitialX(newCanvas!.width - 400);
         newAIFighter!.setInitialY(newCanvas!.height - 500);
         newAIFighter!.setCanvas(newCanvas);
         newAIFighter!.setContext(newContext!);
+        newAIFighter.setPainter();
         newAIFighter!.setSpriteSheet(fight.enemy);
         newAIFighter!.setControls(aiControls);
         newAIFighter!.setGameState(true);
