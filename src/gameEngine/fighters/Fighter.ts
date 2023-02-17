@@ -2,6 +2,7 @@ import {BaseControls} from "../controls/BaseControls";
 import {SpriteSheet} from "../sprite/SpriteSheet";
 import {DataCollector} from "../DataCollector/DataCollector";
 import {Painter} from "../sprite/Painter";
+import {MAX_HEALTH} from "../../utils/constants";
 
 export type Position = { x: number|null, y: number|null };
 type KickMask = {
@@ -42,7 +43,7 @@ export class Fighter {
         y: null
     };
 
-    health: number = 10;
+    health: number = MAX_HEALTH;
 
     isDown: boolean = false;
 

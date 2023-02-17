@@ -10,6 +10,7 @@ import {navigateToPage} from "../utils/navigation";
 import {useDispatch} from "react-redux";
 import {DataCollector} from "../gameEngine/DataCollector/DataCollector";
 import {clearState, setCharacter, setWinner, updateKick} from "../redux/fightSlice";
+import {MAX_HEALTH} from "../utils/constants";
 
 export const Practice = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -88,10 +89,45 @@ export const Practice = () => {
             newContext!.clearRect(0, 0, newCanvas!.width, newCanvas!.height);
 
             newContext!.font = '30px Arial';
-            newContext!.fillStyle = 'white';
 
-            newContext!.fillText(`AI Fighter ${newAIFighter!.health}`, newCanvas?.width! - 300, 100)
-            newContext!.fillText(`Player ${newPlayer!.health}`, 100, 100)
+            newContext!.fillStyle = newPlayer.health > MAX_HEALTH / 2 ?
+                'white' :
+                newPlayer.health <= 10 ?
+                    'red' :
+                    'yellow';
+
+            newContext!.fillRect(100, 100, newPlayer!.health * 10, 50);
+
+            newContext!.fillStyle = 'black';
+
+            newContext!.fillText(
+                fight.fighter,
+                100,
+                130
+            );
+
+            const shifter = 100 - newAIFighter!.health;
+
+            newContext!.fillStyle = newAIFighter.health > MAX_HEALTH / 2 ?
+                'white' :
+                newAIFighter.health <= 10 ?
+                    'red' :
+                    'yellow';
+
+            newContext!.fillRect(
+                newCanvas?.width! / 3 + (shifter * 10),
+                100,
+                newAIFighter!.health * 10,
+                50
+            );
+
+            newContext!.fillStyle = 'black';
+
+            newContext!.fillText(
+                fight.enemy,
+                newCanvas?.width! / 2 + 13 * MAX_HEALTH,
+                130
+            );
 
             newAIFighter!.draw();
             newPlayer!.draw();
@@ -103,7 +139,16 @@ export const Practice = () => {
                 newAIFighter!.update();
             } else {
                 const winner = newPlayer.health! > newAIFighter.health! ? 'player' : 'ai';
-                newContext!.fillText(`${winner === 'ai' ? fight.enemy : fight.fighter} wins`, 400, 100)
+
+                newContext!.font = '30px Arial';
+                newContext!.fillStyle = 'white';
+
+                newContext!.fillText(
+                    `${winner === 'ai' ? fight.enemy : fight.fighter} wins`,
+                    newCanvas?.width! / 2,
+                    300
+                );
+
                 dataCollector.setWinner(winner)
 
                 setTimeout(() => {
