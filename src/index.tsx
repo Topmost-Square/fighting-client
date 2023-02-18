@@ -36,16 +36,16 @@ const authLink = setContext((_, { headers }) => {
     }
 });
 
-const dataWithAuthLick = from([
-    dataServiceLink,
-    authLink
+const dataWithAuthLink = from([
+    authLink,
+    dataServiceLink
 ]);
 
 const client = new ApolloClient({
     link: split(
         operation => operation.getContext().clientName === 'auth',
         authServiceLink,
-        dataWithAuthLick
+        dataWithAuthLink
     ),
     cache: new InMemoryCache()
 });

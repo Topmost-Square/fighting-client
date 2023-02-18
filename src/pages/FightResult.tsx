@@ -1,15 +1,51 @@
-import React from "react";
-import {navigateToPage} from "../utils/navigation";
-import { useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useSetFightingDataMutation} from "../generated/graphql";
 
 export const FightResult = () => {
-    console.log(
-        useSelector(store => console.log(store))
-    )
+    const [setFightingData, { error, loading }] = useSetFightingDataMutation();
+
+    const [fightData, setFightData] = useState<string|null>(null);
+
+    useEffect(() => {
+        if (localStorage.getItem('fight')) {
+            const fightData = localStorage.getItem('fight');
+
+            setFightData(fightData)
+        }
+    }, []);
+
+    useEffect(() => {
+        let isDone = false;
+
+        if (!isDone) {
+            const storeFightingData = async () => {
+                if (fightData) {
+                    localStorage.removeItem('fight');
+
+                    const setFighting = await setFightingData({
+                        variables: {
+                            data: fightData
+                        },
+                    });
+
+                    if (setFighting!.data!.setFightingData!.data!) {
+                        console.log('OK')
+                        //todo: add message / error
+                    }
+                }
+            };
+
+            storeFightingData();
+        }
+
+        return () => {
+            isDone = true;
+        };
+    },[setFightingData, fightData]);
 
     return (
         <div className='flex flex-col items-center h-screen'>
-            Result
+            {loading ? 'Loading...' : 'Result'}
         </div>
     );
 }

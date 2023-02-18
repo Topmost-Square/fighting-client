@@ -1,0 +1,5 @@
+mutation setFightingData($data: String) {
+    setFightingData(data: $data) {
+        data
+    }
+}

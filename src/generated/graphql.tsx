@@ -15,11 +15,17 @@ export type Scalars = {
   Float: number;
 };
 
+export type FightingDataResponse = {
+  __typename?: 'FightingDataResponse';
+  data?: Maybe<Scalars['Boolean']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   login?: Maybe<User>;
   refresh?: Maybe<RefreshResponse>;
   register?: Maybe<User>;
+  setFightingData?: Maybe<FightingDataResponse>;
 };
 
 
@@ -35,8 +41,14 @@ export type MutationRegisterArgs = {
   password?: InputMaybe<Scalars['String']>;
 };
 
+
+export type MutationSetFightingDataArgs = {
+  data?: InputMaybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
+  getFightingData?: Maybe<Scalars['Boolean']>;
   me?: Maybe<User>;
 };
 
@@ -78,6 +90,13 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'User', id: string, email: string, token?: string | null } | null };
+
+export type SetFightingDataMutationVariables = Exact<{
+  data?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SetFightingDataMutation = { __typename?: 'Mutation', setFightingData?: { __typename?: 'FightingDataResponse', data?: boolean | null } | null };
 
 
 export const LoginDocument = gql`
@@ -220,3 +239,36 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const SetFightingDataDocument = gql`
+    mutation setFightingData($data: String) {
+  setFightingData(data: $data) {
+    data
+  }
+}
+    `;
+export type SetFightingDataMutationFn = Apollo.MutationFunction<SetFightingDataMutation, SetFightingDataMutationVariables>;
+
+/**
+ * __useSetFightingDataMutation__
+ *
+ * To run a mutation, you first call `useSetFightingDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetFightingDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setFightingDataMutation, { data, loading, error }] = useSetFightingDataMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSetFightingDataMutation(baseOptions?: Apollo.MutationHookOptions<SetFightingDataMutation, SetFightingDataMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetFightingDataMutation, SetFightingDataMutationVariables>(SetFightingDataDocument, options);
+      }
+export type SetFightingDataMutationHookResult = ReturnType<typeof useSetFightingDataMutation>;
+export type SetFightingDataMutationResult = Apollo.MutationResult<SetFightingDataMutation>;
+export type SetFightingDataMutationOptions = Apollo.BaseMutationOptions<SetFightingDataMutation, SetFightingDataMutationVariables>;

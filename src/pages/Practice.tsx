@@ -153,7 +153,7 @@ export const Practice = () => {
 
                 setTimeout(() => {
                     window.location.href = '/result';
-                }, 3000);
+                }, 1000);
             }
         }
 
