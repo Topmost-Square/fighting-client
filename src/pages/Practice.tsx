@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 import {DataCollector} from "../gameEngine/DataCollector/DataCollector";
 import {clearState, setCharacter, setWinner, updateKick} from "../redux/fightSlice";
 import {MAX_HEALTH} from "../utils/constants";
+import {BackgroundPainter} from "../gameEngine/sprite/BackgroundPainter";
 
 export const Practice = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -37,6 +38,11 @@ export const Practice = () => {
         if (!fight) {
             navigateToPage('/', navigate, checkAndRefreshToken)
         }
+
+        const background = new BackgroundPainter();
+        background.setCanvas(newCanvas!)
+        background.setContext(newContext!);
+        background.setImage(fight.background);
 
         const dataCollector = new DataCollector();
 
@@ -87,6 +93,8 @@ export const Practice = () => {
             requestAnimationFrame(animate);
 
             newContext!.clearRect(0, 0, newCanvas!.width, newCanvas!.height);
+
+            background.draw();
 
             newContext!.font = '30px Arial';
 

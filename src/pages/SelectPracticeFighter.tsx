@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from "react";
 import {SelectScreen} from "../gameEngine/selectScreen/SelectScreen";
 import { characters } from "../gameEngine/selectScreen/charactersList";
+import { backgrounds } from "../gameEngine/selectScreen/backgroundList";
 import {navigateToPage} from "../utils/navigation";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../utils/auth";
@@ -21,10 +22,12 @@ export const SelectPracticeFighter = () => {
         selectScreen.setDefaultAnimation();
 
         const enemyIndex = Math.floor(Math.random() * characters.length);
+        const backgroundIndex = Math.floor(Math.random() * backgrounds.length);
 
         const fightObject = {
             fighter: '',
-            enemy: characters[enemyIndex]
+            enemy: characters[enemyIndex],
+            background: backgrounds[backgroundIndex]
         }
 
         const animate = () => {
