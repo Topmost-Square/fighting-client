@@ -35,7 +35,13 @@ export class IdleAnimation {
         }
     }
 
-    draw(x: number, y: number, height: number) {
+    draw(
+        x: number,
+        y: number,
+        height: number,
+        xCoefficient: number,
+        yCoefficient: number
+    ) {
 
         this.doAnimate && this.animate();
 
@@ -43,10 +49,10 @@ export class IdleAnimation {
             const oneImageSize = 32;
             const clipWidth = 32;
             const clipHeight = 32;
-            const placeImageX = x
-            const placeImageY = y + height - this.size
-            const widthImage = this.size;
-            const heightImage = this.size;
+            const placeImageX = x * xCoefficient
+            const placeImageY = (y + height - this.size) * yCoefficient
+            const widthImage = this.size * xCoefficient;
+            const heightImage = this.size * yCoefficient;
 
             this.context!.imageSmoothingEnabled = false;
 

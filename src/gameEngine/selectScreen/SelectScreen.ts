@@ -21,6 +21,18 @@ export class SelectScreen {
 
     pointer: number = 0;
 
+    xCoefficient: number = 1;
+    yCoefficient: number = 1;
+
+    placeY = 0;
+    imageSize = 0
+    sizeToDisplay = 0;
+    xDraw = 0;
+    yDraw = 0;
+
+    textX = 0;
+    textY = 0;
+
     loadImages() {
         charactersList().forEach((character) => {
             const face = new Image();
@@ -53,6 +65,20 @@ export class SelectScreen {
 
     setIdleAnimation(sprite: HTMLImageElement|null) {
         this.idleAnimation = new IdleAnimation(sprite, this.context)
+    }
+
+    setCoefficient(xCoefficient: number, yCoefficient: number) {
+        this.xCoefficient = xCoefficient;
+        this.yCoefficient = yCoefficient;
+
+        this.placeY = 300 * this.yCoefficient;
+        this.imageSize = 32;
+        this.sizeToDisplay = this.imageSize * 3 * this.xCoefficient; // thrice the original
+        this.xDraw = 700 * this.xCoefficient;
+        this.yDraw = 100 * this.yCoefficient;
+
+        this.textX = (this.canvas?.width! / 10) * this.xCoefficient;
+        this.textY = 100 * this.yCoefficient;
     }
 
     constructor() {
@@ -93,7 +119,7 @@ export class SelectScreen {
             if (character) {
                 this.context!.imageSmoothingEnabled = false;
 
-                const placeX = sizeToDisplay * (index + 1) + this.canvas?.width! / 3
+                const placeX = (sizeToDisplay * (index + 1) + this.canvas?.width! / 3) * this.xCoefficient
 
                 this.context!.drawImage(
                     character.face,
@@ -102,42 +128,67 @@ export class SelectScreen {
                     imageSize,
                     imageSize,
                     placeX,
-                    placeY,
-                    sizeToDisplay,
-                    sizeToDisplay,
+                    placeY * this.yCoefficient,
+                    sizeToDisplay * this.xCoefficient,
+                    sizeToDisplay * this.yCoefficient,
                 );
             }
         });
     }
 
     drawPointer(sizeToDisplay: number, placeY: number) {
-        const pointerX = sizeToDisplay * (this.pointer + 1) + this.canvas?.width! / 3
+        const pointerX = (sizeToDisplay * (this.pointer + 1) + this.canvas?.width! / 3)  * this.xCoefficient
 
         this.context!.strokeStyle = 'yellow';
 
         this.context!.beginPath();
-        this.context!.rect(pointerX, placeY, sizeToDisplay, sizeToDisplay);
+        this.context!.rect(
+            //todo: might be not right
+            pointerX,
+            placeY * this.yCoefficient,
+            sizeToDisplay * this.xCoefficient,
+            sizeToDisplay * this.yCoefficient
+        );
         this.context!.stroke();
     }
 
     drawFighterName() {
-        this.context!.font = '30px Arial';
+        this.context!.font = `${30 * this.yCoefficient}px Arial`;
         this.context!.fillStyle = 'white';
 
-        this.context!.fillText(this.characters[this.pointer].name, this.canvas?.width! / 2 - 100, 200)
+        const aboutText = [
+            "This is the super cool fighter",
+            "This is the super cool fighter,"
+        ];
+
+        this.context!.fillText(
+            this.characters[this.pointer].name,
+            this.textX,
+            this.textY
+        );
+
+        for (let item in aboutText) {
+            this.context!.fillText(
+                aboutText[item],
+                this.textX,
+                this.textY + 100 + (parseInt(item) * 30) * this.yCoefficient
+            );
+        }
     }
 
     draw() {
-        const placeY = 300;
-        const imageSize = 32
-        const sizeToDisplay = imageSize * 3; // thrice the original
+        this.drawFaces(this.sizeToDisplay, this.imageSize, this.placeY);
 
-        this.drawFaces(sizeToDisplay, imageSize, placeY);
-
-        this.drawPointer(sizeToDisplay, placeY);
+        this.drawPointer(this.sizeToDisplay, this.placeY);
 
         this.drawFighterName();
 
-        this.idleAnimation?.draw(sizeToDisplay + this.canvas?.width! / 3, 700, 100)
+        this.idleAnimation?.draw(
+            this.sizeToDisplay + this.canvas?.width! / 3,
+            this.xDraw,
+            this.yDraw,
+            this.xCoefficient,
+            this.yCoefficient
+        )
     }
 }
