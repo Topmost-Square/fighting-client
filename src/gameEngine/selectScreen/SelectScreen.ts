@@ -4,7 +4,8 @@ import {IdleAnimation} from "./IdleAnimation";
 type Character = {
     face: HTMLImageElement,
     idle: HTMLImageElement,
-    name: string
+    name: string,
+    story: Array<string>
 }
 
 export class SelectScreen {
@@ -42,11 +43,13 @@ export class SelectScreen {
             idle.src = character.idle;
 
             const name = character.name
+            const story = character.story
 
             this.characters.push({
                 face,
                 idle,
-                name
+                name,
+                story
             })
         })
     }
@@ -156,10 +159,7 @@ export class SelectScreen {
         this.context!.font = `${30 * this.yCoefficient}px Arial`;
         this.context!.fillStyle = 'white';
 
-        const aboutText = [
-            "This is the super cool fighter",
-            "This is the super cool fighter,"
-        ];
+        const story = this.characters[this.pointer].story;
 
         this.context!.fillText(
             this.characters[this.pointer].name,
@@ -167,9 +167,9 @@ export class SelectScreen {
             this.textY
         );
 
-        for (let item in aboutText) {
+        for (let item in story) {
             this.context!.fillText(
-                aboutText[item],
+                story[item],
                 this.textX,
                 this.textY + 100 + (parseInt(item) * 30) * this.yCoefficient
             );
