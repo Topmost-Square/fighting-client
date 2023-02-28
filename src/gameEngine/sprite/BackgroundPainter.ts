@@ -12,6 +12,12 @@ export class BackgroundPainter {
 
     staticImage: StaticImage|null = null;
 
+    clipWidth = 500;
+    clipHeight = 300;
+
+    placeImageX = 0
+    placeImageY = 0;
+
     setCanvas(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
     }
@@ -29,10 +35,6 @@ export class BackgroundPainter {
     }
 
     draw() {
-        const clipWidth = 500;
-        const clipHeight = 300;
-        const placeImageX = 0
-        const placeImageY = 0;
         const widthImage = this.canvas?.width;
         const heightImage = this.canvas?.height;
 
@@ -40,10 +42,10 @@ export class BackgroundPainter {
             this.staticImage!.background,
             0,
             0,
-            clipWidth,
-            clipHeight,
-            placeImageX,
-            placeImageY,
+            this.clipWidth,
+            this.clipHeight,
+            this.placeImageX,
+            this.placeImageY,
             widthImage!,
             heightImage!,
         );

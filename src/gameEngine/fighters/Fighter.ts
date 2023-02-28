@@ -20,19 +20,6 @@ export class Fighter {
 
     painter: Painter|null = null;
 
-    setName(name: string) {
-        this.name = name;
-    }
-
-    setPainter() {
-        this.painter = new Painter();
-        this.painter.setImages(this.name!);
-        this.painter.setContext(this.context!);
-    }
-
-    setDataCollector(dataCollector: DataCollector) {
-        this.dataCollector = dataCollector;
-    }
 
     controls: BaseControls|null = null;
 
@@ -54,12 +41,18 @@ export class Fighter {
     canvas: HTMLCanvasElement|null = null;
     context: CanvasRenderingContext2D|null = null;
 
+
+    xCoefficient: number = 1;
+    yCoefficient: number = 1;
+
     // todo: these values should depend on screen size
-    width = 150;
-    height = 400;
+    width = 150 * this.xCoefficient;
+    height = 400 * this.yCoefficient;
 
     verticalAcceleration = 0;
     horizontalAcceleration = 0;
+
+    //todo: check if coefficients should be applied here too
     gravity = 20;
     speed = 5;
     airSpeed = 10;
@@ -70,19 +63,47 @@ export class Fighter {
         show: false,
         x: null,
         y: null,
-        width: 150,
-        height: 50
+        width: 150 * this.xCoefficient,
+        height: 50 * this.yCoefficient
     }
 
     legKickMask: KickMask = {
         show: false,
         x: null,
         y: null,
-        width: 250,
-        height: 70
+        width: 250 * this.xCoefficient,
+        height: 70 * this.yCoefficient
     }
 
     gameState: boolean|null = null;
+
+    setCoefficient(xCoefficient: number, yCoefficient: number) {
+        this.xCoefficient = xCoefficient;
+        this.yCoefficient = yCoefficient;
+
+        this.width = 150 * this.xCoefficient;
+        this.height = 400 * this.yCoefficient;
+
+        this.handKickMask.width = 150 * this.xCoefficient;
+        this.handKickMask.height = 50 * this.yCoefficient;
+
+        this.legKickMask.width = 250 * this.xCoefficient;
+        this.legKickMask.height = 70 * this.yCoefficient;
+    }
+
+    setName(name: string) {
+        this.name = name;
+    }
+
+    setPainter() {
+        this.painter = new Painter();
+        this.painter.setImages(this.name!);
+        this.painter.setContext(this.context!);
+    }
+
+    setDataCollector(dataCollector: DataCollector) {
+        this.dataCollector = dataCollector;
+    }
 
     setGameState(gameState: boolean) {
         this.gameState = gameState;
@@ -471,7 +492,7 @@ export class Fighter {
     }
 
     useGravity() {
-        if (this.position.y! < (this.canvas!.height - 500)) {
+        if (this.position.y! < (this.canvas!.height)) {
             this.position.y! += this.gravity;
         }
 
@@ -540,7 +561,12 @@ export class Fighter {
     }
 
     isInTheAir() {
-        return !(this.position.y! >= (this.canvas!.height - 500))
+
+        //todo: check this one
+
+        console.log('check is in the air POS.Y, CANVAS height', this.position.y, this.canvas!.height )
+
+        return !(this.position.y! >= (this.canvas!.height - 500 * this.xCoefficient))
     }
 
     callAnimation(animation: string) {
@@ -571,7 +597,10 @@ export class Fighter {
         this.useGravity();
         this.useHorizontalAcceleration();
 
-        const posX = this.side === 'left' ? this.position.x! - 50 : this.position.x! - 200
+        const posX =
+            this.side === 'left' ?
+                this.position.x! - (50 * this.xCoefficient) :
+                this.position.x! - (200 * this.xCoefficient)
 
         if (this.spriteSheet && this.health > 0 && this.enemy?.health! > 0) {
             this.spriteSheet.draw(posX, this.position.y!, this.height);

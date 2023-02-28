@@ -15,14 +15,14 @@ export class Player extends Fighter {
             this.spriteSheet?.outsideAnimationCall !== 'r-uppercut'
         ) {
             if (!this.isInTheAir()) {
-                this.height = 200; // fighter is down (sitting) / mask is twice smaller
+                this.height = 200 * this.yCoefficient; // fighter is down (sitting) / mask is twice smaller
             }
 
             if (
                 !this.verticalAcceleration &&
-                this.position.y! >= this.canvas?.height! - 500 - this.height
+                this.position.y! >= this.canvas?.height! - 500 * this.yCoefficient - this.height
             ) {
-                this.position.y = this.canvas?.height! - 500 + 200;
+                this.position.y = this.canvas?.height! - (500 + 200) * this.yCoefficient;
 
                 if (this.controls.options.hand2Kick.pushed) {
                     this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'uppercut' });
@@ -34,10 +34,10 @@ export class Player extends Fighter {
         }
 
         if (!this.controls?.options.down && this.position.y) {
-            this.height = 400; // temporarily simulate fighter is up
+            this.height = 400 * this.yCoefficient; // temporarily simulate fighter is up
 
-            if (!this.verticalAcceleration && this.position.y >= this.canvas?.height! - 500) {
-                this.position.y = this.canvas?.height! - 500;
+            if (!this.verticalAcceleration && this.position.y >= this.canvas?.height! - 500 * this.yCoefficient) {
+                this.position.y = this.canvas?.height! - 500 * this.yCoefficient;
             }
         }
     }
