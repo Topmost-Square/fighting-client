@@ -21,7 +21,7 @@ export const Menu = () => {
 
     return (
         <div className='flex flex-col items-center h-screen'>
-            <MenuItem name='Practice' top click={() => navigateToPage('/select/practice', navigate, checkAndRefreshToken)} />
+            <MenuItem name='Practice' top click={() =>  navigateToPage('/select/practice', navigate, checkAndRefreshToken)} />
             <MenuItem name='Online' />
             <MenuItem name='Inventory' />
             <MenuItem name='Settings' />
