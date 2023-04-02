@@ -20,7 +20,6 @@ export class Fighter {
 
     painter: Painter|null = null;
 
-
     controls: BaseControls|null = null;
 
     kicked: boolean = false;
@@ -41,7 +40,6 @@ export class Fighter {
     canvas: HTMLCanvasElement|null = null;
     context: CanvasRenderingContext2D|null = null;
 
-
     xCoefficient: number = 1;
     yCoefficient: number = 1;
 
@@ -53,9 +51,9 @@ export class Fighter {
     horizontalAcceleration = 0;
 
     //todo: check if coefficients should be applied here too
-    gravity = 20;
-    speed = 5;
-    airSpeed = 10;
+    gravity = 20 * this.xCoefficient;
+    speed = 5 * this.xCoefficient;
+    airSpeed = 10 * this.xCoefficient;
 
     spriteSheet: SpriteSheet|null = null;
 
@@ -84,11 +82,17 @@ export class Fighter {
         this.width = 150 * this.xCoefficient;
         this.height = 400 * this.yCoefficient;
 
+        this.spriteSheet?.setSize(xCoefficient)
+
         this.handKickMask.width = 150 * this.xCoefficient;
         this.handKickMask.height = 50 * this.yCoefficient;
 
         this.legKickMask.width = 250 * this.xCoefficient;
         this.legKickMask.height = 70 * this.yCoefficient;
+
+        this.gravity = 20 * this.xCoefficient;
+        this.speed = 5 * this.xCoefficient;
+        this.airSpeed = 10 * this.xCoefficient;
     }
 
     setName(name: string) {
@@ -279,7 +283,7 @@ export class Fighter {
         this.spriteSheet?.dropAnimation();
         this.spriteSheet?.callAnimation(kickAnimation);
         if (this.closeForDamage('leg') && !this.enemy?.isDown) {
-            this.enemy?.getDamage(7, 'head', true, 30, 50, 'turnLeg');
+            this.enemy?.getDamage(7, 'head', true, 30 * this.xCoefficient, 50 * this.xCoefficient, 'turnLeg');
         }
     }
 
@@ -405,7 +409,7 @@ export class Fighter {
         this.spriteSheet?.callAnimation(this.side === 'left' ? 'uppercut' : 'r-uppercut');
 
         if (this.closeForDamage('hand') && !this.enemy?.isDown && !this.enemy?.controls?.options.down) {
-            this.enemy?.getDamage(5, 'head', true, 50, 30, 'uppercut');
+            this.enemy?.getDamage(5, 'head', true, 50 * this.xCoefficient, 30 * this.xCoefficient, 'uppercut');
         }
     }
 
@@ -540,10 +544,6 @@ export class Fighter {
         }
     }
 
-    setSide(side: string) {
-        this.side = side;
-    }
-
     goLeft() {
         if (this.isInTheAir()) {
             this.position.x! -= this.airSpeed;
@@ -561,12 +561,9 @@ export class Fighter {
     }
 
     isInTheAir() {
-
         //todo: check this one
 
-        console.log('check is in the air POS.Y, CANVAS height', this.position.y, this.canvas!.height )
-
-        return !(this.position.y! >= (this.canvas!.height - 500 * this.xCoefficient))
+        return !(this.position.y! >= (this.canvas!.height - 500 * this.yCoefficient))
     }
 
     callAnimation(animation: string) {

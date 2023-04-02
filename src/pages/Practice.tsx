@@ -53,7 +53,7 @@ export const Practice = () => {
         dataCollector.setCharacter({ type: 'player', character: fight.fighter });
         dataCollector.setCharacter({ type: 'enemy', character: fight.enemy });
 
-        const { x, y } = calculateCoefficients(window.innerWidth);
+        const { x, y, px, py } = calculateCoefficients(window.innerWidth);
 
         const newPlayer = new Player();
 
@@ -62,11 +62,6 @@ export const Practice = () => {
         playerControls.setFighter(newPlayer!);
 
         newPlayer.setName(fight.fighter);
-
-
-        console.log(x,y)
-
-        console.log(window.innerWidth, window.innerHeight)
 
         newPlayer!.setInitialX(100 * x);
         newPlayer!.setInitialY(newCanvas!.height * y);
@@ -80,7 +75,7 @@ export const Practice = () => {
         newPlayer!.setDataCollector(dataCollector);
         newPlayer!.setGameState(true);
 
-        newPlayer.setCoefficient(x,y);
+        newPlayer.setCoefficient(px,py);
 
         const newAIFighter = new AIFighter();
 
@@ -102,7 +97,7 @@ export const Practice = () => {
         newAIFighter!.setControls(aiControls);
         newAIFighter!.setGameState(true);
 
-        newAIFighter.setCoefficient(x,y);
+        newAIFighter.setCoefficient(px,py);
 
         const game = new PracticeGame(newPlayer!, newAIFighter!);
 
@@ -190,10 +185,10 @@ export const Practice = () => {
             newCanvas!.width = window.innerWidth;
             newCanvas!.height = window.innerHeight;
 
-            const { x, y } = calculateCoefficients(window.innerWidth);
+            const { x, y, px, py } = calculateCoefficients(window.innerWidth);
 
-            newPlayer.setCoefficient(x,y);
-            newAIFighter.setCoefficient(x,y);
+            newPlayer.setCoefficient(px,py);
+            newAIFighter.setCoefficient(px,py);
         })
     }, []);
 

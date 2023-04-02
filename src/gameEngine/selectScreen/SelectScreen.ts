@@ -88,7 +88,6 @@ export class SelectScreen {
         window.addEventListener('keydown', e => {
             switch (e.key) {
                 case ' ':
-                    console.log('select');
                     this.selected = true;
                     break;
                 case 'ArrowLeft':

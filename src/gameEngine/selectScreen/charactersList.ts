@@ -10,7 +10,7 @@ import GreenFighterIdle from "../images/idle/green.png";
 import PurpleFighterIdle from "../images/idle/purple.png";
 import RedFighterIdle from "../images/idle/red.png";
 
-export const characters = ['purple', 'green', 'black', 'blue', 'red'];
+export const characters = ['Skar', 'Reven', 'Tenemor Nil', 'Nubis Frig', 'Ignis Flam'];
 
 export const charactersList = () => {
     return [
@@ -40,8 +40,6 @@ export const charactersList = () => {
                 "Mindless mutant that kills",
                 "everyone it sees. Uncontrolled",
                 "even by those who created it"
-
-
             ]
         }, //green
         {

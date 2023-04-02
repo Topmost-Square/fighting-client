@@ -7,11 +7,6 @@ import { useSelector } from "react-redux";
 
 export const Menu = () => {
     const navigate = useNavigate();
-
-    console.log(
-        useSelector(store => console.log(store))
-    )
-
     const { checkAndRefreshToken } = useAuth();
 
     const exit = () => {

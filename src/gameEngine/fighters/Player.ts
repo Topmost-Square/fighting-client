@@ -3,7 +3,7 @@ import {Fighter} from "./Fighter";
 export class Player extends Fighter {
     upControlAction() {
         if (this.controls?.options.up && this.verticalAcceleration === 0 && !this.isInTheAir()) {
-            this.verticalAcceleration = 50;
+            this.verticalAcceleration = 50 * this.yCoefficient;
         }
     }
 

@@ -2,6 +2,8 @@ import { spriteSheetFile } from "./SpriteSheetFile";
 import { getAnimationValues } from "./AnimationValues";
 import {Fighter} from "../fighters/Fighter";
 
+const DEFAULT_SIZE = 400;
+
 export type Animation = {
     yStart: number,
     xRange: number,
@@ -49,7 +51,7 @@ const kickAnimationsRight = [
 
 export class SpriteSheet {
     image: HTMLImageElement|null = null;
-    size = 400;
+    size = DEFAULT_SIZE;
     context: CanvasRenderingContext2D|null = null;
     fighter: Fighter|null = null;
 
@@ -78,6 +80,10 @@ export class SpriteSheet {
         this.image.src = spriteSheetFile(spriteSheetName);
         this.context = context;
         this.fighter = fighter;
+    }
+
+    setSize(xCoeeficient: number) {
+        this.size = DEFAULT_SIZE * xCoeeficient;
     }
 
     dropAnimation() {

@@ -29,7 +29,6 @@ export const FightResult = () => {
                     });
 
                     if (setFighting!.data!.setFightingData!.data!) {
-                        console.log('OK')
                         //todo: add message / error
                     }
                 }
