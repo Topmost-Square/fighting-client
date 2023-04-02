@@ -22,8 +22,7 @@ export class Player extends Fighter {
                 !this.verticalAcceleration &&
                 this.position.y! >= this.canvas?.height! - 500 * this.yCoefficient - this.height
             ) {
-                this.position.y = this.canvas?.height! - (500 + 200) * this.yCoefficient;
-
+                this.position.y = this.canvas?.height! - 200 * this.yCoefficient;
                 if (this.controls.options.hand2Kick.pushed) {
                     this.dataCollector?.updateKick({ type: 'damageInflicted', kick: 'uppercut' });
                     this.performUpperCut();

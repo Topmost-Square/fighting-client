@@ -561,8 +561,6 @@ export class Fighter {
     }
 
     isInTheAir() {
-        //todo: check this one
-
         return !(this.position.y! >= (this.canvas!.height - 500 * this.yCoefficient))
     }
 
@@ -599,12 +597,14 @@ export class Fighter {
                 this.position.x! - (50 * this.xCoefficient) :
                 this.position.x! - (200 * this.xCoefficient)
 
+        const posY = this.position.y! * this.yCoefficient;
+
         if (this.spriteSheet && this.health > 0 && this.enemy?.health! > 0) {
-            this.spriteSheet.draw(posX, this.position.y!, this.height);
+            this.spriteSheet.draw(posX, posY, this.height);
         } else if (this.health <= 0) {
-            this.painter?.draw(posX, this.position.y!, this.height, this.side!);
+            this.painter?.draw(posX, posY, this.height, this.side!);
         } else {
-            this.painter?.draw(posX, this.position.y!, this.height, 'win');
+            this.painter?.draw(posX, posY, this.height, 'win');
         }
     }
 }
